@@ -76,7 +76,6 @@ Int_t StPicoD0EventMaker::Make()
 
    if (isGoodEvent())
    {
-
       UInt_t nTracks = mPicoDst->numberOfTracks();
 
       std::vector<Int_t> idPicoDstKaons;
@@ -85,7 +84,7 @@ Int_t StPicoD0EventMaker::Make()
       bool bKaon = 0;
       bool bPion = 0;
 
-      for (UInt_t iTrack = 0; iTrack < nTracks; iTrack++)
+      for (UInt_t iTrack = 0; iTrack < nTracks; ++iTrack)
       {
          StPicoTrack* trk = mPicoDst->track(iTrack);
 
@@ -107,11 +106,12 @@ Int_t StPicoD0EventMaker::Make()
          }
       } // .. end tracks loop
 
-      for (UInt_t ik = 0; ik < idPicoDstKaons.size(); ik++)
+      for (UInt_t ik = 0; ik < idPicoDstKaons.size(); ++ik)
       {
          StPicoTrack* kaon = mPicoDst->track(idPicoDstKaons[ik]);
+
          // make Kπ pairs
-         for (UInt_t ip = 0; ip < idPicoDstPions.size(); ip++)
+         for (UInt_t ip = 0; ip < idPicoDstPions.size(); ++ip)
          {
             if (idPicoDstKaons[ik] == idPicoDstPions[ip]) continue;
 
