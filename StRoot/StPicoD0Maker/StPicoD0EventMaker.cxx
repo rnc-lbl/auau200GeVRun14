@@ -28,8 +28,8 @@ StPicoD0EventMaker::StPicoD0EventMaker(const char* name, StPicoDstMaker *picoMak
    int BufSize = (int)pow(2., 16.);
    int Split = 1;
    mTree = new TTree("T", "T", BufSize);
-   mTree->SetAutoSave(1000000); // autosave every 10 Mbytes
-   mTree->Branch("dEvent", "StDmesonEvent", &mPicoD0Event, BufSize, Split);
+   mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
+   mTree->Branch("dEvent", "StPicoD0Event", &mPicoD0Event, BufSize, Split);
 }
 
 //-----------------------------------------------------------------------------
@@ -48,6 +48,8 @@ Int_t StPicoD0EventMaker::Init()
 Int_t StPicoD0EventMaker::Finish()
 {
    mOutputFile->cd();
+   mOutputFile->Write();
+   mOutputFile->Close();
    return kStOK;
 }
 //-----------------------------------------------------------------------------
@@ -147,7 +149,7 @@ bool StPicoD0EventMaker::isGoodEvent()
    mPicoD0Event->addPicoEvent(*mPicoEvent);
 
    // cuts
-   Float_t vz = mPicoEvent->primaryVertex().z();
+   float vz = mPicoEvent->primaryVertex().z();
    if (!(mPicoEvent->ranking() > 0)) return false;
    if (fabs(vz) > cuts::vz) return false;
 
