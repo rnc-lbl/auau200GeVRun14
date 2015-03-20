@@ -9,11 +9,13 @@
 class StPicoTrack;
 class StPicoEvent;
 
-class StKaonPion : public TObject {
+class StKaonPion : public TObject
+{
  public:
   StKaonPion();
   StKaonPion(StKaonPion const *);
-  StKaonPion(StPicoTrack const * const, StPicoTrack const * const ,unsigned short const,unsigned short const);
+  StKaonPion(StPicoTrack const * const, StPicoTrack const * const ,unsigned short const,unsigned short const,
+             StThreeVectorF const &, float const &);
   ~StKaonPion(); // please keep this non-virtual and NEVER inherit from this class 
   void clear();
 
@@ -21,8 +23,8 @@ class StKaonPion : public TObject {
   unsigned short   pionIdx() const { return mPionIdx;}
   float m()    const { return mLorentzVector.m();}
   float pt()   const { return mLorentzVector.perp();}
-  float eta()   const { return mLorentzVector.pseudoRapidity();}
-  float phi()   const { return mLorentzVector.phi();}
+  float eta()  const { return mLorentzVector.pseudoRapidity();}
+  float phi()  const { return mLorentzVector.phi();}
   float cosThetaStar() const { return static_cast<float>(mCosThetaStar/100.);}
   StLorentzVectorF lorentzVector() const { return mLorentzVector;}
           
