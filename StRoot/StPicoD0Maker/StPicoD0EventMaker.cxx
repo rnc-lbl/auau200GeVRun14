@@ -78,13 +78,13 @@ Int_t StPicoD0EventMaker::Make()
    {
       UInt_t nTracks = mPicoDst->numberOfTracks();
 
-      std::vector<Int_t> idPicoDstKaons;
-      std::vector<Int_t> idPicoDstPions;
+      std::vector<unsigned short> idxPicoKaons;
+      std::vector<unsigned short> idxPicoPions;
 
       bool bKaon = 0;
       bool bPion = 0;
 
-      for (UInt_t iTrack = 0; iTrack < nTracks; ++iTrack)
+      for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
       {
          StPicoTrack* trk = mPicoDst->track(iTrack);
 
@@ -95,30 +95,30 @@ Int_t StPicoD0EventMaker::Make()
 
          if (isPion(trk))
          {
-            idPicoDstPions.push_back(iTrack);
+            idxPicoPions.push_back(iTrack);
             bPion = true;
          }
 
          if (isKaon(trk))
          {
-            idPicoDstKaons.push_back(iTrack);
+            idxPicoKaons.push_back(iTrack);
             bKaon = true;
          }
       } // .. end tracks loop
 
-      for (UInt_t ik = 0; ik < idPicoDstKaons.size(); ++ik)
+      for (unsigned short ik = 0; ik < idxPicoKaons.size(); ++ik)
       {
-         StPicoTrack* kaon = mPicoDst->track(idPicoDstKaons[ik]);
+         StPicoTrack* kaon = mPicoDst->track(idxPicoKaons[ik]);
 
          // make Kπ pairs
-         for (UInt_t ip = 0; ip < idPicoDstPions.size(); ++ip)
+         for (unsigned short ip = 0; ip < idxPicoPions.size(); ++ip)
          {
-            if (idPicoDstKaons[ik] == idPicoDstPions[ip]) continue;
+            if (idxPicoKaons[ik] == idxPicoPions[ip]) continue;
 
-            StPicoTrack* pion = mPicoDst->track(idPicoDstPions[ip]);
+            StPicoTrack* pion = mPicoDst->track(idxPicoPions[ip]);
             if (pion->pMom().perp() <= 0.2 || fabs(pion->pMom().pseudoRapidity()) >= cuts::pionEta) continue; // for the Kπ pair we need both to have pT>0.2
 
-            StKaonPion* kaonPion = new StKaonPion(kaon, pion);
+            StKaonPion* kaonPion = new StKaonPion(kaon, pion,idxPicoKaons[ik],idxPicoPions[ip]);
 
             if (kaonPion->m() <= 0.48 || kaonPion->m() > 2.5)
             {
@@ -132,8 +132,8 @@ Int_t StPicoD0EventMaker::Make()
       } // .. end of kaons loop
 
 
-      idPicoDstKaons.clear();
-      idPicoDstPions.clear();
+      idxPicoKaons.clear();
+      idxPicoPions.clear();
    } //.. end of good event fill
 
    mTree->Fill();

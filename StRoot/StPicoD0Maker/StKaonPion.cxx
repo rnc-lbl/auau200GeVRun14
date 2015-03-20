@@ -1,3 +1,5 @@
+#include <limits>
+
 #ifdef __ROOT__
 #include "StKaonPion.h"
 
@@ -13,14 +15,15 @@ ClassImp(StKaonPion)
 
 
 ////////////////////////////////////////////////////////////////////
-StKaonPion::StKaonPion() {
+StKaonPion::StKaonPion()
+{
   clear();
 }
 ////////////////////////////////////////////////////////////////////
 StKaonPion::StKaonPion(StKaonPion* t) {
   clear();
-  mKaonId = t->mKaonId;
-  mPionId = t->mPionId;
+  mKaonIdx = t->mKaonIdx;
+  mPionIdx = t->mPionIdx;
   mM    = t->mM;
   mPt = t->mPt;
   mEta = t->mEta;
@@ -30,7 +33,7 @@ StKaonPion::StKaonPion(StKaonPion* t) {
 }
 
 ////////////////////////////////////////////////////////////////////
-StKaonPion::StKaonPion(StPicoTrack* kaon, StPicoTrack* pion)
+StKaonPion::StKaonPion(StPicoTrack* kaon, StPicoTrack* pion,unsigned short kIdx,unsigned short pIdx)
 {
   clear();
   if (!kaon || !pion) return;
@@ -47,8 +50,8 @@ StKaonPion::StKaonPion(StPicoTrack* kaon, StPicoTrack* pion)
   //StLorentzVectorF kRotFourMom(kRotMom,kRotMom.massHypothesis(.493677));
   //StLorentzVectorF kpRotFourMom = kRotFourMom + pFourMom;
 
-  mKaonId = (UShort_t)kaon->id();
-  mPionId = (UShort_t)pion->id();
+  mKaonIdx = kIdx;
+  mPionIdx = pIdx;
 
   mM = (10000.*kpFourMom.m())>Pico::USHORTMAX ? Pico::USHORTMAX : (UShort_t)(TMath::Nint(10000.*kpFourMom.m()));
   mPt = (1000.*kpFourMom.perp())>Pico::USHORTMAX ? Pico::USHORTMAX : (UShort_t)(TMath::Nint(1000.*kpFourMom.perp()));
@@ -77,8 +80,8 @@ StKaonPion::~StKaonPion() {
 ////////////////////////////////////////////////////////////////////
 void StKaonPion::clear() {
 
-  mKaonId=Pico::USHORTMAX;
-  mPionId=Pico::USHORTMAX;
+  mKaonIdx = std::numeric_limits<unsigned short>::max();
+  mPionIdx = std::numeric_limits<unsigned short>::max();
 
   mM=Pico::USHORTMAX;
   mPt=0;
