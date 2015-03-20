@@ -12,8 +12,8 @@ class StPicoEvent;
 class StKaonPion : public TObject {
  public:
   StKaonPion();
-  StKaonPion(StKaonPion*);
-  StKaonPion(StPicoTrack*, StPicoTrack*,unsigned short,unsigned short);
+  StKaonPion(StKaonPion const *);
+  StKaonPion(StPicoTrack const * const, StPicoTrack const * const ,unsigned short const,unsigned short const);
   ~StKaonPion(); // please keep this non-virtual and NEVER inherit from this class 
   void clear();
 

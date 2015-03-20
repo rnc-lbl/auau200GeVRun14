@@ -18,7 +18,7 @@ StKaonPion::StKaonPion()
   clear();
 }
 //------------------------------------
-StKaonPion::StKaonPion(StKaonPion* t)
+StKaonPion::StKaonPion(StKaonPion const * t)
 {
   clear();
   mKaonIdx = t->mKaonIdx;
@@ -27,7 +27,7 @@ StKaonPion::StKaonPion(StKaonPion* t)
   mCosThetaStar = t->mCosThetaStar;
 }
 //------------------------------------
-StKaonPion::StKaonPion(StPicoTrack* kaon, StPicoTrack* pion,unsigned short kIdx,unsigned short pIdx)
+StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const pion,unsigned short const kIdx,unsigned short const pIdx)
 {
   clear();
   if (!kaon || !pion) return;
