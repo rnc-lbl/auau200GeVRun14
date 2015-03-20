@@ -20,7 +20,6 @@ StKaonPion::StKaonPion()
 //------------------------------------
 StKaonPion::StKaonPion(StKaonPion const * t)
 {
-  clear();
   mKaonIdx = t->mKaonIdx;
   mPionIdx = t->mPionIdx;
   mLorentzVector = t->mLorentzVector;
