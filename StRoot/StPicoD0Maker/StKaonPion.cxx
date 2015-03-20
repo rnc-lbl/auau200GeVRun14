@@ -31,8 +31,17 @@ StKaonPion::StKaonPion(StKaonPion const * t)
 //------------------------------------
 StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const pion,unsigned short const kIdx,unsigned short const pIdx, StThreeVectorF const & pVtx, float const & bField) : mKaonIdx(kIdx), mPionIdx(pIdx)
 {
-  clear();
-  if (!kaon || !pion) return;
+  if (!kaon || !pion) 
+  {
+    clear();
+    return;
+  }
+
+  if (kaon->id() == pion->id())
+  {
+    clear();
+    return;
+  }
 
   StLorentzVectorF kFourMom(kaon->pMom(),kaon->pMom().massHypothesis(KAONMASS));
   StLorentzVectorF pFourMom(pion->pMom(),pion->pMom().massHypothesis(PIONMASS));
