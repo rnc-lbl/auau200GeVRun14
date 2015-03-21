@@ -98,6 +98,9 @@ StKaonPion::~StKaonPion()
 //------------------------------------
 void StKaonPion::clear()
 {
+  // this is the fastest way to re-initialize all variables of mLorentzVector
+  mLorentzVector = StLorentzVectorF();
+
   mPointingAngle = std::numeric_limits<float>::quiet_NaN();
   mDecayLength = std::numeric_limits<float>::quiet_NaN();
   mKaonDca = std::numeric_limits<float>::quiet_NaN();
