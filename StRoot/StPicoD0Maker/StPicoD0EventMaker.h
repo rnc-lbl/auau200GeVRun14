@@ -2,19 +2,19 @@
 #define StPicoD0EventMaker_h
 
 #include "StMaker.h"
-#include "StPicoD0Event.h"
 
+class TTree;
+class TFile;
 class StPicoDst;
 class StPicoDstMaker;
+class StPicoEvent;
 class StPicoTrack;
-class TString;
-class TH1F;
-class TFile;
+class StPicoD0Event;
 
 class StPicoD0EventMaker : public StMaker 
 {
   public:
-    StPicoD0EventMaker(const char *name, StPicoDstMaker *picoMaker, const char *outName);
+    StPicoD0EventMaker(char const* name, StPicoDstMaker const* picoMaker, char const* outName);
     virtual ~StPicoD0EventMaker();
     
     virtual Int_t Init();

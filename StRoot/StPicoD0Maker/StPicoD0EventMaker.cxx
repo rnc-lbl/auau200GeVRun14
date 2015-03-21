@@ -1,26 +1,23 @@
 #include <vector>
-#include "StPicoD0EventMaker.h"
-#include "StCuts.h"
 
-#include "StRoot/StPicoDstMaker/StPicoDst.h"
-#include "StRoot/StPicoDstMaker/StPicoTrack.h"
-#include "StRoot/StPicoDstMaker/StPicoEvent.h"
-#include "StRoot/StPicoDstMaker/StPicoDstMaker.h"
-// #include "StRoot/StPicoDstMaker/StPicoTrigger.h"
 #include "TTree.h"
+#include "TFile.h"
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
-#include "TFile.h"
+#include "../StPicoDstMaker/StPicoDst.h"
+#include "../StPicoDstMaker/StPicoDstMaker.h"
+#include "../StPicoDstMaker/StPicoEvent.h"
+#include "../StPicoDstMaker/StPicoTrack.h"
+#include "StPicoD0Event.h"
+#include "StPicoD0EventMaker.h"
+#include "StCuts.h"
 
 ClassImp(StPicoD0EventMaker)
 
 //-----------------------------------------------------------------------------
-StPicoD0EventMaker::StPicoD0EventMaker(const char* name, StPicoDstMaker *picoMaker, const char* outName)
-   : StMaker(name)
+StPicoD0EventMaker::StPicoD0EventMaker(char const* name, StPicoDstMaker const *picoMaker, char const* outName)
+   : StMaker(name), mPicoDstMaker(picoMaker), mPicoDst(NULL), mPicoEvent(NULL)
 {
-   mPicoDstMaker = picoMaker;
-   mPicoDst = 0;
-   mPicoEvent = 0;
    mPicoD0Event = new StPicoD0Event();
 
    mOutputFile = new TFile(outName, "RECREATE");
@@ -35,7 +32,8 @@ StPicoD0EventMaker::StPicoD0EventMaker(const char* name, StPicoDstMaker *picoMak
 //-----------------------------------------------------------------------------
 StPicoD0EventMaker::~StPicoD0EventMaker()
 {
-   /*  */
+   /* mTree is owned by mOutputFile directory, it will be destructed once 
+    * the file is closed in ::Finish() */
 }
 
 //-----------------------------------------------------------------------------
@@ -55,7 +53,7 @@ Int_t StPicoD0EventMaker::Finish()
 //-----------------------------------------------------------------------------
 void StPicoD0EventMaker::Clear(Option_t *opt)
 {
-   mPicoD0Event->clear();
+   mPicoD0Event->clear("C");
 }
 
 //-----------------------------------------------------------------------------
