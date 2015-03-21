@@ -79,29 +79,15 @@ Int_t StPicoD0EventMaker::Make()
       std::vector<unsigned short> idxPicoKaons;
       std::vector<unsigned short> idxPicoPions;
 
-      bool bKaon = 0;
-      bool bPion = 0;
-
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
       {
          StPicoTrack* trk = mPicoDst->track(iTrack);
 
          if (!trk || !isGoodTrack(trk)) continue;
 
-         bKaon = 0;
-         bPion = 0;
+         if (isPion(trk)) idxPicoPions.push_back(iTrack);
+         if (isKaon(trk)) idxPicoKaons.push_back(iTrack);
 
-         if (isPion(trk))
-         {
-            idxPicoPions.push_back(iTrack);
-            bPion = true;
-         }
-
-         if (isKaon(trk))
-         {
-            idxPicoKaons.push_back(iTrack);
-            bKaon = true;
-         }
       } // .. end tracks loop
 
       float const bField = mPicoEvent->bField();
@@ -159,7 +145,11 @@ bool StPicoD0EventMaker::isGoodEvent()
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodTrack(StPicoTrack* trk)
 {
-   if (trk->nHitsFit() >= cuts::nHitsFit) return true;
+  // Require at least a hit on every layer of HFT.
+  // It is done here for tests on the preview II data. 
+  // The new StPicoTrack which is used in official production has a method to check this
+   if (trk->nHitsFit() >= cuts::nHitsFit
+       && (!cuts::requireHFT || trk->nHitsMapHFT() & 0xB)) return true; 
 
    return false;
 }
