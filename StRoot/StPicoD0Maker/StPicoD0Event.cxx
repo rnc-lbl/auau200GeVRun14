@@ -9,11 +9,10 @@ ClassImp(StPicoD0Event)
 TClonesArray *StPicoD0Event::fgKaonPion = 0;
 
 //-----------------------------------------------------------------------
-StPicoD0Event::StPicoD0Event()
+StPicoD0Event::StPicoD0Event() : mRunId(-1), mEventId(-1), mNKaonPion(0), mKaonPion(NULL)
 {
   if (!fgKaonPion) fgKaonPion = new TClonesArray("StKaonPion");
   mKaonPion = fgKaonPion; 
-  mNKaonPion = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -28,6 +27,7 @@ void StPicoD0Event::addPicoEvent(StPicoEvent const & picoEvent)
 void StPicoD0Event::clear(char const *option)
 {
   mKaonPion->Clear(option);
+  mRunId = 0;
   mNKaonPion = 0;
 }
 //---------------------------------------------------------------------
