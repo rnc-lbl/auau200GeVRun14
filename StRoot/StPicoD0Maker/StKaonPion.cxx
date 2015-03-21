@@ -10,7 +10,6 @@
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
 #include "StPicoDstMaker/StPicoTrack.h"
-#include "StPicoDstMaker/StPicoConstants.h"
 
 ClassImp(StKaonPion)
   
