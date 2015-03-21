@@ -28,7 +28,8 @@ void StPicoD0Event::clear(char const *option)
 {
   mKaonPionArray->Clear(option);
   mRunId = -1;
-  mNKaonPion = -1;
+  mEventId = -1;
+  mNKaonPion = 0;
 }
 //---------------------------------------------------------------------
 void StPicoD0Event::addKaonPion(StKaonPion* t)
