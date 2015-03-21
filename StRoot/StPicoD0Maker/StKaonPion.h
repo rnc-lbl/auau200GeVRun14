@@ -30,7 +30,9 @@ class StKaonPion : public TObject
   StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
           
  private:
-  StKaonPion& operator=(StKaonPion const &); // disable assignment operator (once C++11 is available in STAR you can use delete specifier instead)
+  // disable copy constructor and assignment operator by making them private (once C++11 is available in STAR you can use delete specifier instead)
+  StKaonPion(StKaonPion const &);
+  StKaonPion& operator=(StKaonPion const &);
   StLorentzVectorF mLorentzVector; // this owns four float only
 
   float mPointingAngle;
