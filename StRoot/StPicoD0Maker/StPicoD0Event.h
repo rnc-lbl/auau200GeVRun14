@@ -17,19 +17,18 @@ public:
    void    addPicoEvent(StPicoEvent const & picoEvent);
    void    addKaonPion(StKaonPion*);
 
-   // while ROOT types are not necessary here they are used for consistency with StPicoDst
-   TClonesArray* kaonPion()   const { return mKaonPion;}
-   Int_t         nKaonPion()  const { return mNKaonPion;}
+   TClonesArray const * kaonPion()   const { return mKaonPion;}
+   int         nKaonPion()  const { return mNKaonPion;}
 
    // for variables from StPicoEvent
    Int_t   runId()   const { return mRunId; }
    Int_t   eventId() const { return mEventId; }
 
 private:
-   // variables from StPicoEvent
+   // some variables below are kept in ROOT types to match the same ones in StPicoEvent
    Int_t   mRunId;           // run number
    Int_t   mEventId;         // event number
-   Int_t   mNKaonPion;       // number of stored pairs
+   int   mNKaonPion;       // number of stored pairs
 
    TClonesArray*        mKaonPion;
    static TClonesArray* fgKaonPion;
