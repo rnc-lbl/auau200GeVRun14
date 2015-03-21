@@ -20,12 +20,11 @@ StKaonPion::StKaonPion()
   clear();
 }
 //------------------------------------
-StKaonPion::StKaonPion(StKaonPion const * t)
+StKaonPion::StKaonPion(StKaonPion const * t): 
+  mLorentzVector(t->mLorentzVector), mPointingAngle(t->mPointingAngle),
+  mDecayLength(t->mDecayLength), mKaonDca(t->mKaonDca), mPionDca(t->mPionDca)
+  mKaonIdx(t->mKaonIdx), mPionIdx(t->mPionIdx), mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar)
 {
-  mKaonIdx = t->mKaonIdx;
-  mPionIdx = t->mPionIdx;
-  mLorentzVector = t->mLorentzVector;
-  mCosThetaStar = t->mCosThetaStar;
 }
 //------------------------------------
 StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const pion,unsigned short const kIdx,unsigned short const pIdx, StThreeVectorF const & vtx, float const & bField) : mKaonIdx(kIdx), mPionIdx(pIdx)
