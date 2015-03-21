@@ -19,7 +19,7 @@ void testPicoD0EventRead(TString filename)
 	{
 		T->GetEntry(i);
 
-		TClonesArray* arrKPi = event->kaonPion();
+		TClonesArray* arrKPi = event->kaonPionArray();
 
 		for(int idx=0;idx<event->nKaonPion();++idx)
 		{
