@@ -41,6 +41,11 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
     return;
   }
 
+  /// prefixes code:
+  ///   k means kaon
+  ///   p means pion
+  ///   kp means kaon-pion pair
+  
   StPhysicalHelixD kHelix = kaon->dcaGeometry().helix();
   StPhysicalHelixD pHelix = pion->dcaGeometry().helix();
 
@@ -49,36 +54,38 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
   pHelix.moveOrigin(pHelix.pathLength(vtx));
 
   // straight line approximation good enough!
-  StThreeVectorF kMom = kHelix.momentum(bField*kilogauss);
-  StThreeVectorF pMom = pHelix.momentum(bField*kilogauss);
-  StPhysicalHelixD kStraightLine(kMom, kHelix.origin(), 0, kaon->charge());
-  StPhysicalHelixD pStraightLine(pMom, pHelix.origin(), 0, pion->charge());
+  StThreeVectorF const kMom = kHelix.momentum(bField*kilogauss);
+  StThreeVectorF const pMom = pHelix.momentum(bField*kilogauss);
+  StPhysicalHelixD const kStraightLine(kMom, kHelix.origin(), 0, kaon->charge());
+  StPhysicalHelixD const pStraightLine(pMom, pHelix.origin(), 0, pion->charge());
 
-  pair<double,double> ss = kStraightLine.pathLengths(pStraightLine);
-  StThreeVectorF kAtDcaToPion = kStraightLine.at(ss.first);
-  StThreeVectorF pAtDcaToKaon = pStraightLine.at(ss.second);
+  pair<double,double> const ss = kStraightLine.pathLengths(pStraightLine);
+  StThreeVectorF const kAtDcaToPion = kStraightLine.at(ss.first);
+  StThreeVectorF const pAtDcaToKaon = pStraightLine.at(ss.second);
 
-  float dcaDaughters = (kAtDcaToPion - pAtDcaToKaon).mag();
+  // calculate DCA of kaon and pion at DCA
+  float const dcaDaughters = (kAtDcaToPion - pAtDcaToKaon).mag();
   mDcaDaughters = (dcaDaughters*10000.) > std::numeric_limits<unsigned short>::max() ? 
     std::numeric_limits<unsigned short>::max() : static_cast<unsigned short>(std::round(mDcaDaughters*10000.));
 
-  StThreeVectorF kMomAtDca = kHelix.momentumAt(ss.first,bField*kilogauss);
-  StThreeVectorF pMomAtDca = pHelix.momentumAt(ss.second,bField*kilogauss);
+  // calculate Lorentz vector of kaon-pion pair
+  StThreeVectorF const kMomAtDca = kHelix.momentumAt(ss.first,bField*kilogauss);
+  StThreeVectorF const pMomAtDca = pHelix.momentumAt(ss.second,bField*kilogauss);
 
-  StLorentzVectorF kFourMom(kMomAtDca,kMomAtDca.massHypothesis(M_KAON_PLUS));
-  StLorentzVectorF pFourMom(pMomAtDca,pMomAtDca.massHypothesis(M_PION_PLUS));
+  StLorentzVectorF const kFourMom(kMomAtDca,kMomAtDca.massHypothesis(M_KAON_PLUS));
+  StLorentzVectorF const pFourMom(pMomAtDca,pMomAtDca.massHypothesis(M_PION_PLUS));
 
   mLorentzVector = kFourMom + pFourMom;
  
   // calculate cosThetaStar
-  StLorentzVectorF kpFourMomReverse(-mLorentzVector.px(), -mLorentzVector.py(), -mLorentzVector.pz(), mLorentzVector.e());
-  StLorentzVectorF kFourMomStar = kFourMom.boost(kpFourMomReverse);
+  StLorentzVectorF const kpFourMomReverse(-mLorentzVector.px(), -mLorentzVector.py(), -mLorentzVector.pz(), mLorentzVector.e());
+  StLorentzVectorF const kFourMomStar = kFourMom.boost(kpFourMomReverse);
   mCosThetaStar = static_cast<char>( std::round( std::cos(kFourMomStar.vect().angle(mLorentzVector.vect())) * 100. ));
 
   // calculate pointing angle and decay length
-  StThreeVectorF v0 = ( kAtDcaToPion + pAtDcaToKaon) * 0.5;
-  mPointingAngle = (v0-vtx).angle(mLorentzVector.vect());
-  mDecayLength = (v0-vtx).mag();
+  StThreeVectorF const v0ToVtx = ( kAtDcaToPion + pAtDcaToKaon) * 0.5 - vtx;
+  mPointingAngle = v0ToVtx.angle(mLorentzVector.vect());
+  mDecayLength = v0ToVtx.mag();
 
   // calculate DCA of tracks to primary vertex
   mKaonDca = (kHelix.origin() - vtx).mag();
