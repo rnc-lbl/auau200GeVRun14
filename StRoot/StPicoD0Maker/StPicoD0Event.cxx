@@ -6,13 +6,13 @@
 
 ClassImp(StPicoD0Event)
 
-TClonesArray *StPicoD0Event::fgKaonPion = 0;
+TClonesArray *StPicoD0Event::fgKaonPionArray = 0;
 
 //-----------------------------------------------------------------------
-StPicoD0Event::StPicoD0Event() : mRunId(-1), mEventId(-1), mNKaonPion(0), mKaonPion(NULL)
+StPicoD0Event::StPicoD0Event() : mRunId(-1), mEventId(-1), mNKaonPion(0), mKaonPionArray(NULL)
 {
-  if (!fgKaonPion) fgKaonPion = new TClonesArray("StKaonPion");
-  mKaonPion = fgKaonPion; 
+  if (!fgKaonPionArray) fgKaonPionArray = new TClonesArray("StKaonPion");
+  mKaonPionArray = fgKaonPionArray; 
 }
 
 //-----------------------------------------------------------------------
@@ -26,13 +26,13 @@ void StPicoD0Event::addPicoEvent(StPicoEvent const & picoEvent)
 //-----------------------------------------------------------------------
 void StPicoD0Event::clear(char const *option)
 {
-  mKaonPion->Clear(option);
-  mRunId = 0;
-  mNKaonPion = 0;
+  mKaonPionArray->Clear(option);
+  mRunId = -1;
+  mNKaonPion = -1;
 }
 //---------------------------------------------------------------------
 void StPicoD0Event::addKaonPion(StKaonPion* t)
 {
-  TClonesArray &KaonPion = *mKaonPion;
-  new(KaonPion[mNKaonPion++]) StKaonPion(t);
+  TClonesArray &kaonPionArray = *mKaonPionArray;
+  new(kaonPionArray[mNKaonPion++]) StKaonPion(t);
 }

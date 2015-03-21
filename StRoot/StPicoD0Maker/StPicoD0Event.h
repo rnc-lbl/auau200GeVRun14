@@ -17,7 +17,7 @@ public:
    void    addPicoEvent(StPicoEvent const & picoEvent);
    void    addKaonPion(StKaonPion*);
 
-   TClonesArray const * kaonPion()   const { return mKaonPion;}
+   TClonesArray const * kaonPionArray()   const { return mKaonPionArray;}
    int         nKaonPion()  const { return mNKaonPion;}
 
    // for variables from StPicoEvent
@@ -30,8 +30,8 @@ private:
    Int_t   mEventId;         // event number
    int   mNKaonPion;       // number of stored pairs
 
-   TClonesArray*        mKaonPion;
-   static TClonesArray* fgKaonPion;
+   TClonesArray*        mKaonPionArray;
+   static TClonesArray* fgKaonPionArray;
 
    ClassDef(StPicoD0Event, 1)
 };
