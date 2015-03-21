@@ -25,15 +25,22 @@ class StKaonPion : public TObject
   float pt()   const { return mLorentzVector.perp();}
   float eta()  const { return mLorentzVector.pseudoRapidity();}
   float phi()  const { return mLorentzVector.phi();}
+  float dcaDaughters() const { return static_cast<float>(mDcaDaughters)/10000.;}
   float cosThetaStar() const { return static_cast<float>(mCosThetaStar/100.);}
-  StLorentzVectorF lorentzVector() const { return mLorentzVector;}
+  StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
           
  private:
   StLorentzVectorF mLorentzVector; // this owns four float only
 
+  float mPointingAngle;
+  float mDecayLength;
+  float mKaonDca;
+  float mPionDca;
+
   unsigned short  mKaonIdx; // index of track in StPicoDstEvent
   unsigned short  mPionIdx;
 
+  unsigned short mDcaDaughters; // dcaDaughters * 10000. 1 μm precision
   char mCosThetaStar; // cosThetaStar * 100.
 
   ClassDef(StKaonPion,1)
