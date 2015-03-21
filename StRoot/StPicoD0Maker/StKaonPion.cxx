@@ -15,29 +15,35 @@
 ClassImp(StKaonPion)
   
 
-StKaonPion::StKaonPion()
-{
-  clear();
-}
-//------------------------------------
-StKaonPion::StKaonPion(StKaonPion const * t): 
-  mLorentzVector(t->mLorentzVector), mPointingAngle(t->mPointingAngle),
-  mDecayLength(t->mDecayLength), mKaonDca(t->mKaonDca), mPionDca(t->mPionDca),
-  mKaonIdx(t->mKaonIdx), mPionIdx(t->mPionIdx), mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar)
-{
-}
-//------------------------------------
-StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const pion,unsigned short const kIdx,unsigned short const pIdx, StThreeVectorF const & vtx, float const & bField) : mKaonIdx(kIdx), mPionIdx(pIdx)
-{
-  if (!kaon || !pion) 
-  {
-    clear();
-    return;
-  }
+StKaonPion::StKaonPion(): mLorentzVector(StLorentzVectorF()), 
+                       mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()), 
+                       mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()), 
+                       mKaonIdx(std::numeric_limits<unsigned short>::max()), mPionIdx(std::numeric_limits<unsigned short>::max()), 
+                       mDcaDaughters(std::numeric_limits<unsigned short>::max()), mCosThetaStar(std::numeric_limits<char>::min())
 
-  if (kaon->id() == pion->id())
+{
+}
+//------------------------------------
+StKaonPion::StKaonPion(StKaonPion const * t) : mLorentzVector(t->mLorentzVector), 
+                       mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength), 
+                       mKaonDca(t->mKaonDca), mPionDca(t->mPionDca),
+                       mKaonIdx(t->mKaonIdx), mPionIdx(t->mPionIdx), 
+                       mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar)
+{
+}
+//------------------------------------
+StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const pion,
+                       unsigned short const kIdx,unsigned short const pIdx, 
+                       StThreeVectorF const & vtx, float const & bField) : mLorentzVector(StLorentzVectorF()), 
+                       mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()), 
+                       mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()), 
+                       mKaonIdx(kIdx), mPionIdx(pIdx), 
+                       mDcaDaughters(std::numeric_limits<unsigned short>::max()), mCosThetaStar(std::numeric_limits<char>::min())
+{
+  if ((!kaon || !pion) || (kaon->id() == pion->id()))
   {
-    clear();
+    mKaonIdx = std::numeric_limits<unsigned short>::max();
+    mPionIdx = std::numeric_limits<unsigned short>::max();
     return;
   }
 
@@ -91,25 +97,4 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
   mKaonDca = (kHelix.origin() - vtx).mag();
   mPionDca = (pHelix.origin() - vtx).mag();
 }
-//------------------------------------
-StKaonPion::~StKaonPion()
-{
-}
-//------------------------------------
-void StKaonPion::clear()
-{
-  // this is the fastest way to re-initialize all variables of mLorentzVector
-  mLorentzVector = StLorentzVectorF();
-
-  mPointingAngle = std::numeric_limits<float>::quiet_NaN();
-  mDecayLength = std::numeric_limits<float>::quiet_NaN();
-  mKaonDca = std::numeric_limits<float>::quiet_NaN();
-  mPionDca = std::numeric_limits<float>::quiet_NaN();
-
-  mKaonIdx = std::numeric_limits<unsigned short>::max();
-  mPionIdx = std::numeric_limits<unsigned short>::max();
-
-  mDcaDaughters = std::numeric_limits<unsigned short>::max();
-  mCosThetaStar = std::numeric_limits<char>::min();
-};
 #endif // __ROOT__
