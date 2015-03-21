@@ -14,7 +14,7 @@ class StPicoD0Event;
 class StPicoD0EventMaker : public StMaker 
 {
   public:
-    StPicoD0EventMaker(char const* name, StPicoDstMaker const* picoMaker, char const* outName);
+    StPicoD0EventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName);
     virtual ~StPicoD0EventMaker();
     
     virtual Int_t Init();

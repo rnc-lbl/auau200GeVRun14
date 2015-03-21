@@ -15,7 +15,7 @@
 ClassImp(StPicoD0EventMaker)
 
 //-----------------------------------------------------------------------------
-StPicoD0EventMaker::StPicoD0EventMaker(char const* name, StPicoDstMaker const *picoMaker, char const* outName)
+StPicoD0EventMaker::StPicoD0EventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName)
    : StMaker(name), mPicoDstMaker(picoMaker), mPicoDst(NULL), mPicoEvent(NULL)
 {
    mPicoD0Event = new StPicoD0Event();
