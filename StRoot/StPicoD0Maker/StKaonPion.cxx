@@ -58,7 +58,7 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
   kHelix.moveOrigin(kHelix.pathLength(vtx));
   pHelix.moveOrigin(pHelix.pathLength(vtx));
 
-  // straight line approximation good enough!
+  // use straight lines approximation to get point of DCA of kaon-pion pair
   StThreeVectorF const kMom = kHelix.momentum(bField*kilogauss);
   StThreeVectorF const pMom = pHelix.momentum(bField*kilogauss);
   StPhysicalHelixD const kStraightLine(kMom, kHelix.origin(), 0, kaon->charge());
@@ -68,7 +68,7 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
   StThreeVectorF const kAtDcaToPion = kStraightLine.at(ss.first);
   StThreeVectorF const pAtDcaToKaon = pStraightLine.at(ss.second);
 
-  // calculate DCA of kaon and pion at DCA
+  // calculate DCA of pion to kaon at their DCA
   float const dcaDaughters = (kAtDcaToPion - pAtDcaToKaon).mag();
   mDcaDaughters = (dcaDaughters*10000.) > std::numeric_limits<unsigned short>::max() ? 
     std::numeric_limits<unsigned short>::max() : static_cast<unsigned short>(std::round(mDcaDaughters*10000.));
@@ -88,9 +88,9 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
   mCosThetaStar = static_cast<char>( std::round( std::cos(kFourMomStar.vect().angle(mLorentzVector.vect())) * 100. ));
 
   // calculate pointing angle and decay length
-  StThreeVectorF const v0ToVtx = ( kAtDcaToPion + pAtDcaToKaon) * 0.5 - vtx;
-  mPointingAngle = v0ToVtx.angle(mLorentzVector.vect());
-  mDecayLength = v0ToVtx.mag();
+  StThreeVectorF const vtxToV0 = ( kAtDcaToPion + pAtDcaToKaon) * 0.5 - vtx;
+  mPointingAngle = vtxToV0.angle(mLorentzVector.vect());
+  mDecayLength = vtxToV0.mag();
 
   // calculate DCA of tracks to primary vertex
   mKaonDca = (kHelix.origin() - vtx).mag();
