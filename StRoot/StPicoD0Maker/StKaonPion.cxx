@@ -22,7 +22,7 @@ StKaonPion::StKaonPion()
 //------------------------------------
 StKaonPion::StKaonPion(StKaonPion const * t): 
   mLorentzVector(t->mLorentzVector), mPointingAngle(t->mPointingAngle),
-  mDecayLength(t->mDecayLength), mKaonDca(t->mKaonDca), mPionDca(t->mPionDca)
+  mDecayLength(t->mDecayLength), mKaonDca(t->mKaonDca), mPionDca(t->mPionDca),
   mKaonIdx(t->mKaonIdx), mPionIdx(t->mPionIdx), mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar)
 {
 }
