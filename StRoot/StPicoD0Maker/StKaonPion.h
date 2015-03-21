@@ -14,8 +14,8 @@ class StKaonPion : public TObject
  public:
   StKaonPion();
   StKaonPion(StKaonPion const *);
-  StKaonPion(StPicoTrack const * const, StPicoTrack const * const ,unsigned short const,unsigned short const,
-             StThreeVectorF const &, float const &);
+  StKaonPion(StPicoTrack const * kaon, StPicoTrack const * pion,unsigned short kIdx,unsigned short pIdx,
+             StThreeVectorF const & vtx, float bField);
   ~StKaonPion() {}// please keep this non-virtual and NEVER inherit from this class 
 
   unsigned short   kaonIdx() const { return mKaonIdx;}
