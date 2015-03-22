@@ -139,7 +139,7 @@ bool StPicoD0EventMaker::isGoodEvent()
    return true;
 }
 //-----------------------------------------------------------------------------
-bool StPicoD0EventMaker::isGoodTrack(StPicoTrack* trk)
+bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
   // Require at least a hit on every layer of HFT.
   // It is done here for tests on the preview II data. 
@@ -150,7 +150,7 @@ bool StPicoD0EventMaker::isGoodTrack(StPicoTrack* trk)
    return false;
 }
 //-----------------------------------------------------------------------------
-bool StPicoD0EventMaker::isPion(StPicoTrack* trk)
+bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk) const
 {
    // no cut on Eta because the soft pion can have any eta
    if (trk->pMom().perp() >= cuts::pionPt && fabs(trk->nSigmaPion()) < cuts::nSigmaPion) return true;
@@ -158,7 +158,7 @@ bool StPicoD0EventMaker::isPion(StPicoTrack* trk)
    return false;
 }
 //-----------------------------------------------------------------------------
-bool StPicoD0EventMaker::isKaon(StPicoTrack* trk)
+bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk) const
 {
    if (trk->pMom().perp() >= cuts::kaonPt  && fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon
          && fabs(trk->pMom().pseudoRapidity()) < cuts::kaonEta) return true;
@@ -166,7 +166,7 @@ bool StPicoD0EventMaker::isKaon(StPicoTrack* trk)
    return false;
 }
 //-----------------------------------------------------------------------------
-float StPicoD0EventMaker::getTofBeta(StPicoTrack const * trk)
+float StPicoD0EventMaker::getTofBeta(StPicoTrack const * const trk) const
 {
   if(Int_t index2tof = trk->bTofPidTraitsIndex() >= 0)
   {
