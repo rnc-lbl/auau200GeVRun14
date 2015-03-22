@@ -11,9 +11,11 @@ void testPicoD0EventRead(TString filename)
 	StPicoD0Event* event = new StPicoD0Event();
 	T->SetBranchAddress("dEvent",&event);
 
-	// TFile ff("read_test.root","RECREATE");
+	TFile ff("read_test.root","RECREATE");
+  TNtuple* nt = new TNtuple("nt","","m:pt:eta:phi:theta:"
+                                     "decayL:kDca:pDca:dca12:cosThetaStar");
 
-	StKaonPion* pp = 0;
+	StKaonPion* kp = 0;
 
 	for(Int_t i=0;i<100000;i++)
 	{
@@ -23,11 +25,13 @@ void testPicoD0EventRead(TString filename)
 
 		for(int idx=0;idx<event->nKaonPion();++idx)
 		{
-			pp = (StKaonPion*)arrKPi->At(idx);
+			kp = (StKaonPion*)arrKPi->At(idx);
 
-      cout<<pp->m()<<endl;
+      nt->Fill(kp->m(),kp->pt(),kp->eta(),kp->phi(),kp->poitingAngle(),
+              kp->decayLength(),kp->kaonDca(),kp->pionDca(),kp->dcaDaughters(),kp->cosThetaStar());
 		}
 	}
 
-	// ff.Close();
+  nt->Write();
+	ff.Close();
 }
