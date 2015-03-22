@@ -15,14 +15,14 @@ public:
    ~StPicoD0Event(){ clear("C");}
    void    clear(char const *option = "");
    void    addPicoEvent(StPicoEvent const & picoEvent);
-   void    addKaonPion(StKaonPion*);
+   void    addKaonPion(StKaonPion const*);
 
    TClonesArray const * kaonPionArray()   const { return mKaonPionArray;}
-   int         nKaonPion()  const { return mNKaonPion;}
+   int         nKaonPion()  const;
 
    // for variables from StPicoEvent
-   Int_t   runId()   const { return mRunId; }
-   Int_t   eventId() const { return mEventId; }
+   Int_t   runId()   const;
+   Int_t   eventId() const;
 
 private:
    // some variables below are kept in ROOT types to match the same ones in StPicoEvent
@@ -36,4 +36,7 @@ private:
    ClassDef(StPicoD0Event, 1)
 };
 
+inline int   StPicoD0Event::nKaonPion()  const { return mNKaonPion;}
+inline Int_t StPicoD0Event::runId()   const { return mRunId; }
+inline Int_t StPicoD0Event::eventId() const { return mEventId; }
 #endif
