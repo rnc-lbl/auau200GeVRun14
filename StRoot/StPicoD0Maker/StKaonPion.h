@@ -18,15 +18,19 @@ class StKaonPion : public TObject
              StThreeVectorF const & vtx, float bField);
   ~StKaonPion() {}// please keep this non-virtual and NEVER inherit from this class 
 
-  unsigned short   kaonIdx() const { return mKaonIdx;}
-  unsigned short   pionIdx() const { return mPionIdx;}
-  float m()    const { return mLorentzVector.m();}
-  float pt()   const { return mLorentzVector.perp();}
-  float eta()  const { return mLorentzVector.pseudoRapidity();}
-  float phi()  const { return mLorentzVector.phi();}
-  float dcaDaughters() const { return static_cast<float>(mDcaDaughters)/10000.;}
-  float cosThetaStar() const { return static_cast<float>(mCosThetaStar/100.);}
   StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
+  float m()    const;
+  float pt()   const;
+  float eta()  const;
+  float phi()  const;
+  float poitingAngle() const;
+  float decayLength() const;
+  float kaonDca() const;
+  float pionDca() const;
+  unsigned short   kaonIdx() const;
+  unsigned short   pionIdx() const;
+  float dcaDaughters() const;
+  float cosThetaStar() const;
           
  private:
   // disable copy constructor and assignment operator by making them private (once C++11 is available in STAR you can use delete specifier instead)
@@ -48,6 +52,18 @@ class StKaonPion : public TObject
   ClassDef(StKaonPion,1)
 };
 
+inline float StKaonPion::m()    const { return mLorentzVector.m();}
+inline float StKaonPion::pt()   const { return mLorentzVector.perp();}
+inline float StKaonPion::eta()  const { return mLorentzVector.pseudoRapidity();}
+inline float StKaonPion::phi()  const { return mLorentzVector.phi();}
+inline float StKaonPion::poitingAngle() const { return mPointingAngle;}
+inline float StKaonPion::decayLength() const { return mDecayLength;}
+inline float StKaonPion::kaonDca() const { return mKaonDca;}
+inline float StKaonPion::pionDca() const { return mPionDca;}
+inline unsigned short   StKaonPion::kaonIdx() const { return mKaonIdx;}
+inline unsigned short   StKaonPion::pionIdx() const { return mPionIdx;}
+inline float StKaonPion::dcaDaughters() const { return static_cast<float>(mDcaDaughters)/10000.;}
+inline float StKaonPion::cosThetaStar() const { return static_cast<float>(mCosThetaStar/100.);}
 
 #endif
 #endif
