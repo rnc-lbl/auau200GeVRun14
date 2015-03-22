@@ -105,16 +105,11 @@ Int_t StPicoD0EventMaker::Make()
             StPicoTrack* pion = mPicoDst->track(idxPicoPions[ip]);
             if (pion->pMom().perp() <= 0.2 || fabs(pion->pMom().pseudoRapidity()) >= cuts::pionEta) continue; // for the Kπ pair we need both to have pT>0.2
 
-            StKaonPion* kaonPion = new StKaonPion(kaon, pion,idxPicoKaons[ik],idxPicoPions[ip],pVtx,bField);
+            StKaonPion kaonPion(kaon, pion,idxPicoKaons[ik],idxPicoPions[ip],pVtx,bField);
 
-            if (kaonPion->m() <= 0.48 || kaonPion->m() > 2.5)
-            {
-               delete kaonPion;
-               continue;
-            }
+            if (kaonPion.m() <= 0.48 || kaonPion.m() > 2.5) continue;
 
-            mPicoD0Event->addKaonPion(kaonPion);
-            delete kaonPion;
+            mPicoD0Event->addKaonPion(&kaonPion);
          } // .. end make Kπ pairs
       } // .. end of kaons loop
 
