@@ -11,16 +11,19 @@ namespace cuts
 	int const nHitsFit = 20;
   bool const requireHFT = true;
 	float const nHitsFitnHitsMax = 0.52; // applied in StPicoDstMaker for Run14 data, no need to reapply here
-	float const dca = 2.0;
 
 	//pions 
 	float const nSigmaPion = 3.0;
 	float const pionPt = 0.2;
-	float const pionEta = 1.0;
 
 	//kaons 
 	float const nSigmaKaon = 2.0;
 	float const kaonPt = 0.2;
-	float const kaonEta = 1.0;
+
+  // kaonPion pair cuts
+  float const dcaDaughters = 0.0200; // maximum
+  float const decayLength = 0.0030; // minimum
+  float const minMass = 1.6;
+  float const maxMass = 2.1;
 }
 #endif

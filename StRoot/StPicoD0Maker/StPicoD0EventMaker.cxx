@@ -86,8 +86,10 @@ Int_t StPicoD0EventMaker::Make()
 
          if (!trk || !isGoodTrack(trk)) continue;
 
-         if (isPion(trk)) idxPicoPions.push_back(iTrack);
-         if (isKaon(trk)) idxPicoKaons.push_back(iTrack);
+         float const beta = getTofBeta(trk);
+
+         if (isPion(trk,beta)) idxPicoPions.push_back(iTrack);
+         if (isKaon(trk,beta)) idxPicoKaons.push_back(iTrack);
 
       } // .. end tracks loop
 
@@ -96,29 +98,29 @@ Int_t StPicoD0EventMaker::Make()
 
       for (unsigned short ik = 0; ik < idxPicoKaons.size(); ++ik)
       {
-         StPicoTrack* kaon = mPicoDst->track(idxPicoKaons[ik]);
+         StPicoTrack const * kaon = mPicoDst->track(idxPicoKaons[ik]);
 
          // make Kπ pairs
          for (unsigned short ip = 0; ip < idxPicoPions.size(); ++ip)
          {
             if (idxPicoKaons[ik] == idxPicoPions[ip]) continue;
 
-            StPicoTrack* pion = mPicoDst->track(idxPicoPions[ip]);
-            if (pion->pMom().perp() <= 0.2 || fabs(pion->pMom().pseudoRapidity()) >= cuts::pionEta) continue; // for the Kπ pair we need both to have pT>0.2
+            StPicoTrack const * pion = mPicoDst->track(idxPicoPions[ip]);
 
             StKaonPion kaonPion(kaon, pion,idxPicoKaons[ik],idxPicoPions[ip],pVtx,bField);
 
-            if (kaonPion.m() <= 0.48 || kaonPion.m() > 2.5) continue;
+            if (!isGoodPair(kaonPion)) continue;
 
             mPicoD0Event->addKaonPion(&kaonPion);
          } // .. end make Kπ pairs
       } // .. end of kaons loop
 
-
       idxPicoKaons.clear();
       idxPicoPions.clear();
    } //.. end of good event fill
 
+   // This should never be inside the good event block
+   // because we want to save information about all events, good or bad
    mTree->Fill();
    mPicoD0Event->clear("C");
 
@@ -141,7 +143,7 @@ bool StPicoD0EventMaker::isGoodEvent()
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
-  // Require at least a hit on every layer of HFT.
+  // Require at least one hit on every layer of PXL and IST.
   // It is done here for tests on the preview II data. 
   // The new StPicoTrack which is used in official production has a method to check this
    if (trk->nHitsFit() >= cuts::nHitsFit
@@ -150,7 +152,7 @@ bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
    return false;
 }
 //-----------------------------------------------------------------------------
-bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk) const
+bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk, float const & bTofBeta) const
 {
    // no cut on Eta because the soft pion can have any eta
    if (trk->pMom().perp() >= cuts::pionPt && fabs(trk->nSigmaPion()) < cuts::nSigmaPion) return true;
@@ -158,21 +160,30 @@ bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk) const
    return false;
 }
 //-----------------------------------------------------------------------------
-bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk) const
+bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk, float const & bTofBeta) const
 {
-   if (trk->pMom().perp() >= cuts::kaonPt  && fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon
-         && fabs(trk->pMom().pseudoRapidity()) < cuts::kaonEta) return true;
+   if (trk->pMom().perp() >= cuts::kaonPt  && fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon) return true;
 
    return false;
 }
 //-----------------------------------------------------------------------------
 float StPicoD0EventMaker::getTofBeta(StPicoTrack const * const trk) const
 {
-  if(Int_t index2tof = trk->bTofPidTraitsIndex() >= 0)
+  if(Int_t const index2tof = trk->bTofPidTraitsIndex() >= 0)
   {
-      if(StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(index2tof)) 
+      if(StPicoBTofPidTraits const* tofPid = mPicoDst->btofPidTraits(index2tof)) 
         return tofPid->btofBeta();
   }
 
   return  0.;
+}
+//-----------------------------------------------------------------------------
+bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
+{
+  if(kp.dcaDaughters() <  cuts::dcaDaughters &&
+      kp.decayLength() > cuts::decayLength &&
+      kp.m() > cuts::minMass &&
+      kp.m() < cuts::maxMass) return true;
+
+  return false;
 }
