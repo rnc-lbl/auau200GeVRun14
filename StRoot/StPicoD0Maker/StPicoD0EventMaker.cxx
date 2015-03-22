@@ -8,6 +8,7 @@
 #include "../StPicoDstMaker/StPicoDstMaker.h"
 #include "../StPicoDstMaker/StPicoEvent.h"
 #include "../StPicoDstMaker/StPicoTrack.h"
+#include "../StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoD0Event.h"
 #include "StPicoD0EventMaker.h"
 #include "StCuts.h"
@@ -163,4 +164,15 @@ bool StPicoD0EventMaker::isKaon(StPicoTrack* trk)
          && fabs(trk->pMom().pseudoRapidity()) < cuts::kaonEta) return true;
 
    return false;
+}
+//-----------------------------------------------------------------------------
+float StPicoD0EventMaker::getTofBeta(StPicoTrack const * trk)
+{
+  if(Int_t index2tof = trk->bTofPidTraitsIndex() >= 0)
+  {
+      if(StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(index2tof)) 
+        return tofPid->btofBeta();
+  }
+
+  return  0.;
 }
