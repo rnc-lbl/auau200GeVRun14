@@ -80,7 +80,7 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
   // calculate DCA of pion to kaon at their DCA
   float const dcaDaughters = (kAtDcaToPion - pAtDcaToKaon).mag();
   mDcaDaughters = (dcaDaughters*10000.) > std::numeric_limits<unsigned short>::max() ? 
-    std::numeric_limits<unsigned short>::max() : static_cast<unsigned short>(std::round(mDcaDaughters*10000.));
+    std::numeric_limits<unsigned short>::max() : static_cast<unsigned short>(std::round(dcaDaughters*10000.));
 
   // calculate Lorentz vector of kaon-pion pair
   StThreeVectorF const kMomAtDca = kHelix.momentumAt(ss.first,bField*kilogauss);
