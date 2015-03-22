@@ -33,7 +33,7 @@ StPicoD0EventMaker::StPicoD0EventMaker(char const* name, StPicoDstMaker* picoMak
 //-----------------------------------------------------------------------------
 StPicoD0EventMaker::~StPicoD0EventMaker()
 {
-   /* mTree is owned by mOutputFile directory, it will be destructed once 
+   /* mTree is owned by mOutputFile directory, it will be destructed once
     * the file is closed in ::Finish() */
 }
 
@@ -88,8 +88,8 @@ Int_t StPicoD0EventMaker::Make()
 
          float const beta = getTofBeta(trk);
 
-         if (isPion(trk,beta)) idxPicoPions.push_back(iTrack);
-         if (isKaon(trk,beta)) idxPicoKaons.push_back(iTrack);
+         if (isPion(trk, beta)) idxPicoPions.push_back(iTrack);
+         if (isKaon(trk, beta)) idxPicoKaons.push_back(iTrack);
 
       } // .. end tracks loop
 
@@ -107,7 +107,7 @@ Int_t StPicoD0EventMaker::Make()
 
             StPicoTrack const * pion = mPicoDst->track(idxPicoPions[ip]);
 
-            StKaonPion kaonPion(kaon, pion,idxPicoKaons[ik],idxPicoPions[ip],pVtx,bField);
+            StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
 
             if (!isGoodPair(kaonPion)) continue;
 
@@ -143,11 +143,11 @@ bool StPicoD0EventMaker::isGoodEvent()
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
-  // Require at least one hit on every layer of PXL and IST.
-  // It is done here for tests on the preview II data. 
-  // The new StPicoTrack which is used in official production has a method to check this
+   // Require at least one hit on every layer of PXL and IST.
+   // It is done here for tests on the preview II data.
+   // The new StPicoTrack which is used in official production has a method to check this
    if (trk->nHitsFit() >= cuts::nHitsFit
-       && (!cuts::requireHFT || trk->nHitsMapHFT() & 0xB)) return true; 
+         && (!cuts::requireHFT || trk->nHitsMapHFT() & 0xB)) return true;
 
    return false;
 }
@@ -169,21 +169,21 @@ bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk, float const & bTo
 //-----------------------------------------------------------------------------
 float StPicoD0EventMaker::getTofBeta(StPicoTrack const * const trk) const
 {
-  if(Int_t const index2tof = trk->bTofPidTraitsIndex() >= 0)
-  {
-      if(StPicoBTofPidTraits const* tofPid = mPicoDst->btofPidTraits(index2tof)) 
-        return tofPid->btofBeta();
-  }
+   if (Int_t const index2tof = trk->bTofPidTraitsIndex() >= 0)
+   {
+      if (StPicoBTofPidTraits const* tofPid = mPicoDst->btofPidTraits(index2tof))
+         return tofPid->btofBeta();
+   }
 
-  return  0.;
+   return  0.;
 }
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
 {
-  if(kp.dcaDaughters() <  cuts::dcaDaughters &&
-      kp.decayLength() > cuts::decayLength &&
-      kp.m() > cuts::minMass &&
-      kp.m() < cuts::maxMass) return true;
+   if (kp.dcaDaughters() <  cuts::dcaDaughters &&
+         kp.decayLength() > cuts::decayLength &&
+         kp.m() > cuts::minMass &&
+         kp.m() < cuts::maxMass) return true;
 
-  return false;
+   return false;
 }
