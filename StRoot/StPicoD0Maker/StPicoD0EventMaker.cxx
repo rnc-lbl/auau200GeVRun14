@@ -73,6 +73,9 @@ Int_t StPicoD0EventMaker::Make()
       return kStWarn;
    }
 
+   mPicoEvent = mPicoDst->event();
+   mPicoD0Event->addPicoEvent(*mPicoEvent);
+
    if (isGoodEvent())
    {
       UInt_t nTracks = mPicoDst->numberOfTracks();
@@ -120,7 +123,7 @@ Int_t StPicoD0EventMaker::Make()
    } //.. end of good event fill
 
    // This should never be inside the good event block
-   // because we want to save information about all events, good or bad
+   // because we want to save header information about all events, good or bad
    mTree->Fill();
    mPicoD0Event->clear("C");
 
@@ -130,8 +133,6 @@ Int_t StPicoD0EventMaker::Make()
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodEvent()
 {
-   mPicoEvent = mPicoDst->event();
-   mPicoD0Event->addPicoEvent(*mPicoEvent);
 
    // cuts
    // float vz = mPicoEvent->primaryVertex().z();
