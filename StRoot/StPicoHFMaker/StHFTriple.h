@@ -1,5 +1,5 @@
-#ifndef StHFPair_hh
-#define StHFPair_hh
+#ifndef StHFTriple_hh
+#define StHFTriple_hh
 #ifdef __ROOT__
 
 #include "TObject.h"
@@ -9,16 +9,16 @@
 class StPicoTrack;
 class StPicoEvent;
 
-class StHFPair : public TObject
+class StHFTriple : public TObject
 {
  public:
-  StHFPair();
-  StHFPair(StHFPair const *);
-  StHFPair(StPicoTrack const * particle1, StPicoTrack const * particle2, 
+  StHFTriple();
+  StHFTriple(StHFTriple const *);
+  StHFTriple(StPicoTrack const * particle1, StPicoTrack const * particle2, 
 	   float particle1MassHypo, float particle2MassHypo,
 	   unsigned short particle1Idx, unsigned short particle2Idx,
 	   StThreeVectorF const & vtx, float bField);
-  ~StHFPair() {;}
+  ~StHFTriple() {;}
 
   StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
   float m()    const;
@@ -36,8 +36,8 @@ class StHFPair : public TObject
           
  private:
   // disable copy constructor and assignment operator by making them private (once C++11 is available in STAR you can use delete specifier instead)
-  StHFPair(StHFPair const &);
-  StHFPair& operator=(StHFPair const &);
+  StHFTriple(StHFTriple const &);
+  StHFTriple& operator=(StHFTriple const &);
   StLorentzVectorF mLorentzVector; // this owns four float only
 
   float mParticle1MassHypo;   // Mass hypothesis - particle 1 - M_KAON_PLUS
@@ -52,23 +52,23 @@ class StHFPair : public TObject
   unsigned short  mParticle2Idx;
 
   unsigned short mDcaDaughters; // dcaDaughters * 10000. 1 μm precision
-  char           mCosThetaStar; // cosThetaStar * 100.
+  char mCosThetaStar; // cosThetaStar * 100.
 
-  ClassDef(StHFPair,1)
+  ClassDef(StHFTriple,1)
 };
 
-inline float StHFPair::m()    const { return mLorentzVector.m();}
-inline float StHFPair::pt()   const { return mLorentzVector.perp();}
-inline float StHFPair::eta()  const { return mLorentzVector.pseudoRapidity();}
-inline float StHFPair::phi()  const { return mLorentzVector.phi();}
-inline float StHFPair::pointingAngle() const { return mPointingAngle;}
-inline float StHFPair::decayLength()   const { return mDecayLength;}
-inline float StHFPair::particle1Dca()  const { return mParticle1Dca;}
-inline float StHFPair::particle2Dca()  const { return mParticle2Dca;}
-inline unsigned short   StHFPair::particle1Idx() const { return mParticle1Idx;}
-inline unsigned short   StHFPair::particle2Idx() const { return mParticle2Idx;}
-inline float StHFPair::dcaDaughters() const { return static_cast<float>(mDcaDaughters)/10000.;}
-inline float StHFPair::cosThetaStar() const { return static_cast<float>(mCosThetaStar/100.);}
+inline float StHFTriple::m()    const { return mLorentzVector.m();}
+inline float StHFTriple::pt()   const { return mLorentzVector.perp();}
+inline float StHFTriple::eta()  const { return mLorentzVector.pseudoRapidity();}
+inline float StHFTriple::phi()  const { return mLorentzVector.phi();}
+inline float StHFTriple::pointingAngle() const { return mPointingAngle;}
+inline float StHFTriple::decayLength()   const { return mDecayLength;}
+inline float StHFTriple::particle1Dca()  const { return mParticle1Dca;}
+inline float StHFTriple::particle2Dca()  const { return mParticle2Dca;}
+inline unsigned short   StHFTriple::particle1Idx() const { return mParticle1Idx;}
+inline unsigned short   StHFTriple::particle2Idx() const { return mParticle2Idx;}
+inline float StHFTriple::dcaDaughters() const { return static_cast<float>(mDcaDaughters)/10000.;}
+inline float StHFTriple::cosThetaStar() const { return static_cast<float>(mCosThetaStar/100.);}
 
 #endif
 #endif

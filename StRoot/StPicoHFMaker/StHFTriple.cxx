@@ -2,7 +2,7 @@
 #include <cmath>
 
 #ifdef __ROOT__
-#include "StHFPair.h"
+#include "StHFTriple.h"
 
 #include "StLorentzVectorF.hh"
 #include "StThreeVectorF.hh"
@@ -12,10 +12,10 @@
 #include "SystemOfUnits.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 
-ClassImp(StHFPair)
+ClassImp(StHFTriple)
 
 
-StHFPair::StHFPair(): mLorentzVector(StLorentzVectorF()),
+StHFTriple::StHFTriple(): mLorentzVector(StLorentzVectorF()),
    mParticle1MassHypo(std::numeric_limits<float>::quiet_NaN()), mParticle2MassHypo(std::numeric_limits<float>::quiet_NaN()),
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
@@ -25,7 +25,7 @@ StHFPair::StHFPair(): mLorentzVector(StLorentzVectorF()),
 {
 }
 //------------------------------------
-StHFPair::StHFPair(StHFPair const * t) : mLorentzVector(t->mLorentzVector),
+StHFTriple::StHFTriple(StHFTriple const * t) : mLorentzVector(t->mLorentzVector),
    mParticle1MassHypo(t->mParticle1MassHypo), mParticle2MassHypo(t->mParticle2MassHypo),
    mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength),
    mParticle1Dca(t->mParticle1Dca), mParticle2Dca(t->mParticle2Dca),
@@ -34,7 +34,7 @@ StHFPair::StHFPair(StHFPair const * t) : mLorentzVector(t->mLorentzVector),
 {
 }
 //------------------------------------
-StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * const particle2,
+StHFTriple::StHFTriple(StPicoTrack const * const particle1, StPicoTrack const * const particle2,
 		   float particle1MassHypo, float particle2MassHypo,
 		   unsigned short const p1Idx, unsigned short const p2Idx,
 		   StThreeVectorF const & vtx, float const bField)  : 
