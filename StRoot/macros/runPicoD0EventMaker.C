@@ -27,8 +27,8 @@ void runPicoD0EventMaker(const Char_t *inputFile="test.list", const Char_t *outp
 
 	chain = new StChain();
 
-	StPicoDstMaker* picoMaker = new StPicoDstMaker(0,inputFile,"picoDst");
-  StPicoD0EventMaker = new StPicoD0EventMaker("ana",picoMaker,outputFile);
+	StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0,inputFile,"picoDstMaker");
+  StPicoD0EventMaker picoD0Maker = new StPicoD0EventMaker("picoD0Maker",picoDstMaker,outputFile);
 
 	chain->Init();
 	cout<<"chain->Init();"<<endl;
