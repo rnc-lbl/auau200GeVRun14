@@ -1,4 +1,5 @@
 #include <vector>
+#include <cmath>
 
 #include "TTree.h"
 #include "TFile.h"
@@ -133,13 +134,9 @@ Int_t StPicoD0EventMaker::Make()
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodEvent()
 {
-
-   // cuts
-   // float vz = mPicoEvent->primaryVertex().z();
-   // if (!(mPicoEvent->ranking() > 0)) return false;
-   // if (fabs(vz) > cuts::vz) return false;
-
-   return true;
+   return (mPicoEvent->triggerWord() & cuts::triggerWord) &&
+          fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
+          fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz;
 }
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
@@ -147,25 +144,18 @@ bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
    // Require at least one hit on every layer of PXL and IST.
    // It is done here for tests on the preview II data.
    // The new StPicoTrack which is used in official production has a method to check this
-   if (trk->nHitsFit() >= cuts::nHitsFit
-         && (!cuts::requireHFT || trk->nHitsMapHFT() & 0xB)) return true;
-
-   return false;
+   return (!cuts::requireHFT || trk->nHitsMapHFT() & 0xB) && 
+          trk->nHitsFit() >= cuts::nHitsFit;
 }
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk, float const & bTofBeta) const
 {
-   // no cut on Eta because the soft pion can have any eta
-   if (trk->pMom().perp() >= cuts::pionPt && fabs(trk->nSigmaPion()) < cuts::nSigmaPion) return true;
-
-   return false;
+   return fabs(trk->nSigmaPion()) < cuts::nSigmaPion;
 }
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk, float const & bTofBeta) const
 {
-   if (trk->pMom().perp() >= cuts::kaonPt  && fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon) return true;
-
-   return false;
+   return fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon;
 }
 //-----------------------------------------------------------------------------
 float StPicoD0EventMaker::getTofBeta(StPicoTrack const * const trk) const
@@ -181,10 +171,8 @@ float StPicoD0EventMaker::getTofBeta(StPicoTrack const * const trk) const
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
 {
-   if (kp.dcaDaughters() <  cuts::dcaDaughters &&
-         kp.decayLength() > cuts::decayLength &&
-         kp.m() > cuts::minMass &&
-         kp.m() < cuts::maxMass) return true;
-
-   return false;
+   return kp.m() > cuts::minMass && kp.m() < cuts::maxMass &&
+          std::cos(kp.pointingAngle()) > cuts::cosTheta &&
+          kp.decayLength() > cuts::decayLength &&
+          kp.dcaDaughters() < cuts::dcaDaughters;
 }
