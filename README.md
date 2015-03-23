@@ -1,6 +1,5 @@
-Author: Mustafa Mustafa, Xin Dong  
-email: mmustafa@lbl.gov, xdong@lbl.gov
+Authors: Xin Dong (xdong@lbl.gov),  
+         Mustafa Mustafa (mmustafa@lbl.gov),  
+         Jochen Thaeder (jmthader@lbl.gov)   
 
 # auau200GeVRun14
-
-Trying to add a baseclass for HF analysis
