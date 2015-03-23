@@ -23,7 +23,7 @@ class StKaonPion : public TObject
   float pt()   const;
   float eta()  const;
   float phi()  const;
-  float poitingAngle() const;
+  float pointingAngle() const;
   float decayLength() const;
   float kaonDca() const;
   float pionDca() const;
@@ -56,7 +56,7 @@ inline float StKaonPion::m()    const { return mLorentzVector.m();}
 inline float StKaonPion::pt()   const { return mLorentzVector.perp();}
 inline float StKaonPion::eta()  const { return mLorentzVector.pseudoRapidity();}
 inline float StKaonPion::phi()  const { return mLorentzVector.phi();}
-inline float StKaonPion::poitingAngle() const { return mPointingAngle;}
+inline float StKaonPion::pointingAngle() const { return mPointingAngle;}
 inline float StKaonPion::decayLength() const { return mDecayLength;}
 inline float StKaonPion::kaonDca() const { return mKaonDca;}
 inline float StKaonPion::pionDca() const { return mPionDca;}
