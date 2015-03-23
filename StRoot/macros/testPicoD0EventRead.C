@@ -17,7 +17,7 @@ void testPicoD0EventRead(TString filename)
 
 	StKaonPion* kp = 0;
 
-	for(Int_t i=0;i<100000;i++)
+	for(Int_t i=0;i<100000;++i)
 	{
 		T->GetEntry(i);
 
@@ -27,7 +27,7 @@ void testPicoD0EventRead(TString filename)
 		{
 			kp = (StKaonPion*)arrKPi->At(idx);
 
-      nt->Fill(kp->m(),kp->pt(),kp->eta(),kp->phi(),kp->poitingAngle(),
+      nt->Fill(kp->m(),kp->pt(),kp->eta(),kp->phi(),kp->pointingAngle(),
               kp->decayLength(),kp->kaonDca(),kp->pionDca(),kp->dcaDaughters(),kp->cosThetaStar());
 		}
 	}
