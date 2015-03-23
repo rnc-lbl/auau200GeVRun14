@@ -18,7 +18,7 @@ class StKaonPion : public TObject
              StThreeVectorF const & vtx, float bField);
   ~StKaonPion() {}// please keep this non-virtual and NEVER inherit from this class 
 
-  StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
+  StLorentzVectorF const & lorentzVector() const;
   float m()    const;
   float pt()   const;
   float eta()  const;
@@ -51,7 +51,7 @@ class StKaonPion : public TObject
 
   ClassDef(StKaonPion,1)
 };
-
+inline StLorentzVectorF const & StKaonPion::lorentzVector() const { return mLorentzVector;}
 inline float StKaonPion::m()    const { return mLorentzVector.m();}
 inline float StKaonPion::pt()   const { return mLorentzVector.perp();}
 inline float StKaonPion::eta()  const { return mLorentzVector.pseudoRapidity();}
