@@ -134,9 +134,9 @@ bool StPicoD0EventMaker::isGoodEvent()
    mPicoD0Event->addPicoEvent(*mPicoEvent);
 
    // cuts
-   float vz = mPicoEvent->primaryVertex().z();
-   if (!(mPicoEvent->ranking() > 0)) return false;
-   if (fabs(vz) > cuts::vz) return false;
+   // float vz = mPicoEvent->primaryVertex().z();
+   // if (!(mPicoEvent->ranking() > 0)) return false;
+   // if (fabs(vz) > cuts::vz) return false;
 
    return true;
 }
