@@ -146,12 +146,12 @@ bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
           trk->nHitsFit() >= cuts::nHitsFit;
 }
 //-----------------------------------------------------------------------------
-bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk, float const & bTofBeta) const
+bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk) const
 {
    return fabs(trk->nSigmaPion()) < cuts::nSigmaPion;
 }
 //-----------------------------------------------------------------------------
-bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk, float const & bTofBeta) const
+bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk) const
 {
    return fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon;
 }
