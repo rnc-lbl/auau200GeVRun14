@@ -12,14 +12,14 @@
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoEvent.h"
 #include "StPicoDstMaker/StPicoTrack.h"
-#include "StPicoD0Maker/StPicoD0Event.h"
-#include "StPicoD0Maker/StKaonPion.h"
+#include "StPicoD0EventMaker/StPicoD0Event.h"
+#include "StPicoD0EventMaker/StKaonPion.h"
 #include "StPicoD0AnaMaker.h"
 
 ClassImp(StPicoD0AnaMaker)
 
-StPicoD0AnaMaker::StPicoD0AnaMaker(char const * name,char const * inputFilesList, char const * outName): StMaker(name),
-   mPicoD0Event(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
+StPicoD0AnaMaker::StPicoD0AnaMaker(char const * name,char const * inputFilesList, char const * outName,StPicoDstMaker* picoDstMaker): 
+  StMaker(name),mPicoDstMaker(picoDstMaker),mPicoD0Event(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
    mOutputFile(NULL), mChain(NULL), mNtuple(NULL), mEventCounter(0)
 {}
 
@@ -71,23 +71,36 @@ Int_t StPicoD0AnaMaker::Make()
    // this line need to be moved into its own function
    mChain->GetEntry(mEventCounter++);
 
-   /*if(mPicoD0Event->eventId() != picoDst->event()->eventId())
+   if (!mPicoDstMaker)
+   {
+      LOG_WARN << " StPicoD0AnaMaker - No PicoDstMaker! Skip! " << endm;
+      return kStWarn;
+   }
+
+   StPicoDst const* picoDst = mPicoDstMaker->picoDst();
+
+   if (!picoDst)
+   {
+      LOG_WARN << "StPicoD0AnaMaker - No PicoDst! Skip! " << endm;
+      return kStWarn;
+   }
+
+   if(mPicoD0Event->eventId() != picoDst->event()->eventId())
    {
      cout<<"SOMETHING TERRIBLE JUST HAPPENED. StPicoEvent and StPicoD0Event are not in sync"<<endl;
      exit(1);
    }
-   */
 
    TClonesArray const * aKaonPion = mPicoD0Event->kaonPionArray();
 
    for (int idx = 0; idx < aKaonPion->GetEntriesFast(); ++idx)
    {
       StKaonPion const* kp = (StKaonPion*)aKaonPion->At(idx);
-      // StPicoTrack const* kaon = picoDst->track(kp->kaonIdx());
-      // StPicoTrack const* pion = picoDst->track(kp->pionIdx());
+      StPicoTrack const* kaon = picoDst->track(kp->kaonIdx());
+      StPicoTrack const* pion = picoDst->track(kp->pionIdx());
 
-      // mNtuple->Fill(kaon->pMom().perp(), pion->pMom().perp(), kaon->charge()*pion->charge(), kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
-      mNtuple->Fill(-1,-1,-1, kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
+      mNtuple->Fill(kaon->pMom().perp(), pion->pMom().perp(), kaon->charge()*pion->charge(), kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
+      // mNtuple->Fill(-1,-1,-1, kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
                     kp->decayLength(), kp->kaonDca(), kp->pionDca(), kp->dcaDaughters(), kp->cosThetaStar());
    }
 
