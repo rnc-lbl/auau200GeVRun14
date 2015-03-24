@@ -18,7 +18,7 @@ ClassImp(StPicoD0EventMaker)
 
 //-----------------------------------------------------------------------------
 StPicoD0EventMaker::StPicoD0EventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName)
-   : StMaker(name), mPicoDstMaker(picoMaker), mPicoDst(NULL), mPicoEvent(NULL)
+   : StMaker(name), mPicoDstMaker(picoMaker), mPicoEvent(NULL)
 {
    mPicoD0Event = new StPicoD0Event();
 
@@ -67,26 +67,26 @@ Int_t StPicoD0EventMaker::Make()
       return kStWarn;
    }
 
-   mPicoDst = mPicoDstMaker->picoDst();
-   if (!mPicoDst)
+   StPicoDst const * picoDst = mPicoDstMaker->picoDst();
+   if (!picoDst)
    {
       LOG_WARN << " No PicoDst! Skip! " << endm;
       return kStWarn;
    }
 
-   mPicoEvent = mPicoDst->event();
+   mPicoEvent = picoDst->event();
    mPicoD0Event->addPicoEvent(*mPicoEvent);
 
    if (isGoodEvent())
    {
-      UInt_t nTracks = mPicoDst->numberOfTracks();
+      UInt_t nTracks = picoDst->numberOfTracks();
 
       std::vector<unsigned short> idxPicoKaons;
       std::vector<unsigned short> idxPicoPions;
 
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
       {
-         StPicoTrack* trk = mPicoDst->track(iTrack);
+         StPicoTrack* trk = picoDst->track(iTrack);
 
          if (!trk || !isGoodTrack(trk)) continue;
 
@@ -100,14 +100,14 @@ Int_t StPicoD0EventMaker::Make()
 
       for (unsigned short ik = 0; ik < idxPicoKaons.size(); ++ik)
       {
-         StPicoTrack const * kaon = mPicoDst->track(idxPicoKaons[ik]);
+         StPicoTrack const * kaon = picoDst->track(idxPicoKaons[ik]);
 
          // make Kπ pairs
          for (unsigned short ip = 0; ip < idxPicoPions.size(); ++ip)
          {
             if (idxPicoKaons[ik] == idxPicoPions[ip]) continue;
 
-            StPicoTrack const * pion = mPicoDst->track(idxPicoPions[ip]);
+            StPicoTrack const * pion = picoDst->track(idxPicoPions[ip]);
 
             StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
 
