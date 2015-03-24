@@ -23,7 +23,7 @@ void runPicoD0EventMaker(const Char_t *inputFile="test.list", const Char_t *outp
 	loadSharedLibraries();
 
 	gSystem->Load("StPicoDstMaker");
-  gSystem->Load("StPicoD0Maker");
+  gSystem->Load("StPicoD0EventMaker");
 
 	chain = new StChain();
 
