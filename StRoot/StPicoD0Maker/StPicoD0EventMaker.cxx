@@ -1,4 +1,5 @@
 #include <vector>
+#include <cmath>
 
 #include "TTree.h"
 #include "TFile.h"
@@ -73,6 +74,9 @@ Int_t StPicoD0EventMaker::Make()
       return kStWarn;
    }
 
+   mPicoEvent = mPicoDst->event();
+   mPicoD0Event->addPicoEvent(*mPicoEvent);
+
    if (isGoodEvent())
    {
       UInt_t nTracks = mPicoDst->numberOfTracks();
@@ -86,10 +90,8 @@ Int_t StPicoD0EventMaker::Make()
 
          if (!trk || !isGoodTrack(trk)) continue;
 
-         float const beta = getTofBeta(trk);
-
-         if (isPion(trk, beta)) idxPicoPions.push_back(iTrack);
-         if (isKaon(trk, beta)) idxPicoKaons.push_back(iTrack);
+         if (isPion(trk)) idxPicoPions.push_back(iTrack);
+         if (isKaon(trk)) idxPicoKaons.push_back(iTrack);
 
       } // .. end tracks loop
 
@@ -120,7 +122,7 @@ Int_t StPicoD0EventMaker::Make()
    } //.. end of good event fill
 
    // This should never be inside the good event block
-   // because we want to save information about all events, good or bad
+   // because we want to save header information about all events, good or bad
    mTree->Fill();
    mPicoD0Event->clear("C");
 
@@ -130,15 +132,9 @@ Int_t StPicoD0EventMaker::Make()
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodEvent()
 {
-   mPicoEvent = mPicoDst->event();
-   mPicoD0Event->addPicoEvent(*mPicoEvent);
-
-   // cuts
-   float vz = mPicoEvent->primaryVertex().z();
-   if (!(mPicoEvent->ranking() > 0)) return false;
-   if (fabs(vz) > cuts::vz) return false;
-
-   return true;
+   return (mPicoEvent->triggerWord() & cuts::triggerWord) &&
+          fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
+          fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz;
 }
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
@@ -146,44 +142,24 @@ bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
    // Require at least one hit on every layer of PXL and IST.
    // It is done here for tests on the preview II data.
    // The new StPicoTrack which is used in official production has a method to check this
-   if (trk->nHitsFit() >= cuts::nHitsFit
-         && (!cuts::requireHFT || trk->nHitsMapHFT() & 0xB)) return true;
-
-   return false;
+   return (!cuts::requireHFT || trk->nHitsMapHFT() & 0xB) && 
+          trk->nHitsFit() >= cuts::nHitsFit;
 }
 //-----------------------------------------------------------------------------
-bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk, float const & bTofBeta) const
+bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk) const
 {
-   // no cut on Eta because the soft pion can have any eta
-   if (trk->pMom().perp() >= cuts::pionPt && fabs(trk->nSigmaPion()) < cuts::nSigmaPion) return true;
-
-   return false;
+   return fabs(trk->nSigmaPion()) < cuts::nSigmaPion;
 }
 //-----------------------------------------------------------------------------
-bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk, float const & bTofBeta) const
+bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk) const
 {
-   if (trk->pMom().perp() >= cuts::kaonPt  && fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon) return true;
-
-   return false;
-}
-//-----------------------------------------------------------------------------
-float StPicoD0EventMaker::getTofBeta(StPicoTrack const * const trk) const
-{
-   if (Int_t const index2tof = trk->bTofPidTraitsIndex() >= 0)
-   {
-      if (StPicoBTofPidTraits const* tofPid = mPicoDst->btofPidTraits(index2tof))
-         return tofPid->btofBeta();
-   }
-
-   return  0.;
+   return fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon;
 }
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
 {
-   if (kp.dcaDaughters() <  cuts::dcaDaughters &&
-         kp.decayLength() > cuts::decayLength &&
-         kp.m() > cuts::minMass &&
-         kp.m() < cuts::maxMass) return true;
-
-   return false;
+   return kp.m() > cuts::minMass && kp.m() < cuts::maxMass &&
+          std::cos(kp.pointingAngle()) > cuts::cosTheta &&
+          kp.decayLength() > cuts::decayLength &&
+          kp.dcaDaughters() < cuts::dcaDaughters;
 }

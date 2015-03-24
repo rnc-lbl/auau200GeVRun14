@@ -18,12 +18,12 @@ class StKaonPion : public TObject
              StThreeVectorF const & vtx, float bField);
   ~StKaonPion() {}// please keep this non-virtual and NEVER inherit from this class 
 
-  StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
+  StLorentzVectorF const & lorentzVector() const;
   float m()    const;
   float pt()   const;
   float eta()  const;
   float phi()  const;
-  float poitingAngle() const;
+  float pointingAngle() const;
   float decayLength() const;
   float kaonDca() const;
   float pionDca() const;
@@ -51,12 +51,12 @@ class StKaonPion : public TObject
 
   ClassDef(StKaonPion,1)
 };
-
+inline StLorentzVectorF const & StKaonPion::lorentzVector() const { return mLorentzVector;}
 inline float StKaonPion::m()    const { return mLorentzVector.m();}
 inline float StKaonPion::pt()   const { return mLorentzVector.perp();}
 inline float StKaonPion::eta()  const { return mLorentzVector.pseudoRapidity();}
 inline float StKaonPion::phi()  const { return mLorentzVector.phi();}
-inline float StKaonPion::poitingAngle() const { return mPointingAngle;}
+inline float StKaonPion::pointingAngle() const { return mPointingAngle;}
 inline float StKaonPion::decayLength() const { return mDecayLength;}
 inline float StKaonPion::kaonDca() const { return mKaonDca;}
 inline float StKaonPion::pionDca() const { return mPionDca;}

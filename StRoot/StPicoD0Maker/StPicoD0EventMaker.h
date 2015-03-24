@@ -26,10 +26,9 @@ class StPicoD0EventMaker : public StMaker
   private:
     bool  isGoodEvent();
     bool  isGoodTrack(StPicoTrack const*) const;
-    bool  isPion(StPicoTrack const*, float const & bTofBeta) const;
-    bool  isKaon(StPicoTrack const*, float const & bTofBeta) const;
+    bool  isPion(StPicoTrack const*) const;
+    bool  isKaon(StPicoTrack const*) const;
     bool  isGoodPair(StKaonPion const &) const;
-    float getTofBeta(StPicoTrack const*) const;
 
     StPicoDstMaker* mPicoDstMaker;
     StPicoDst*      mPicoDst;
