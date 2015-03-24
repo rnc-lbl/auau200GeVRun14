@@ -90,10 +90,8 @@ Int_t StPicoD0EventMaker::Make()
 
          if (!trk || !isGoodTrack(trk)) continue;
 
-         float const beta = getTofBeta(trk);
-
-         if (isPion(trk, beta)) idxPicoPions.push_back(iTrack);
-         if (isKaon(trk, beta)) idxPicoKaons.push_back(iTrack);
+         if (isPion(trk)) idxPicoPions.push_back(iTrack);
+         if (isKaon(trk)) idxPicoKaons.push_back(iTrack);
 
       } // .. end tracks loop
 
@@ -156,17 +154,6 @@ bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk, float const & bTo
 bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk, float const & bTofBeta) const
 {
    return fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon;
-}
-//-----------------------------------------------------------------------------
-float StPicoD0EventMaker::getTofBeta(StPicoTrack const * const trk) const
-{
-   if (Int_t const index2tof = trk->bTofPidTraitsIndex() >= 0)
-   {
-      if (StPicoBTofPidTraits const* tofPid = mPicoDst->btofPidTraits(index2tof))
-         return tofPid->btofBeta();
-   }
-
-   return  0.;
 }
 //-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
