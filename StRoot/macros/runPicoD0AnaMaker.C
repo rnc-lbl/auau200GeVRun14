@@ -8,8 +8,8 @@ void runPicoD0AnaMaker(TString d0list,TString picolist,TString outFileName)
 	gSystem->Load("StPicoD0AnaMaker");
 
   chain = new StChain();
-	// StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0,inputFile,"picoDstMaker");
-	StPicoD0AnaMaker*  picoD0AnaMaker = new StPicoD0AnaMaker("picoD0AnaMaker",d0list,outFileName.Data());
+	StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0,picolist,"picoDstMaker");
+	StPicoD0AnaMaker*  picoD0AnaMaker = new StPicoD0AnaMaker("picoD0AnaMaker",d0list,outFileName.Data(),picoDstMaker);
 
   chain->Init();
   int nEntries = picoD0AnaMaker->getEntries();
