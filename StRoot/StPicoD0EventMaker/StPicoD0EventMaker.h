@@ -5,7 +5,6 @@
 
 class TTree;
 class TFile;
-class StPicoDst;
 class StPicoDstMaker;
 class StPicoEvent;
 class StPicoTrack;
@@ -31,7 +30,6 @@ class StPicoD0EventMaker : public StMaker
     bool  isGoodPair(StKaonPion const &) const;
 
     StPicoDstMaker* mPicoDstMaker;
-    StPicoDst*      mPicoDst;
     StPicoEvent*    mPicoEvent;
     
     TFile* mOutputFile;
