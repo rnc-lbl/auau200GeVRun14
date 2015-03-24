@@ -8,11 +8,12 @@ class TString;
 class TFile;
 class TNtuple;
 class StPicoD0Event;
+class StPicoDstMaker;
 
 class StPicoD0AnaMaker : public StMaker
 {
   public:
-    StPicoD0AnaMaker(char const * name, char const * inputFilesList, char const * outName);
+    StPicoD0AnaMaker(char const * name, char const * inputFilesList, char const * outName,StPicoDstMaker* picoDstMaker);
     virtual ~StPicoD0AnaMaker();
 
     virtual Int_t Init();
@@ -24,7 +25,9 @@ class StPicoD0AnaMaker : public StMaker
   private:
     StPicoD0AnaMaker() {}
 
+    StPicoDstMaker* mPicoDstMaker;
     StPicoD0Event* mPicoD0Event;
+
     TString mOutFileName;
     TString mInputFileList;
     TFile* mOutputFile;
