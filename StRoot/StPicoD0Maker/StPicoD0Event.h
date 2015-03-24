@@ -17,7 +17,7 @@ public:
    void    addPicoEvent(StPicoEvent const & picoEvent);
    void    addKaonPion(StKaonPion const*);
 
-   TClonesArray const * kaonPionArray()   const { return mKaonPionArray;}
+   TClonesArray const * kaonPionArray()   const;
    int         nKaonPion()  const;
 
    // for variables from StPicoEvent
@@ -36,6 +36,7 @@ private:
    ClassDef(StPicoD0Event, 1)
 };
 
+inline TClonesArray const * StPicoD0Event::kaonPionArray()   const { return mKaonPionArray;}
 inline int   StPicoD0Event::nKaonPion()  const { return mNKaonPion;}
 inline Int_t StPicoD0Event::runId()   const { return mRunId; }
 inline Int_t StPicoD0Event::eventId() const { return mEventId; }
