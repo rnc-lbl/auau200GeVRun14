@@ -9,7 +9,7 @@ namespace cuts
    float const vzVpdVz = 3.0; // 3 cm.
 
    //tracking
-   int const nHitsFit = 20;
+   int const nHitsFit = 15;
    bool const requireHFT = true;
 
    //pions
