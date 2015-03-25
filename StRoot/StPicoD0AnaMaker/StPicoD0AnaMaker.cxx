@@ -110,3 +110,18 @@ Int_t StPicoD0AnaMaker::Make()
 
    return kStOK;
 }
+//-----------------------------------------------------------------------------
+bool StPicoD0AnaMaker::isGoodPair(StKaonPion const* const kp) const
+{
+  if(!kp) return false;
+
+  StPicoTrack const* kaon = mPicoDstMaker->picoDst()->track(kp->kaonIdx());
+  StPicoTrack const* pion = mPicoDstMaker->picoDst()->track(kp->pionIdx());
+
+  return fabs(kaon->nSigmaKaon()) < cuts::nSigmaKaon &&
+         fabs(pion->nSigmaPion()) < cuts::nSigmaPion && 
+         kp.m() > cuts::minMass && kp.m() < cuts::maxMass &&
+         std::cos(kp.pointingAngle()) > cuts::cosTheta &&
+         kp.decayLength() > cuts::decayLength &&
+         kp.dcaDaughters() < cuts::dcaDaughters;
+}

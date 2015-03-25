@@ -27,6 +27,8 @@ class StPicoD0AnaMaker : public StMaker
     StPicoD0AnaMaker() {}
     void readNextEvent();
 
+    bool isGoodPair(StKaonPion const*) const;
+
     StPicoDstMaker* mPicoDstMaker;
     StPicoD0Event* mPicoD0Event;
 
