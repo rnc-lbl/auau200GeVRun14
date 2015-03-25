@@ -68,8 +68,7 @@ Int_t StPicoD0AnaMaker::Finish()
 //-----------------------------------------------------------------------------
 Int_t StPicoD0AnaMaker::Make()
 {
-   // this line need to be moved into its own function
-   mChain->GetEntry(mEventCounter++);
+   readNextEvent();
 
    if (!mPicoDstMaker)
    {

@@ -24,6 +24,7 @@ class StPicoD0AnaMaker : public StMaker
     
   private:
     StPicoD0AnaMaker() {}
+    void readNextEvent();
 
     StPicoDstMaker* mPicoDstMaker;
     StPicoD0Event* mPicoD0Event;
@@ -42,4 +43,10 @@ inline int StPicoD0AnaMaker::getEntries() const
 {
   return mChain? mChain->GetEntriesFast() : 0;
 }
+
+inline void StPicoD0AnaMaker::readNextEvent()
+{
+  mChain->GetEntry(mEventCounter++);
+}
+
 #endif
