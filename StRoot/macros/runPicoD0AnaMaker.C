@@ -4,7 +4,7 @@ void runPicoD0AnaMaker(TString d0list,TString picolist,TString outFileName)
 	loadSharedLibraries();
 
 	gSystem->Load("StPicoDstMaker");
-	gSystem->Load("StPicoD0Maker");
+	gSystem->Load("StPicoD0EventMaker");
 	gSystem->Load("StPicoD0AnaMaker");
 
   chain = new StChain();
