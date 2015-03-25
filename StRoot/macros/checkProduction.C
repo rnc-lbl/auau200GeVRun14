@@ -33,16 +33,16 @@ void checkProduction(TString picoFileName, TString muFileName,
       {
          if (static_cast<float>(nPicoEvents) / nMuDstEvents < numberOfEventsRatio)
          {
-            cout<<'\n';
-            cout<< "nEvents  = " << nMuDstEvents <<" and nProducedEvents = " << nPicoEvents <<endl;
-            cout << "WARNING - LOW NUMBER OF EVENTS: " << picoFileName << endl;
+            cerr<<'\n';
+            cerr<< "nEvents  = " << nMuDstEvents <<" and nProducedEvents = " << nPicoEvents <<endl;
+            cerr << "WARNING - LOW NUMBER OF EVENTS: " << picoFileName << endl;
             deleteFile(picoFileName);
             return;
          }
          else
          {
-           cout<< " FILE IS GOOD: "<<endl;
-           cout<< "nEvents  = " << nMuDstEvents <<" and nProducedEvents = " << nPicoEvents <<endl;
+           cerr<< " FILE IS GOOD: "<<endl;
+           cerr<< "nEvents  = " << nMuDstEvents <<" and nProducedEvents = " << nPicoEvents <<endl;
          }
       }
       else
@@ -53,11 +53,11 @@ void checkProduction(TString picoFileName, TString muFileName,
    }
    else if (nMuDstEvents == 0)
    {
-      cout << "MuDst FILE IS EMPTY" << endl;
+      cerr << "MuDst FILE IS EMPTY" << endl;
    }
    else
    {
-      cout << "MuDst FILE IS NOT ACCESSIBLE OR TREE DOES NOT EXIST" << endl;
+      cerr << "MuDst FILE IS NOT ACCESSIBLE OR TREE DOES NOT EXIST" << endl;
       deleteFile(picoFileName);
    }
 
@@ -67,8 +67,8 @@ void checkProduction(TString picoFileName, TString muFileName,
 void deleteFile(TString filename)
 {
    TString command = "rm -f " + filename;
-   cout<<'\n';
-   cout << command << endl;
+   cerr<<'\n';
+   cerr << command << endl;
    gSystem->Exec(command.Data());
 }
 
@@ -78,8 +78,8 @@ int getNumberOfEvents(TString filename, TString treeName)
 
    if(!file)
    {
-      cout<<'\n';
-      cout << "WARNING - CANNOT OPEN FILE: " << filename << endl;
+      cerr<<'\n';
+      cerr << "WARNING - CANNOT OPEN FILE: " << filename << endl;
       return CannotOpenFile;
 
    }
@@ -87,8 +87,8 @@ int getNumberOfEvents(TString filename, TString treeName)
    // Check if the root file is zombie
    if (file->IsZombie())
    {
-      cout<<'\n';
-      cout << "WARNING - ZMOBIE FILE: " << filename << endl;
+      cerr<<'\n';
+      cerr << "WARNING - ZMOBIE FILE: " << filename << endl;
       file->Close();
       return Zombie;
    }
@@ -104,8 +104,8 @@ int getNumberOfEvents(TString filename, TString treeName)
    }
    else
    {
-      cout<<'\n';
-      cout << "WARNING - TREE DOES NOT EXIST: " << filename << endl;
+      cerr<<'\n';
+      cerr << "WARNING - TREE DOES NOT EXIST: " << filename << endl;
       file->Close();
       return NoTree;
    }
