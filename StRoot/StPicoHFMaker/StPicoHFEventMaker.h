@@ -2,13 +2,21 @@
 #define StPicoHFEventMaker_h
 
 #include "StMaker.h"
+#include "StLorentzVectorF.hh"
 
 /* **************************************************
  *  Base class for HF analysis
  *
  *  Usage:
+ *   Implement in inherited class
+ *    InitHF()
+ *    MakeHF()
  *
- *
+ *   To be implemented in derived class
+ *       methods can be StHFCuts utility class
+ *    isPion
+ *    isKaon
+ *    isProton
  *
  *  Authors:  Xin Dong (xdong@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
@@ -35,51 +43,60 @@ class StPicoHFEventMaker : public StMaker
     StPicoHFEventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName);
     virtual ~StPicoHFEventMaker();
     
-    virtual Int_t InitHF();
-    virtual Int_t MakeHF();
-    virtual void  Clear(Option_t *opt="");
-    virtual Int_t FinishHF();
+    virtual Int_t InitHF()   { return kStOK; }
+    virtual Int_t MakeHF()   { return kStOK; }
+    virtual Int_t FinishHF() { return kStOK; }
 
+    virtual void  Clear(Option_t *opt="");
+
+    void SetHFBaseCuts(StHFCuts* cuts) { mHFCuts = cuts; }
 
   protected:
-    virtual bool  isPion(StPicoTrack const*, float const & bTofBeta) const;
-    virtual bool  isKaon(StPicoTrack const*, float const & bTofBeta) const;
-    virtual bool  isProton(StPicoTrack const*, float const & bTofBeta) const;
+    virtual bool  isPion(StPicoTrack const*, float const & bTofBeta) const   { return true; }
+    virtual bool  isKaon(StPicoTrack const*, float const & bTofBeta) const   { return true; }
+    virtual bool  isProton(StPicoTrack const*, float const & bTofBeta) const { return true; }
 
-    virtual bool  isGoodPair(StHFPair const &) const;
-    virtual bool  isGoodTriple(StHFTriplet const &) const;
+    void CreateSecondaryK0Short();
+
+    float getTofBeta(StPicoTrack const*) const;
+
+    // -- members ------------------------
+
+    StPicoDst      *mPicoDst;
+
+    StHFCuts       *mHFCuts;
+
+    StPicoHFEvent  *mPicoHFEvent;
+
+    float           mBField;
+    StThreeVectorF  mPrimVtx;
+
+    unsigned int    mDecayMode; // 
+    unsigned int    mMakerMode; // 
+
+    std::vector<unsigned short> mIdxPicoPions;
+    std::vector<unsigned short> mIdxPicoKaons;
+    std::vector<unsigned short> mIdxPicoProtons;
    
   private:
-    virtual Int_t Init();
-    virtual Int_t Make();
-    virtual Int_t Finish();
-
+    Int_t Init();
+    Int_t Make();
+    Int_t Finish();
+    
     void  Reset();
 
     bool  isGoodEvent();
     bool  isGoodTrack(StPicoTrack const*) const;
- 
-    float getTofBeta(StPicoTrack const*) const;
+    
+    // -- members ------------------------
 
     StPicoDstMaker* mPicoDstMaker;
-    StPicoDst*      mPicoDst;
+
     StPicoEvent*    mPicoEvent;
 
-    StHFCuts *mHFCuts;
-    
     TFile* mOutputFile;
     TTree* mTree;
-    StPicoHFEvent* mPicoHFEvent;
 
-    float mBField;
-    StThreeVectorF mPrimVtx;
-
-    std::vector<unsigned short> mIdxPicoKaons;
-    std::vector<unsigned short> mIdxPicoPions;
-    std::vector<unsigned short> mIdxPicoProtons;
-
-
-    
     ClassDef(StPicoHFEventMaker, 1)
 };
 
