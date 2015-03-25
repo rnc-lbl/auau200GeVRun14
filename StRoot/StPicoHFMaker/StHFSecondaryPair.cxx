@@ -2,8 +2,7 @@
 #include <cmath>
 
 #ifdef __ROOT__
-#include "StHFSecondPair.h"
-#include "StHFSecondPair.h"
+#include "StHFSecondaryPair.h"
 
 #include "StLorentzVectorF.hh"
 #include "StThreeVectorF.hh"
@@ -13,10 +12,10 @@
 #include "SystemOfUnits.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 
-ClassImp(StHFSecondPair)
+ClassImp(StHFSecondaryPair)
 
 
-StHFSecondPair::StHFSecondPair(): mLorentzVector(StLorentzVectorF()),
+StHFSecondaryPair::StHFSecondaryPair(): mLorentzVector(StLorentzVectorF()),
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
    mParticle1Idx(std::numeric_limits<unsigned short>::max()), mParticle2Idx(std::numeric_limits<unsigned short>::max()),
@@ -25,7 +24,7 @@ StHFSecondPair::StHFSecondPair(): mLorentzVector(StLorentzVectorF()),
 {
 }
 //------------------------------------
-StHFSecondPair::StHFSecondPair(StHFSecondPair const * t) : mLorentzVector(t->mLorentzVector),
+StHFSecondaryPair::StHFSecondaryPair(StHFSecondaryPair const * t) : mLorentzVector(t->mLorentzVector),
    mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength),
    mParticle1Dca(t->mParticle1Dca), mParticle2Dca(t->mParticle2Dca),
    mParticle1Idx(t->mParticle1Idx), mParticle2Idx(t->mParticle2Idx),
@@ -34,7 +33,7 @@ StHFSecondPair::StHFSecondPair(StHFSecondPair const * t) : mLorentzVector(t->mLo
 }
 
 //------------------------------------
-StHFSecondPair::StHFSecondPair(StPicoTrack const * const particle1, StPicoTrack const * const particle2,
+StHFSecondaryPair::StHFSecondaryPair(StPicoTrack const * const particle1, StPicoTrack const * const particle2,
 		   float p1MassHypo, float p2MassHypo, 
 		   unsigned short const p1Idx, unsigned short const p2Idx,
 		   StThreeVectorF const & vtx, float const bField)  : 
@@ -55,7 +54,6 @@ StHFSecondPair::StHFSecondPair(StPicoTrack const * const particle1, StPicoTrack 
    ///   p1 means particle 1
    ///   p2 means particle 2
    ///   pair means partic1 , particle2. pair
-
 
    // to be used for testing with preview II pico production
    StDcaGeometry p1DcaG, p2DcaG;

@@ -8,7 +8,7 @@
 
 class StPicoTrack;
 class StPicoEvent;
-class StHFSecondPair;
+class StHFSecondaryPair;
 
 class StHFPair : public TObject
 {
@@ -21,7 +21,7 @@ class StHFPair : public TObject
 	   unsigned short particle1Idx, unsigned short particle2Idx,
 	   StThreeVectorF const & vtx, float bField);
 
-  StHFPair(StPicoTrack const * particle1, StHFSecondPair const * particle2, 
+  StHFPair(StPicoTrack const * particle1, StHFSecondaryPair const * particle2, 
 	   float p1MassHypo, float p2MassHypo,
 	   unsigned short particle1Idx, unsigned short particle2Idx,
 	   StThreeVectorF const & vtx, float bField);
