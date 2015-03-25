@@ -33,8 +33,12 @@ class StPicoD0AnaMaker : public StMaker
     TString mInputFileList;
     TFile* mOutputFile;
     TChain* mChain;
-    TNtuple* mNtuple;
     int mEventCounter;
+
+    // -------------- USER variables -------------------------
+    // add your mamber variables here. 
+    // Remember that ntuples size can be really big, used histograms were appropriate
+    TNtuple* mNtuple;
 
     ClassDef(StPicoD0AnaMaker, 1)
 };

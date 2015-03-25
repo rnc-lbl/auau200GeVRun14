@@ -20,7 +20,7 @@ ClassImp(StPicoD0AnaMaker)
 
 StPicoD0AnaMaker::StPicoD0AnaMaker(char const * name,char const * inputFilesList, char const * outName,StPicoDstMaker* picoDstMaker): 
   StMaker(name),mPicoDstMaker(picoDstMaker),mPicoD0Event(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
-   mOutputFile(NULL), mChain(NULL), mNtuple(NULL), mEventCounter(0)
+   mOutputFile(NULL), mChain(NULL), mEventCounter(0), mNtuple(NULL)
 {}
 
 Int_t StPicoD0AnaMaker::Init()
@@ -49,6 +49,9 @@ Int_t StPicoD0AnaMaker::Init()
 
    mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
    mOutputFile->cd();
+
+
+   // -------------- USER VARIABLES -------------------------
    mNtuple = new TNtuple("nt", "", "pt1:pt2:flag:m:pt:eta:phi:theta:"
                          "decayL:kDca:pDca:dca12:cosThetaStar");
    return kStOK;
@@ -90,16 +93,17 @@ Int_t StPicoD0AnaMaker::Make()
      exit(1);
    }
 
+   // -------------- USER ANALYSIS -------------------------
    TClonesArray const * aKaonPion = mPicoD0Event->kaonPionArray();
 
    for (int idx = 0; idx < aKaonPion->GetEntriesFast(); ++idx)
    {
+      // this is an example of how to get the kaonPion pairs and their corresponsing tracks
       StKaonPion const* kp = (StKaonPion*)aKaonPion->At(idx);
       StPicoTrack const* kaon = picoDst->track(kp->kaonIdx());
       StPicoTrack const* pion = picoDst->track(kp->pionIdx());
 
       mNtuple->Fill(kaon->pMom().perp(), pion->pMom().perp(), kaon->charge()*pion->charge(), kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
-      // mNtuple->Fill(-1,-1,-1, kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
                     kp->decayLength(), kp->kaonDca(), kp->pionDca(), kp->dcaDaughters(), kp->cosThetaStar());
    }
 
