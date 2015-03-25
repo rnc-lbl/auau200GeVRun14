@@ -5,6 +5,7 @@
  * This macro is to check the intergrity of prorductions.
  */
 
+#include <fstream>
 #include <iostream>
 
 #include "TString.h"
@@ -15,75 +16,84 @@
 
 using namespace std;
 
-enum fileState {Zombie = -1, NoTree = -2, CannotOpenFile=-3};
+enum fileState {Zombie = -1, NoTree = -2, CannotOpenFile = -3};
 
-void deleteFile(TString filename);
-int getNumberOfEvents(TString filename, TString treeName);
+void deleteFile(TString filename, ofstream& os);
+int getNumberOfEvents(TString filename, TString treeName, ofstream& os);
 
 void checkProduction(TString picoFileName, TString muFileName,
-                            float numberOfEventsRatio = 0.95, TString picoTreeName = "PicoDst", TString muTreeName = "MuDst")
+                     float numberOfEventsRatio = 0.95, TString picoTreeName = "PicoDst", TString muTreeName = "MuDst")
 {
-   cerr<<" CHECKING OUTPUT "<<endl;
-   cerr<< picoFileName << endl;
-   cerr<< muFileName << endl;
+   TString logFileName = picoFileName;
+   logFileName = logFileName.ReplaceAll(".picoDst.root", ".nEventsCheck.log");
 
-   int nMuDstEvents = getNumberOfEvents(muFileName, muTreeName);
+   ofstream logOs(logFileName.Data(),ios::out);
+
+   logOs << '\n';
+   logOs << "CHECKING OUTPUT " << endl;
+   logOs << "picoFileName: " << picoFileName << endl;
+   logOs << "muFileName: " << muFileName << endl;
+   logOs << '\n';
+
+   int nMuDstEvents = getNumberOfEvents(muFileName, muTreeName,logOs);
+
+   logOs << "nMuDstEvents = " << nMuDstEvents << endl;
 
    if (nMuDstEvents > 0)
    {
-      int nPicoEvents = getNumberOfEvents(picoFileName, picoTreeName);
+      int nPicoEvents = getNumberOfEvents(picoFileName, picoTreeName,logOs);
+
+      logOs << "nPicoEvents = " << nPicoEvents << endl;
 
       if (nPicoEvents > 0)
       {
          if (static_cast<float>(nPicoEvents) / nMuDstEvents < numberOfEventsRatio)
          {
-            cerr<<'\n';
-            cerr<< "nEvents  = " << nMuDstEvents <<" and nProducedEvents = " << nPicoEvents <<endl;
-            cerr << "WARNING - LOW NUMBER OF EVENTS: " << picoFileName << endl;
-            deleteFile(picoFileName);
+            logOs << '\n';
+            logOs << "WARNING - LOW NUMBER OF EVENTS: " << picoFileName << endl;
+            deleteFile(picoFileName,logOs);
             return;
          }
          else
          {
-           cerr<< " FILE IS GOOD: "<<endl;
-           cerr<< "nEvents  = " << nMuDstEvents <<" and nProducedEvents = " << nPicoEvents <<endl;
+            logOs << " FILE IS GOOD: " << endl;
          }
       }
       else
       {
-        deleteFile(picoFileName);
-        return;
+         deleteFile(picoFileName,logOs);
+         return;
       }
    }
    else if (nMuDstEvents == 0)
    {
-      cerr << "MuDst FILE IS EMPTY" << endl;
+      logOs << "MuDst FILE IS EMPTY" << endl;
    }
    else
    {
-      cerr << "MuDst FILE IS NOT ACCESSIBLE OR TREE DOES NOT EXIST" << endl;
-      deleteFile(picoFileName);
+      logOs << "MuDst FILE IS NOT ACCESSIBLE OR TREE DOES NOT EXIST" << endl;
+      deleteFile(picoFileName,logOs);
    }
 
    return;
 }
 
-void deleteFile(TString filename)
+void deleteFile(TString filename, ofstream& logOs)
 {
    TString command = "rm -f " + filename;
-   cerr<<'\n';
-   cerr << command << endl;
+   logOs << '\n';
+   logOs << command << endl;
    gSystem->Exec(command.Data());
 }
 
-int getNumberOfEvents(TString filename, TString treeName)
+int getNumberOfEvents(TString filename, TString treeName, ofstream& logOs)
 {
    TFile* file = TFile::Open(filename.Data());
 
-   if(!file)
+   if (!file)
    {
-      cerr<<'\n';
-      cerr << "WARNING - CANNOT OPEN FILE: " << filename << endl;
+      cerr << '\n';
+      logOs << "WARNING - CANNOT OPEN FILE: " << filename << endl;
       return CannotOpenFile;
 
    }
@@ -91,8 +101,8 @@ int getNumberOfEvents(TString filename, TString treeName)
    // Check if the root file is zombie
    if (file->IsZombie())
    {
-      cerr<<'\n';
-      cerr << "WARNING - ZMOBIE FILE: " << filename << endl;
+      logOs << '\n';
+      logOs << "WARNING - ZMOBIE FILE: " << filename << endl;
       file->Close();
       return Zombie;
    }
@@ -108,8 +118,8 @@ int getNumberOfEvents(TString filename, TString treeName)
    }
    else
    {
-      cerr<<'\n';
-      cerr << "WARNING - TREE DOES NOT EXIST: " << filename << endl;
+      logOs << '\n';
+      logOs << "WARNING - TREE DOES NOT EXIST: " << filename << endl;
       file->Close();
       return NoTree;
    }
