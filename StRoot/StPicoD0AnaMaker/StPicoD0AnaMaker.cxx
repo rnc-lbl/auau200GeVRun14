@@ -101,6 +101,8 @@ Int_t StPicoD0AnaMaker::Make()
    {
       // this is an example of how to get the kaonPion pairs and their corresponsing tracks
       StKaonPion const* kp = (StKaonPion*)aKaonPion->At(idx);
+      if(!isGoodPair(kp)) continue;
+
       StPicoTrack const* kaon = picoDst->track(kp->kaonIdx());
       StPicoTrack const* pion = picoDst->track(kp->pionIdx());
 
