@@ -1,4 +1,4 @@
-void runPicoD0AnaMaker(TString d0list,TString picolist,TString outFileName)
+void runPicoD0AnaMaker(TString d0list,TString outFileName)
 {
 	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
 	loadSharedLibraries();
@@ -8,8 +8,16 @@ void runPicoD0AnaMaker(TString d0list,TString picolist,TString outFileName)
 	gSystem->Load("StPicoD0AnaMaker");
 
   chain = new StChain();
-	StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0,picolist,"picoDstMaker");
+
+  // create list of picoDst files
+  TString command = "sed 's/hft\/d0tree/picodsts/g' "+d0list+" >correspondingPico.list";
+  gSystem->Exec(command.Data());
+	StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0,"correspondingPico.list","picoDstMaker");
 	StPicoD0AnaMaker*  picoD0AnaMaker = new StPicoD0AnaMaker("picoD0AnaMaker",d0list,outFileName.Data(),picoDstMaker);
+  
+  // delete list of picos
+  command = "rm -f correspondingPico.list";
+  gSystem->Exec(command.Data());
 
   chain->Init();
   int nEntries = picoD0AnaMaker->getEntries();
