@@ -11,13 +11,17 @@
 #include "../StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoHFEvent.h"
 #include "StPicoHFEventMaker.h"
-#include "StCuts.h"
+
+#include "StHFCuts.h"
+#include "StHFPair.h"
+
+#include "phys_constants.h"
 
 ClassImp(StPicoHFEventMaker)
 
 //-----------------------------------------------------------------------------
 StPicoHFEventMaker::StPicoHFEventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName)
-   : StMaker(name), mPicoDstMaker(picoMaker), mPicoDst(NULL), mPicoEvent(NULL)
+: StMaker(name), mPicoDstMaker(picoMaker), mPicoDst(NULL), mPicoEvent(NULL), mHFCuts(NULL)
 {
    mPicoHFEvent = new StPicoHFEvent();
 
@@ -28,6 +32,8 @@ StPicoHFEventMaker::StPicoHFEventMaker(char const* name, StPicoDstMaker* picoMak
    mTree = new TTree("T", "T", BufSize);
    mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
    mTree->Branch("dEvent", "StPicoHFEvent", &mPicoHFEvent, BufSize, Split);
+
+   //   mOutputList = new TList();
 }
 
 //-----------------------------------------------------------------------------
@@ -40,6 +46,8 @@ StPicoHFEventMaker::~StPicoHFEventMaker()
 //-----------------------------------------------------------------------------
 Int_t StPicoHFEventMaker::Init()
 {
+  mHFCuts = StHFCuts::Instance();
+
   Reset();
   InitHF();
   return kStOK;
@@ -62,7 +70,7 @@ Int_t StPicoHFEventMaker::Finish()
 }
 
 //-----------------------------------------------------------------------------
-Int_t StPicoHFEventMaker::Finish()
+Int_t StPicoHFEventMaker::FinishHF()
 {
   return kStOK;
 }
@@ -72,7 +80,7 @@ void StPicoHFEventMaker::Reset()
 {
   mIdxPicoPions.clear();
   mIdxPicoKaons.clear();
-  mIdxPicoKaons.clear();
+  mIdxPicoProtons.clear();
   
   mPicoHFEvent->clear("C");
 }
@@ -100,6 +108,8 @@ Int_t StPicoHFEventMaker::Make()
       return kStWarn;
    }
 
+   Int_t iReturn = kStOK;
+
    if (isGoodEvent())
    {
       UInt_t nTracks = mPicoDst->numberOfTracks();
@@ -108,17 +118,16 @@ Int_t StPicoHFEventMaker::Make()
       {
          StPicoTrack* trk = mPicoDst->track(iTrack);
 
-         if (!trk || !isGoodTrack(trk)) continue;
+         if (!trk || !mHFCuts->IsGoodTrack(trk)) continue;
 
          float const beta = getTofBeta(trk);
-
          if (isPion(trk, beta))   mIdxPicoPions.push_back(iTrack);
          if (isKaon(trk, beta))   mIdxPicoKaons.push_back(iTrack);
          if (isProton(trk, beta)) mIdxPicoProtons.push_back(iTrack);
 
       } // .. end tracks loop
 
-      In_t iReturn = MakeHF();
+     iReturn = MakeHF();
       
    } //.. end of good event fill
 
@@ -135,22 +144,20 @@ Int_t StPicoHFEventMaker::Make()
 Int_t StPicoHFEventMaker::MakeHF()
 {
 
-  for (unsigned short ik = 0; ik < mIdxPicoKaons.size(); ++ik)
-    {
+  for (unsigned short ik = 0; ik < mIdxPicoKaons.size(); ++ik) {
       StPicoTrack const * kaon = mPicoDst->track(mIdxPicoKaons[ik]);
       
       // make Kπ pairs
-      for (unsigned short ip = 0; ip < mIdxPicoPions.size(); ++ip)
-	{
-	  if (mIdxPicoKaons[ik] == mIdxPicoPions[ip]) continue;
+      for (unsigned short ip = 0; ip < mIdxPicoPions.size(); ++ip) {
+	if (mIdxPicoKaons[ik] == mIdxPicoPions[ip]) continue;
 	  
 	  StPicoTrack const * pion = mPicoDst->track(mIdxPicoPions[ip]);
 	  
-	  StKaonPion kaonPion(kaon, pion, mIdxPicoKaons[ik], mIdxPicoPions[ip], mPrimVtx, mBField);
+	  StHFPair kaonPion(kaon, pion, M_KAON_PLUS, M_PION_PLUS, mIdxPicoKaons[ik], mIdxPicoPions[ip], mPrimVtx, mBField);
 	  
-	  if (!isGoodPair(kaonPion)) continue;
+	  if (!mHFCuts->IsGoodPrimaryPair(kaonPion)) continue;
 	  
-	  mPicoHFEvent->addKaonPion(&kaonPion);
+	  mPicoHFEvent->addHFPrimary(&kaonPion);
 	} // .. end make Kπ pairs
     } // .. end of kaons loop
   
@@ -166,48 +173,33 @@ bool StPicoHFEventMaker::isGoodEvent()
    mBField = mPicoEvent->bField();
    mPrimVtx = mPicoEvent->primaryVertex();
 
-
    // cuts
    float vz = mPicoEvent->primaryVertex().z();
-   if (!(mPicoEvent->ranking() > 0)) return false;
-   if (fabs(vz) > hfcuts::vz) return false;
+   if (!(mPicoEvent->ranking() > 0)) 
+     return false;
+   if (fabs(vz) > mHFCuts->CutVzMax()) 
+     return false;
 
    return true;
 }
-//-----------------------------------------------------------------------------
-bool StPicoHFEventMaker::isGoodTrack(StPicoTrack const * const trk) const
-{
-   // Require at least one hit on every layer of PXL and IST.
-   // It is done here for tests on the preview II data.
-   // The new StPicoTrack which is used in official production has a method to check this
-   if (trk->nHitsFit() >= hfcuts::nHitsFit
-         && (!hfcuts::requireHFT || trk->nHitsMapHFT() & 0xB)) return true;
 
-   return false;
-}
 //-----------------------------------------------------------------------------
 bool StPicoHFEventMaker::isPion(StPicoTrack const * const trk, float const & bTofBeta) const
 {
-  // add ETA cut
-   if (trk->pMom().perp() >= hfcuts::pionPt && fabs(trk->nSigmaPion()) < hfcuts::nSigmaPion) return true;
-
-   return false;
+  // JMT add ETA cut
+  return true; //(trk->pMom().perp() >= hfcuts::pionPt && fabs(trk->nSigmaPion()) < hfcuts::nSigmaPion) ? true : false;
 }
 //-----------------------------------------------------------------------------
 bool StPicoHFEventMaker::isKaon(StPicoTrack const * const trk, float const & bTofBeta) const
 {
-  // add ETA cut
-   if (trk->pMom().perp() >= hfcuts::kaonPt  && fabs(trk->nSigmaKaon()) < hfcuts::nSigmaKaon) return true;
-
-   return false;
+  // JMT add ETA cut
+  return true ; //(trk->pMom().perp() >= hfcuts::kaonPt  && fabs(trk->nSigmaKaon()) < hfcuts::nSigmaKaon) ? true : false;
 }
 //-----------------------------------------------------------------------------
 bool StPicoHFEventMaker::isProton(StPicoTrack const * const trk, float const & bTofBeta) const
 {
-  // add ETA cut
-   if (trk->pMom().perp() >= hfcuts::protonPt  && fabs(trk->nSigmaProton()) < hfcuts::nSigmaProton) return true;
-
-   return false;
+  // JMT add ETA cut
+  return true; //(trk->pMom().perp() >= hfcuts::protonPt  && fabs(trk->nSigmaProton()) < hfcuts::nSigmaProton) ? true: false;
 }
 //-----------------------------------------------------------------------------
 float StPicoHFEventMaker::getTofBeta(StPicoTrack const * const trk) const
@@ -220,25 +212,14 @@ float StPicoHFEventMaker::getTofBeta(StPicoTrack const * const trk) const
 
    return  0.;
 }
-//-----------------------------------------------------------------------------
-bool StPicoHFEventMaker::isGoodPair(StKaonPion const & kp) const
-{
-   if (kp.dcaDaughters() <  hfcuts::dcaDaughters &&
-         kp.decayLength() > hfcuts::decayLength &&
-         kp.m() > hfcuts::minMass &&
-         kp.m() < hfcuts::maxMass) return true;
 
-   return false;
+//-----------------------------------------------------------------------------
+bool StPicoHFEventMaker::isGoodPair(StHFPair const & pair) const
+{
+  return mHFCuts->IsGoodPrimaryPair(pair);
 }
 //-----------------------------------------------------------------------------
-bool StPicoHFEventMaker::isGoodTriple(StKaonPion const & kp) const
+bool StPicoHFEventMaker::isGoodTriple(StHFTriplet const & triplet) const
 {
-  /* if (kp.dcaDaughters() <  hfcuts::dcaDaughters &&
-         kp.decayLength() > hfcuts::decayLength &&
-         kp.m() > hfcuts::minMass &&
-         kp.m() < hfcuts::maxMass) return true;
-  */
-  // FILL ME
-
-   return false;
+  return mHFCuts->IsGoodTriplet(triplet);
 }

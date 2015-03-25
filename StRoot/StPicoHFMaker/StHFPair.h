@@ -8,16 +8,24 @@
 
 class StPicoTrack;
 class StPicoEvent;
+class StHFSecondaryPair;
 
 class StHFPair : public TObject
 {
  public:
   StHFPair();
   StHFPair(StHFPair const *);
+
   StHFPair(StPicoTrack const * particle1, StPicoTrack const * particle2, 
-	   float particle1MassHypo, float particle2MassHypo,
+	   float p1MassHypo, float p2MassHypo,
 	   unsigned short particle1Idx, unsigned short particle2Idx,
 	   StThreeVectorF const & vtx, float bField);
+
+  StHFPair(StPicoTrack const * particle1, StHFSecondaryPair const * particle2, 
+	   float p1MassHypo, float p2MassHypo,
+	   unsigned short particle1Idx, unsigned short particle2Idx,
+	   StThreeVectorF const & vtx, float bField);
+
   ~StHFPair() {;}
 
   StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
@@ -25,7 +33,7 @@ class StHFPair : public TObject
   float pt()   const;
   float eta()  const;
   float phi()  const;
-  float poitingAngle() const;
+  float pointingAngle() const;
   float decayLength() const;
   float particle1Dca() const;
   float particle2Dca() const;
@@ -40,9 +48,6 @@ class StHFPair : public TObject
   StHFPair& operator=(StHFPair const &);
   StLorentzVectorF mLorentzVector; // this owns four float only
 
-  float mParticle1MassHypo;   // Mass hypothesis - particle 1 - M_KAON_PLUS
-  float mParticle2MassHypo;   // Mass Hypothesis - particle 2 - M_PION_PLUS
-
   float mPointingAngle;
   float mDecayLength;
   float mParticle1Dca;
@@ -52,7 +57,7 @@ class StHFPair : public TObject
   unsigned short  mParticle2Idx;
 
   unsigned short mDcaDaughters; // dcaDaughters * 10000. 1 μm precision
-  char mCosThetaStar; // cosThetaStar * 100.
+  char           mCosThetaStar; // cosThetaStar * 100.
 
   ClassDef(StHFPair,1)
 };
@@ -62,9 +67,9 @@ inline float StHFPair::pt()   const { return mLorentzVector.perp();}
 inline float StHFPair::eta()  const { return mLorentzVector.pseudoRapidity();}
 inline float StHFPair::phi()  const { return mLorentzVector.phi();}
 inline float StHFPair::pointingAngle() const { return mPointingAngle;}
-inline float StHFPair::decayLength() const { return mDecayLength;}
-inline float StHFPair::particle1Dca() const { return mParticle1Dca;}
-inline float StHFPair::particle2Dca() const { return mParticle2Dca;}
+inline float StHFPair::decayLength()   const { return mDecayLength;}
+inline float StHFPair::particle1Dca()  const { return mParticle1Dca;}
+inline float StHFPair::particle2Dca()  const { return mParticle2Dca;}
 inline unsigned short   StHFPair::particle1Idx() const { return mParticle1Idx;}
 inline unsigned short   StHFPair::particle2Idx() const { return mParticle2Idx;}
 inline float StHFPair::dcaDaughters() const { return static_cast<float>(mDcaDaughters)/10000.;}

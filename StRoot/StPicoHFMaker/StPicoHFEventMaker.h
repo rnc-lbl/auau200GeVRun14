@@ -3,10 +3,20 @@
 
 #include "StMaker.h"
 
-// -----------------------------------------------
-//   Base class for HF analysis
-//   - Run 14 - 200 GeV AuAu 
-// -----------------------------------------------
+/* **************************************************
+ *  Base class for HF analysis
+ *
+ *  Usage:
+ *
+ *
+ *
+ *  Authors:  Xin Dong (xdong@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *            Jochen Thaeder (jmthader@lbl.gov)   
+ *            Michael Lomnitz (mlomitz@lbl.gov)
+ *
+ * **************************************************
+ */
 
 class TTree;
 class TFile;
@@ -15,7 +25,9 @@ class StPicoDstMaker;
 class StPicoEvent;
 class StPicoTrack;
 class StPicoHFEvent;
-class StKaonPion;
+class StHFPair;
+class StHFTriplet;
+class StHFCuts;
 
 class StPicoHFEventMaker : public StMaker 
 {
@@ -34,15 +46,15 @@ class StPicoHFEventMaker : public StMaker
     virtual bool  isKaon(StPicoTrack const*, float const & bTofBeta) const;
     virtual bool  isProton(StPicoTrack const*, float const & bTofBeta) const;
 
-    virtual bool  isGoodPair(StKaonPion const &) const;
-    virtual bool  isGoodTriple(StKaonPion const &) const;
+    virtual bool  isGoodPair(StHFPair const &) const;
+    virtual bool  isGoodTriple(StHFTriplet const &) const;
    
   private:
-    Int_t Init();
-    Int_t Make();
-    Int_t Finish();
+    virtual Int_t Init();
+    virtual Int_t Make();
+    virtual Int_t Finish();
 
-    Int_t Reset();
+    void  Reset();
 
     bool  isGoodEvent();
     bool  isGoodTrack(StPicoTrack const*) const;
@@ -52,6 +64,8 @@ class StPicoHFEventMaker : public StMaker
     StPicoDstMaker* mPicoDstMaker;
     StPicoDst*      mPicoDst;
     StPicoEvent*    mPicoEvent;
+
+    StHFCuts *mHFCuts;
     
     TFile* mOutputFile;
     TTree* mTree;
@@ -63,6 +77,8 @@ class StPicoHFEventMaker : public StMaker
     std::vector<unsigned short> mIdxPicoKaons;
     std::vector<unsigned short> mIdxPicoPions;
     std::vector<unsigned short> mIdxPicoProtons;
+
+
     
     ClassDef(StPicoHFEventMaker, 1)
 };
