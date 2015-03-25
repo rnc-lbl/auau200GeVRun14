@@ -16,19 +16,23 @@ public:
    void    clear(char const *option = "");
    void    addPicoEvent(StPicoEvent const & picoEvent);
    void    addKaonPion(StKaonPion const*);
+   void    nKaons(int);
+   void    nPions(int);
 
-   TClonesArray const * kaonPionArray()   const;
-   int         nKaonPion()  const;
-
-   // for variables from StPicoEvent
    Int_t   runId()   const;
    Int_t   eventId() const;
+   TClonesArray const * kaonPionArray()   const;
+   int     nKaonPion()  const;
+   int     nKaons() const;
+   int     nPions() const;
 
 private:
    // some variables below are kept in ROOT types to match the same ones in StPicoEvent
    Int_t   mRunId;           // run number
    Int_t   mEventId;         // event number
    int   mNKaonPion;       // number of stored pairs
+   int   mNKaons;
+   int   mNPions;
 
    TClonesArray*        mKaonPionArray;
    static TClonesArray* fgKaonPionArray;
@@ -36,8 +40,13 @@ private:
    ClassDef(StPicoD0Event, 1)
 };
 
+inline void StPicoD0Event::nKaons(int n) { mNKaons = n; }
+inline void StPicoD0Event::nPions(int n) { mNPions = n; }
+
 inline TClonesArray const * StPicoD0Event::kaonPionArray()   const { return mKaonPionArray;}
 inline int   StPicoD0Event::nKaonPion()  const { return mNKaonPion;}
+inline int   StPicoD0Event::nKaons()  const { return mNKaons;}
+inline int   StPicoD0Event::nPions()  const { return mNPions;}
 inline Int_t StPicoD0Event::runId()   const { return mRunId; }
 inline Int_t StPicoD0Event::eventId() const { return mEventId; }
 #endif
