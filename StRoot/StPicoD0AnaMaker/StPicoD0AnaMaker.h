@@ -13,7 +13,8 @@ class StPicoDstMaker;
 class StPicoD0AnaMaker : public StMaker
 {
   public:
-    StPicoD0AnaMaker(char const * name, char const * inputFilesList, char const * outName,StPicoDstMaker* picoDstMaker);
+    StPicoD0AnaMaker(char const * name, char const * inputFilesList, 
+        char const * outName,StPicoDstMaker* picoDstMaker);
     virtual ~StPicoD0AnaMaker();
 
     virtual Int_t Init();
