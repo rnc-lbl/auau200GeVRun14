@@ -2,6 +2,17 @@
 #define StHFSecondaryPair_hh
 #ifdef __ROOT__
 
+/* **************************************************
+ *  Generic class calculating and storing secondary pairs in HF analysis
+ *
+ *  Authors:  Xin Dong (xdong@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *            Jochen Thaeder (jmthader@lbl.gov)   
+ *            Michael Lomnitz (mlomitz@lbl.gov)
+ *
+ * **************************************************
+ */
+
 #include "TObject.h"
 #include "TClonesArray.h"
 #include "StLorentzVectorF.hh"
