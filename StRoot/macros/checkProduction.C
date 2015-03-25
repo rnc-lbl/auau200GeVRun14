@@ -23,6 +23,10 @@ int getNumberOfEvents(TString filename, TString treeName);
 void checkProduction(TString picoFileName, TString muFileName,
                             float numberOfEventsRatio = 0.95, TString picoTreeName = "PicoDst", TString muTreeName = "MuDst")
 {
+   cerr<<" CHECKING OUTPUT "<<endl;
+   cerr<< picoFileName << endl;
+   cerr<< muFileName << endl;
+
    int nMuDstEvents = getNumberOfEvents(muFileName, muTreeName);
 
    if (nMuDstEvents > 0)
