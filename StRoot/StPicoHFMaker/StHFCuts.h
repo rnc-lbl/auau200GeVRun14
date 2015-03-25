@@ -32,9 +32,6 @@ class StHFCuts : public TObject
   void SetCutVzMax(float f)            { mVzMax = f; }
   void SetCutVzVpdVzMax(float f)       { mVzVpdVzMax = f; }
 
-  
-
-
   void SetCutNHitsFitMax(int i)        { mNHitsFitMax = i; }
   void SetCutRequireHFT(bool b)        { mRequireHFT = b; }
   void SetCutNHitsFitnHitsMax(float f) { mNHitsFitnHitsMax = f; }
