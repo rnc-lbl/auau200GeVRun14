@@ -3,7 +3,7 @@
 
 #ifdef __ROOT__
 #include "StHFPair.h"
-#include "StHFSecondPair.h"
+#include "StHFSecondaryPair.h"
 
 #include "StLorentzVectorF.hh"
 #include "StThreeVectorF.hh"
@@ -54,8 +54,7 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
    /// prefixes code:
    ///   p1 means particle 1
    ///   p2 means particle 2
-   ///   pair means partic1 , particle2. pair
-
+   ///   pair means particle1-particle2  pair
 
    // to be used for testing with preview II pico production
    StDcaGeometry p1DcaG, p2DcaG;
@@ -111,7 +110,7 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
 }
 
 //------------------------------------
-StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondPair const * const particle2,
+StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondaryPair const * const particle2,
 		   float p1MassHypo, float p2MassHypo, 
 		   unsigned short const p1Idx, unsigned short const p2Idx,
 		   StThreeVectorF const & vtx, float const bField)  : 
@@ -135,7 +134,6 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondPair const * c
    ///   p1 means particle 1
    ///   p2 means particle 2
    ///   pair means partic1 , particle2. pair
-
 
    // to be used for testing with preview II pico production
    StDcaGeometry p1DcaG, p2DcaG;
