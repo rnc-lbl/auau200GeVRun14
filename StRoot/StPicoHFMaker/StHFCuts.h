@@ -98,7 +98,7 @@ class StHFCuts : public TObject
 
   bool IsGoodEvent();
 
-  bool IsGoodTrack(StPicoTrack const *trk);
+  bool IsGoodTrack(StPicoTrack const *trk) const;
 
 
 
