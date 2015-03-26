@@ -15,6 +15,7 @@
 #include "StPicoD0EventMaker/StPicoD0Event.h"
 #include "StPicoD0EventMaker/StKaonPion.h"
 #include "StPicoD0AnaMaker.h"
+#include "StCuts.h"
 
 ClassImp(StPicoD0AnaMaker)
 
@@ -122,8 +123,8 @@ bool StPicoD0AnaMaker::isGoodPair(StKaonPion const* const kp) const
 
   return fabs(kaon->nSigmaKaon()) < cuts::nSigmaKaon &&
          fabs(pion->nSigmaPion()) < cuts::nSigmaPion && 
-         kp.m() > cuts::minMass && kp.m() < cuts::maxMass &&
-         std::cos(kp.pointingAngle()) > cuts::cosTheta &&
-         kp.decayLength() > cuts::decayLength &&
-         kp.dcaDaughters() < cuts::dcaDaughters;
+         kp->m() > cuts::minMass && kp->m() < cuts::maxMass &&
+         std::cos(kp->pointingAngle()) > cuts::cosTheta &&
+         kp->decayLength() > cuts::decayLength &&
+         kp->dcaDaughters() < cuts::dcaDaughters;
 }
