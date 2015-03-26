@@ -6,7 +6,6 @@
 
 #include "StLorentzVectorF.hh"
 #include "StThreeVectorF.hh"
-#include "StDcaGeometry.h" // remove in official production
 #include "StPhysicalHelixD.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
@@ -54,14 +53,8 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
 
 
    // to be used for testing with preview II pico production
-   StDcaGeometry kDcaG, pDcaG;
-   kDcaG.set(kaon->params(), kaon->errMatrix());
-   pDcaG.set(pion->params(), pion->errMatrix());
-   StPhysicalHelixD kHelix = kDcaG.helix();
-   StPhysicalHelixD pHelix = pDcaG.helix();
-   // to be used in official production
-   //StPhysicalHelixD kHelix = kaon->dcaGeometry().helix();
-   //StPhysicalHelixD pHelix = pion->dcaGeometry().helix();
+   StPhysicalHelixD kHelix = kaon->dcaGeometry().helix();
+   StPhysicalHelixD pHelix = pion->dcaGeometry().helix();
 
    // move origins of helices to the primary vertex origin
    kHelix.moveOrigin(kHelix.pathLength(vtx));
