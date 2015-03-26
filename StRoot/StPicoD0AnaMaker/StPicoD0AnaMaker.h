@@ -8,6 +8,7 @@ class TString;
 class TFile;
 class TNtuple;
 class StPicoD0Event;
+class StKaonPion;
 class StPicoDstMaker;
 
 class StPicoD0AnaMaker : public StMaker
