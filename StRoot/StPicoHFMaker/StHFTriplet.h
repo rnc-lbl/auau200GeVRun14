@@ -66,11 +66,11 @@ class StHFTriplet : public TObject
   unsigned short  mParticle2Idx;
   unsigned short  mParticle3Idx;
 
-  unsigned short mDcaDaughters12; // dcaDaughters * 10000. 1 μm precision
-  unsigned short mDcaDaughters23; // dcaDaughters * 10000. 1 μm precision
-  unsigned short mDcaDaughters31; // dcaDaughters * 10000. 1 μm precision
+  float mDcaDaughters12;
+  float mDcaDaughters23;
+  float mDcaDaughters31;
 
-  char mCosThetaStar; // cosThetaStar * 100.
+  float mCosThetaStar; 
 
   ClassDef(StHFTriplet,1)
 };
@@ -87,10 +87,10 @@ inline float StHFTriplet::particle3Dca()  const { return mParticle3Dca;}
 inline unsigned short   StHFTriplet::particle1Idx() const { return mParticle1Idx;}
 inline unsigned short   StHFTriplet::particle2Idx() const { return mParticle2Idx;}
 inline unsigned short   StHFTriplet::particle3Idx() const { return mParticle2Idx;}
-inline float StHFTriplet::dcaDaughters12() const { return static_cast<float>(mDcaDaughters12)/10000.;}
-inline float StHFTriplet::dcaDaughters23() const { return static_cast<float>(mDcaDaughters23)/10000.;}
-inline float StHFTriplet::dcaDaughters31() const { return static_cast<float>(mDcaDaughters31)/10000.;}
-inline float StHFTriplet::cosThetaStar()   const { return static_cast<float>(mCosThetaStar/100.);}
+inline float StHFTriplet::dcaDaughters12() const { return mDcaDaughters12;}
+inline float StHFTriplet::dcaDaughters23() const { return mDcaDaughters23;}
+inline float StHFTriplet::dcaDaughters31() const { return mDcaDaughters31;}
+inline float StHFTriplet::cosThetaStar()   const { return mCosThetaStar;}
 
 #endif
 #endif

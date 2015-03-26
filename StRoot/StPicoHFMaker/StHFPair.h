@@ -39,7 +39,7 @@ class StHFPair : public TObject
 
   ~StHFPair() {;}
 
-  StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
+  StLorentzVectorF const & lorentzVector() const;
   float m()    const;
   float pt()   const;
   float eta()  const;
@@ -67,12 +67,12 @@ class StHFPair : public TObject
   unsigned short  mParticle1Idx; // index of track in StPicoDstEvent
   unsigned short  mParticle2Idx;
 
-  unsigned short mDcaDaughters; // dcaDaughters * 10000. 1 μm precision
-  char           mCosThetaStar; // cosThetaStar * 100.
+  float mDcaDaughters;
+  float mCosThetaStar; 
 
   ClassDef(StHFPair,1)
 };
-
+inline StLorentzVectorF const & StHFPair::lorentzVector() const { return mLorentzVector;}
 inline float StHFPair::m()    const { return mLorentzVector.m();}
 inline float StHFPair::pt()   const { return mLorentzVector.perp();}
 inline float StHFPair::eta()  const { return mLorentzVector.pseudoRapidity();}
@@ -83,8 +83,8 @@ inline float StHFPair::particle1Dca()  const { return mParticle1Dca;}
 inline float StHFPair::particle2Dca()  const { return mParticle2Dca;}
 inline unsigned short   StHFPair::particle1Idx() const { return mParticle1Idx;}
 inline unsigned short   StHFPair::particle2Idx() const { return mParticle2Idx;}
-inline float StHFPair::dcaDaughters() const { return static_cast<float>(mDcaDaughters)/10000.;}
-inline float StHFPair::cosThetaStar() const { return static_cast<float>(mCosThetaStar/100.);}
+inline float StHFPair::dcaDaughters() const { return mDcaDaughters;}
+inline float StHFPair::cosThetaStar() const { return mCosThetaStar;}
 
 #endif
 #endif
