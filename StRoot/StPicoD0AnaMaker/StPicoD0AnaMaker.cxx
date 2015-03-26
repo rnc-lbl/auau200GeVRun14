@@ -66,6 +66,9 @@ StPicoD0AnaMaker::~StPicoD0AnaMaker()
 //-----------------------------------------------------------------------------
 Int_t StPicoD0AnaMaker::Finish()
 {
+   LOG_INFO << " StPicoD0AnaMaker - writing data and closing output file " <<endm;
+   mOutputFile->cd();
+   mNtuple->Write();
    mOutputFile->Close();
 
    return kStOK;
@@ -92,8 +95,8 @@ Int_t StPicoD0AnaMaker::Make()
    if(mPicoD0Event->runId() != picoDst->event()->runId() ||
        mPicoD0Event->eventId() != picoDst->event()->eventId())
    {
-     cout<<"!!!!!!!!!!!! ATTENTION !!!!!!!!!!!!!"<<endl;
-     cout<<"SOMETHING TERRIBLE JUST HAPPENED. StPicoEvent and StPicoD0Event are not in sync."<<endl;
+     LOG_ERROR <<" StPicoD0AnaMaker - !!!!!!!!!!!! ATTENTION !!!!!!!!!!!!!"<<endm;
+     LOG_ERROR <<" StPicoD0AnaMaker - SOMETHING TERRIBLE JUST HAPPENED. StPicoEvent and StPicoD0Event are not in sync."<<endm;
      exit(1);
    }
 
