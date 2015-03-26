@@ -78,9 +78,7 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
    StThreeVectorF const pAtDcaToKaon = pStraightLine.at(ss.second);
 
    // calculate DCA of pion to kaon at their DCA
-   float const dcaDaughters = (kAtDcaToPion - pAtDcaToKaon).mag();
-   mDcaDaughters = (dcaDaughters * 10000.) > std::numeric_limits<unsigned short>::max() ?
-                   std::numeric_limits<unsigned short>::max() : static_cast<unsigned short>(std::round(dcaDaughters * 10000.));
+   mDcaDaughters = (kAtDcaToPion - pAtDcaToKaon).mag();
 
    // calculate Lorentz vector of kaon-pion pair
    StThreeVectorF const kMomAtDca = kHelix.momentumAt(ss.first, bField * kilogauss);
@@ -94,7 +92,7 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
    // calculate cosThetaStar
    StLorentzVectorF const kpFourMomReverse(-mLorentzVector.px(), -mLorentzVector.py(), -mLorentzVector.pz(), mLorentzVector.e());
    StLorentzVectorF const kFourMomStar = kFourMom.boost(kpFourMomReverse);
-   mCosThetaStar = static_cast<char>(std::round(std::cos(kFourMomStar.vect().angle(mLorentzVector.vect())) * 100.));
+   mCosThetaStar = std::cos(kFourMomStar.vect().angle(mLorentzVector.vect()));
 
    // calculate pointing angle and decay length
    StThreeVectorF const vtxToV0 = (kAtDcaToPion + pAtDcaToKaon) * 0.5 - vtx;
