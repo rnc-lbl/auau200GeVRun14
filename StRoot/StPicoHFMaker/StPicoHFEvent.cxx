@@ -26,7 +26,7 @@ StPicoHFEvent::StPicoHFEvent(unsigned int mode) : mRunId(-1), mEventId(-1), mNHF
 						  mHFPrimaryArray(NULL), mHFSecondaryArray(NULL) 
 {
   // -- Constructor with mode selection
-  if (mode == StPicoHFEvent::secondPair) {
+  if (mode == StPicoHFEvent::secondaryPair) {
     if (!fgHFPrimaryArray) fgHFPrimaryArray = new TClonesArray("StHFPair");
     mHFPrimaryArray = fgHFPrimaryArray;
 
