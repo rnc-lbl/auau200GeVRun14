@@ -89,9 +89,11 @@ Int_t StPicoD0AnaMaker::Make()
       return kStWarn;
    }
 
-   if(mPicoD0Event->eventId() != picoDst->event()->eventId())
+   if(mPicoD0Event->runId() != picoDst->event()->runId() ||
+       mPicoD0Event->eventId() != picoDst->event()->eventId())
    {
-     cout<<"SOMETHING TERRIBLE JUST HAPPENED. StPicoEvent and StPicoD0Event are not in sync"<<endl;
+     cout<<"!!!!!!!!!!!! ATTENTION !!!!!!!!!!!!!"<<endl;
+     cout<<"SOMETHING TERRIBLE JUST HAPPENED. StPicoEvent and StPicoD0Event are not in sync."<<endl;
      exit(1);
    }
 
