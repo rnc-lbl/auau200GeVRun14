@@ -48,7 +48,7 @@ public:
    Int_t   runId()   const;
    Int_t   eventId() const;
 
-   enum eHFEventMode {pair, triplet, secondPair};
+   enum eHFEventMode {pair, triplet, secondaryPair};
 
 private:
 
