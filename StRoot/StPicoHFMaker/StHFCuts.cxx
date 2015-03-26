@@ -19,19 +19,26 @@
 ClassImp(StHFCuts)
 
 // _________________________________________________________
-StHFCuts::StHFCuts() : mVzMax(100.), mVzVpdVzMax(6.),
-  mNHitsFitMax(20), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
+StHFCuts::StHFCuts() : mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
+  mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
   
-  mNSigmaPion(3.), mPionPt(0.2), mPionEta(999.),
-  mNSigmaKaon(2.5), mKaonPt(0.2), mKaonEta(999.),
-  mNSigmaProton(2.5), mProtonPt(0.2), mProtonEta(999.),
+  // mNSigmaPion(3.),    mPionPt(0.2),   mPionEta(999.),
+  // mNSigmaKaon(2.5),   mKaonPt(0.2),   mKaonEta(999.),
+  // mNSigmaProton(2.5), mProtonPt(0.2), mProtonEta(999.),
   
-  mPrimDcaDaughtersMax(0.0200), mPrimDecayLengthMin(0.0030), mPrimMassMin(1.6), mPrimMassMax(2.1),
-  mSecondDcaDaughtersMax(0.0200), mSecondDecayLengthMin(0.0030), mSecondMassMin(1.6), mSecondMassMax(2.1) {
+  mPrimaryDcaDaughtersMax(0.0200), mPrimaryDecayLengthMin(0.0030), mPrimaryCosThetaMin(0.), 
+  mPrimaryMassMin(1.6), mPrimaryMassMax(2.1),
+
+  mSecondaryDcaDaughtersMax(0.0200), mSecondaryDecayLengthMin(0.0030), mSecondaryCosThetaMin(0.), 
+  mSecondaryMassMin(1.6), mSecondaryMassMax(2.1),
+
+  mTripletDcaDaughters12Max(0.0200), mTripletDcaDaughters23Max(0.0200), mTripletDcaDaughters31Max(0.0200), 
+  mTripletDecayLengthMin(0.0030), mTripletCosThetaMin(0.), 
+  mTripletMassMin(1.6), mTripletMassMax(2.1) {
   // -- private constructor 
 }
 
-StHFCuts* mStHFCuts = NULL;
+StHFCuts* StHFCuts::mStHFCuts = NULL;
 
 // _________________________________________________________
 StHFCuts* StHFCuts::Instance() {
@@ -43,7 +50,7 @@ StHFCuts* StHFCuts::Instance() {
   return mStHFCuts;
 }
 
-//-----------------------------------------------------------------------------
+// _________________________________________________________
 bool StHFCuts::IsGoodTrack(StPicoTrack const * const trk) const
 {
   // Require at least one hit on every layer of PXL and IST.
@@ -57,26 +64,28 @@ bool StHFCuts::IsGoodTrack(StPicoTrack const * const trk) const
 
 // _________________________________________________________
 bool StHFCuts::IsGoodPrimaryPair(StHFPair const & pair) const {
-  if (pair.dcaDaughters() <  mPrimDcaDaughtersMax &&
-      pair.decayLength() > mPrimDecayLengthMin &&
-      pair.m() > mPrimMassMin &&
-      pair.m() < mPrimMassMax) return true;
-  
-  return false;
+  return ( pair.m() > mPrimaryMassMin && pair.m() < mPrimaryMassMax &&
+	   std::cos(pair.pointingAngle()) > mPrimaryCosThetaMin &&
+	   pair.decayLength() > mPrimaryDecayLengthMin &&
+	   pair.dcaDaughters() < mPrimaryDcaDaughtersMax);
 }
 
 // _________________________________________________________
 bool StHFCuts::IsGoodSecondaryPair(StHFSecondaryPair const & pair) const {
-  // TODO JMT 
-  
-  return true;
+  return ( pair.m() > mSecondaryMassMin && pair.m() < mSecondaryMassMax &&
+	   std::cos(pair.pointingAngle()) > mSecondaryCosThetaMin &&
+	   pair.decayLength() > mSecondaryDecayLengthMin &&
+	   pair.dcaDaughters() < mSecondaryDcaDaughtersMax);
 }
 
 // _________________________________________________________
 bool StHFCuts::IsGoodTriplet(StHFTriplet const & triplet) const {
-  // TODO JMT 
-  
-  return true;
+  return ( triplet.m() > mTripletMassMin && triplet.m() < mTripletMassMax &&
+	   std::cos(triplet.pointingAngle()) > mTripletCosThetaMin &&
+	   triplet.decayLength() > mTripletDecayLengthMin &&
+	   triplet.dcaDaughters12() < mTripletDcaDaughters12Max &&
+	   triplet.dcaDaughters23() < mTripletDcaDaughters23Max &&
+	   triplet.dcaDaughters31() < mTripletDcaDaughters31Max);
 }
 
 
