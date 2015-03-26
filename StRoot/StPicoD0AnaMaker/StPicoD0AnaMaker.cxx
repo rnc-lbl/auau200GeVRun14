@@ -36,8 +36,8 @@ Int_t StPicoD0AnaMaker::Init()
       std::string file;
       while (getline(listOfFiles, file))
       {
-         mChain->Add(file.c_str());
          LOG_INFO << "StPicoD0AnaMaker - Adding :" << file << endm;
+         mChain->Add(file.c_str());
       }
    }
    else
