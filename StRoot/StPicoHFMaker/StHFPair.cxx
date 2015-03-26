@@ -20,7 +20,7 @@ StHFPair::StHFPair(): mLorentzVector(StLorentzVectorF()),
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
    mParticle1Idx(std::numeric_limits<unsigned short>::max()), mParticle2Idx(std::numeric_limits<unsigned short>::max()),
-   mDcaDaughters(std::numeric_limits<unsigned short>::max()), mCosThetaStar(std::numeric_limits<char>::min())
+   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min())
 
 {
 }
@@ -42,7 +42,7 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Idx(p1Idx), mParticle2Idx(p2Idx),
-  mDcaDaughters(std::numeric_limits<unsigned short>::max()), mCosThetaStar(std::numeric_limits<char>::min())
+  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min())
 {
    if ((!particle1 || !particle2) || (particle1->id() == particle2->id()))
    {
@@ -80,10 +80,8 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
    StThreeVectorF const p1AtDcaToP2 = p1StraightLine.at(ss.first);
    StThreeVectorF const p2AtDcaToP1 = p2StraightLine.at(ss.second);
 
-   // calculate DCA of particle1 to particl2 at their DCA
-   float const dcaDaughters = (p1AtDcaToP2 - p2AtDcaToP1).mag();
-   mDcaDaughters = (dcaDaughters * 10000.) > std::numeric_limits<unsigned short>::max() ?
-                   std::numeric_limits<unsigned short>::max() : static_cast<unsigned short>(std::round(dcaDaughters * 10000.));
+   // calculate DCA of particle1 to particle2 at their DCA
+   mDcaDaughters = (p1AtDcaToP2 - p2AtDcaToP1).mag();
 
    // calculate Lorentz vector of particle1-particle2 pair
    StThreeVectorF const p1MomAtDca = p1Helix.momentumAt(ss.first,  bField * kilogauss);
@@ -97,7 +95,7 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
    // calculate cosThetaStar
    StLorentzVectorF const pairFourMomReverse(-mLorentzVector.px(), -mLorentzVector.py(), -mLorentzVector.pz(), mLorentzVector.e());
    StLorentzVectorF const p1FourMomStar = p1FourMom.boost(pairFourMomReverse);
-   mCosThetaStar = static_cast<char>(std::round(std::cos(p1FourMomStar.vect().angle(mLorentzVector.vect())) * 100.));
+   mCosThetaStar = std::cos(p1FourMomStar.vect().angle(mLorentzVector.vect()));
 
    // calculate pointing angle and decay length
    StThreeVectorF const vtxToV0 = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 - vtx;
@@ -118,7 +116,7 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondaryPair const 
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Idx(p1Idx), mParticle2Idx(p2Idx),
-  mDcaDaughters(std::numeric_limits<unsigned short>::max()), mCosThetaStar(std::numeric_limits<char>::min())
+  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min())
 {
 
 #if 0
@@ -160,10 +158,8 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondaryPair const 
    StThreeVectorF const p2AtDcaToP1 = p2StraightLine.at(ss.second);
 
    // calculate DCA of particle1 to particl2 at their DCA
-   float const dcaDaughters = (p1AtDcaToP2 - p2AtDcaToP1).mag();
-   mDcaDaughters = (dcaDaughters * 10000.) > std::numeric_limits<unsigned short>::max() ?
-                   std::numeric_limits<unsigned short>::max() : static_cast<unsigned short>(std::round(dcaDaughters * 10000.));
-
+   mDcaDaughters = (p1AtDcaToP2 - p2AtDcaToP1).mag();
+   
    // calculate Lorentz vector of particle1-particle2 pair
    StThreeVectorF const p1MomAtDca = p1Helix.momentumAt(ss.first,  bField * kilogauss);
    StThreeVectorF const p2MomAtDca = p2Helix.momentumAt(ss.second, bField * kilogauss);
@@ -176,7 +172,7 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondaryPair const 
    // calculate cosThetaStar
    StLorentzVectorF const pairFourMomReverse(-mLorentzVector.px(), -mLorentzVector.py(), -mLorentzVector.pz(), mLorentzVector.e());
    StLorentzVectorF const p1FourMomStar = p1FourMom.boost(pairFourMomReverse);
-   mCosThetaStar = static_cast<char>(std::round(std::cos(p1FourMomStar.vect().angle(mLorentzVector.vect())) * 100.));
+   mCosThetaStar = std::cos(p1FourMomStar.vect().angle(mLorentzVector.vect()));
 
    // calculate pointing angle and decay length
    StThreeVectorF const vtxToV0 = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 - vtx;
