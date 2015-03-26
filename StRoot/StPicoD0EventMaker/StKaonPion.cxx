@@ -15,7 +15,7 @@
 ClassImp(StKaonPion)
 
 
-StKaonPion::StKaonPion(): mLorentzVector(StLorentzVectorF()),
+StKaonPion::StKaonPion(): mLorentzVector(),
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()),
    mKaonIdx(std::numeric_limits<unsigned short>::max()), mPionIdx(std::numeric_limits<unsigned short>::max()),
