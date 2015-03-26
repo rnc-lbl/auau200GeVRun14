@@ -15,6 +15,7 @@
 #include "../StPicoHFMaker/StPicoHFEvent.h"
 #include "../StPicoHFMaker/StHFCuts.h"
 #include "../StPicoHFMaker/StHFPair.h"
+#include "../StPicoHFMaker/StHFTriplet.h"
 
 #include "StPicoHFLambdaCMaker.h"
 
@@ -50,24 +51,39 @@ Int_t StPicoHFLambdaCMaker::MakeHF() {
   // if (mDecayChannel == StPicoHFLambdaCMaker::K0short_Proton)
   //  CreateSecondaryK0Short();
 
-#if 0
-  for (unsigned short ik = 0; ik < mIdxPicoKaons.size(); ++ik) {
-      StPicoTrack const * kaon = mPicoDst->track(mIdxPicoKaons[ik]);
-      
-      // make Kπ pairs
-      for (unsigned short ip = 0; ip < mIdxPicoPions.size(); ++ip) {
-	if (mIdxPicoKaons[ik] == mIdxPicoPions[ip]) continue;
-	  
-	  StPicoTrack const * pion = mPicoDst->track(mIdxPicoPions[ip]);
-	  
-	  StHFPair kaonPion(kaon, pion, M_KAON_PLUS, M_PION_PLUS, mIdxPicoKaons[ik], mIdxPicoPions[ip], mPrimVtx, mBField);
-	  
-	  if (!mHFCuts->IsGoodPrimaryPair(kaonPion)) continue;
-	  
-	  mPicoHFEvent->addHFPrimary(&kaonPion);
-	} // .. end make Kπ pairs
-    } // .. end of kaons loop
-#endif  
+
+
+  for (unsigned short idxProton = 0; idxProton < mIdxPicoProtons.size(); ++idxProton) {
+      StPicoTrack const *proton = mPicoDst->track(mIdxPicoProtons[idxProton]);
+
+      for (unsigned short idxKaon = 0; idxKaon < mIdxPicoKaons.size(); ++idxKaon) {
+	StPicoTrack const *kaon = mPicoDst->track(mIdxPicoKaons[idxKaon]);
+	
+	if (mIdxPicoKaons[idxKaon] == mIdxPicoProtons[idxProton]) 
+	  continue;
+
+	StHFPair tmpProtonKaon(kaon, proton, M_KAON_PLUS, M_PROTON, 
+			       mIdxPicoKaons[idxKaon], mIdxPicoProtons[idxProton], mPrimVtx, mBField);
+	if (!mHFCuts->IsGoodPrimaryPair(tmpProtonKaon)) 
+	  continue;
+
+  	for (unsigned short idxPion = 0; idxPion < mIdxPicoPions.size(); ++idxPion) {
+	  StPicoTrack const *pion = mPicoDst->track(mIdxPicoPions[idxPion]);
+
+	  if (mIdxPicoProtons[idxProton] == mIdxPicoPions[idxPion] || mIdxPicoKaons[idxKaon] == mIdxPicoPions[idxPion]) 
+	    continue;
+
+	  StHFTriplet triplet(kaon, proton, pion, M_KAON_PLUS, M_PROTON, M_PION_PLUS, 
+			      mIdxPicoKaons[idxKaon], mIdxPicoProtons[idxProton], mIdxPicoPions[idxPion], mPrimVtx, mBField);
+	  if (!mHFCuts->IsGoodTriplet(triplet)) 
+	    continue;
+
+	  mPicoHFEvent->addHFPrimary(&triplet);
+
+	} // for (unsigned short idxPion = 0; idxPion < mIdxPicoPions.size(); ++idxPion) {
+      } // for (unsigned short idxKaon = 0; idxKaon < mIdxPicoKaons.size(); ++idxKaon) {
+  } // for (unsigned short idxProton = 0; idxProton < mIdxPicoProtons.size(); ++idxProton) {
+
 
   return kStOK;
 }
@@ -76,18 +92,20 @@ Int_t StPicoHFLambdaCMaker::MakeHF() {
 //-----------------------------------------------------------------------------
 bool StPicoHFLambdaCMaker::isPion(StPicoTrack const * const trk, float const & bTofBeta) const {
   // JMT add ETA cut
-  return true; //(trk->pMom().perp() >= hfcuts::pionPt && fabs(trk->nSigmaPion()) < hfcuts::nSigmaPion) ? true : false;
+
+  
+  return (trk->pMom().perp() >= 0.2 && fabs(trk->nSigmaPion()) <2.5) ? true : false;
 }
 
 //-----------------------------------------------------------------------------
 bool StPicoHFLambdaCMaker::isKaon(StPicoTrack const * const trk, float const & bTofBeta) const {
   // JMT add ETA cut
-  return true ; //(trk->pMom().perp() >= hfcuts::kaonPt  && fabs(trk->nSigmaKaon()) < hfcuts::nSigmaKaon) ? true : false;
+  return (trk->pMom().perp() >= 0.2 && fabs(trk->nSigmaKaon()) <2.5) ? true : false;
 }
 
 //-----------------------------------------------------------------------------
 bool StPicoHFLambdaCMaker::isProton(StPicoTrack const * const trk, float const & bTofBeta) const {
   // JMT add ETA cut
-  return true; //(trk->pMom().perp() >= hfcuts::protonPt  && fabs(trk->nSigmaProton()) < hfcuts::nSigmaProton) ? true: false;
+  return (trk->pMom().perp() >= 0.2 && fabs(trk->nSigmaProton()) <2.5) ? true : false;
 }
 

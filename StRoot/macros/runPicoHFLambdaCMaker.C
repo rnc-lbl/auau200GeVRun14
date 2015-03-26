@@ -35,22 +35,26 @@ void runPicoHFLambdaCMaker(const Char_t *inputFile="test.list", const Char_t *ou
   StHFCuts* hfCuts = StHFCuts::Instance();
 
   // -- use secondary decay
-  picoHFLambdaCMaker->SetDecayMode(StPicoHFEvent::secondaryPair);
+  //  picoHFLambdaCMaker->SetDecayMode(StPicoHFEvent::secondaryPair);
   
   // -- use triplet decay
-  //  picoHFLambdaCMaker->SetDecayMode(StPicoHFEvent::triplet);
+  picoHFLambdaCMaker->SetDecayMode(StPicoHFEvent::triplet);
   
   // -- write trees
   picoHFLambdaCMaker->SetMakerMode(StPicoHFEventMaker::write);
 
   // ---------------------------------------------------
   // -- Set Base cuts for HF analysis
-  hfCuts->SetCutVzMax(20.);
-  hfCuts->SetCutVzVpdVzMax(10.);
-  
+  hfCuts->SetCutVzMax(6.);
+  hfCuts->SetCutVzVpdVzMax(3.);
+  hfCuts->SetCutTriggerWord(0x1F);
+
   hfCuts->SetCutNHitsFitMax(15); 
   hfCuts->SetCutRequireHFT(true);
   hfCuts->SetCutNHitsFitnHitsMax(0.52);
+
+  hfCuts->SetCutTriplet(0.02, 0.02, 0.02, 0.003, 0., 2.0, 2.5); 
+
   // ---------------------------------------------------
   picoHFLambdaCMaker->SetHFBaseCuts(hfCuts);
 
