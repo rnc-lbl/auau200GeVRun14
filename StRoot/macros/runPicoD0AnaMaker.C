@@ -10,7 +10,7 @@ void runPicoD0AnaMaker(TString d0list,TString outFileName)
   chain = new StChain();
 
   // create list of picoDst files
-  TString command = "sed 's/hft\/d0tree/picodsts/g' "+d0list+" >correspondingPico.list";
+  TString command = "sed 's/hft\\\/d0tree/picodsts/g' "+d0list+" >correspondingPico.list";
   gSystem->Exec(command.Data());
 	StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0,"correspondingPico.list","picoDstMaker");
 	StPicoD0AnaMaker*  picoD0AnaMaker = new StPicoD0AnaMaker("picoD0AnaMaker",d0list,outFileName.Data(),picoDstMaker);
