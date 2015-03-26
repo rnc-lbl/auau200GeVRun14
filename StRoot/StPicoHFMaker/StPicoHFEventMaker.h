@@ -51,6 +51,11 @@ class StPicoHFEventMaker : public StMaker
 
     void SetHFBaseCuts(StHFCuts* cuts) { mHFCuts = cuts; }
 
+    enum eMakerMode {analyse, write};
+    
+    void SetMakerMode(unsigned short us) { mMakerMode = us; }
+    void SetDecayMode(unsigned short us) { mDecayMode = us; }
+
   protected:
     virtual bool  isPion(StPicoTrack const*, float const & bTofBeta) const   { return true; }
     virtual bool  isKaon(StPicoTrack const*, float const & bTofBeta) const   { return true; }

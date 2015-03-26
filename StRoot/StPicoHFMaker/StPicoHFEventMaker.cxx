@@ -51,7 +51,6 @@ Int_t StPicoHFEventMaker::Init() {
   mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
   mTree->Branch("dEvent", "StPicoHFEvent", &mPicoHFEvent, BufSize, Split);
   
-  
   //   mOutputList = new TList();
   
   Reset();
@@ -62,6 +61,7 @@ Int_t StPicoHFEventMaker::Init() {
 //-----------------------------------------------------------------------------
 Int_t StPicoHFEventMaker::Finish() {
   FinishHF();
+
   mOutputFile->cd();
   mOutputFile->Write();
   mOutputFile->Close();
