@@ -66,8 +66,8 @@ class StHFSecondaryPair : public TObject
   unsigned short  mParticle1Idx; // index of track in StPicoDstEvent
   unsigned short  mParticle2Idx;
 
-  unsigned short mDcaDaughters; // dcaDaughters * 10000. 1 μm precision
-  char           mCosThetaStar; // cosThetaStar * 100.
+  float mDcaDaughters;
+  float mCosThetaStar;
 
   ClassDef(StHFSecondaryPair,1)
 };
@@ -82,8 +82,8 @@ inline float StHFSecondaryPair::particle1Dca()  const { return mParticle1Dca;}
 inline float StHFSecondaryPair::particle2Dca()  const { return mParticle2Dca;}
 inline unsigned short   StHFSecondaryPair::particle1Idx() const { return mParticle1Idx;}
 inline unsigned short   StHFSecondaryPair::particle2Idx() const { return mParticle2Idx;}
-inline float StHFSecondaryPair::dcaDaughters() const { return static_cast<float>(mDcaDaughters)/10000.;}
-inline float StHFSecondaryPair::cosThetaStar() const { return static_cast<float>(mCosThetaStar/100.);}
+inline float StHFSecondaryPair::dcaDaughters() const { return mDcaDaughters;}
+inline float StHFSecondaryPair::cosThetaStar() const { return mCosThetaStar;}
 
 #endif
 #endif
