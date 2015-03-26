@@ -46,8 +46,8 @@ class StKaonPion : public TObject
   unsigned short  mKaonIdx; // index of track in StPicoDstEvent
   unsigned short  mPionIdx;
 
-  unsigned short mDcaDaughters; // dcaDaughters * 10000. 1 μm precision
-  char mCosThetaStar; // cosThetaStar * 100.
+  float mDcaDaughters;
+  float mCosThetaStar; 
 
   ClassDef(StKaonPion,1)
 };
@@ -62,8 +62,8 @@ inline float StKaonPion::kaonDca() const { return mKaonDca;}
 inline float StKaonPion::pionDca() const { return mPionDca;}
 inline unsigned short   StKaonPion::kaonIdx() const { return mKaonIdx;}
 inline unsigned short   StKaonPion::pionIdx() const { return mPionIdx;}
-inline float StKaonPion::dcaDaughters() const { return static_cast<float>(mDcaDaughters)/10000.;}
-inline float StKaonPion::cosThetaStar() const { return static_cast<float>(mCosThetaStar/100.);}
+inline float StKaonPion::dcaDaughters() const { return mDcaDaughters;}
+inline float StKaonPion::cosThetaStar() const { return mCosThetaStar;}
 
 #endif
 #endif
