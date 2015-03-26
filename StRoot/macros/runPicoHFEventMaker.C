@@ -33,6 +33,15 @@ void runPicoHFEventMaker(const Char_t *inputFile="test.list", const Char_t *outp
   StPicoHFEventMaker* picoHFMaker = new StPicoHFEventMaker("picoHFMaker", picoDstMaker, outputFile);
   StHFCuts* hfCuts = StHFCuts::Instance();
 
+  // -- use secondary decay
+  picoHFMaker->SetDecayMode(StPicoHFEvent::secondaryPair);
+  
+  // -- use triplet decay
+  //  picoHFMaker->SetDecayMode(StPicoHFEvent::triplet);
+  
+  // -- write trees
+  picoHFMaker->SetMakerMode(StPicoHFEventMaker::write);
+
   // ---------------------------------------------------
   // -- Set Base cuts for HF analysis
   hfCuts->SetCutVzMax(20.);
