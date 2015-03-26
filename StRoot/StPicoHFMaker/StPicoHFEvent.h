@@ -41,7 +41,7 @@ public:
 
    TClonesArray const * hFPrimaryArray()     const { return mHFPrimaryArray;}
    int                  nHFPrimary()         const;
-   TClonesArray const * hFSecondatryArray()  const { return mHFSecondaryArray;}
+   TClonesArray const * hFSecondaryArray()   const { return mHFSecondaryArray;}
    int                  nHFSecondary()       const;
 
    // for variables from StPicoEvent
