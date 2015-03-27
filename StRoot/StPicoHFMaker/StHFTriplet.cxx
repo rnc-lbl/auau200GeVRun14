@@ -60,18 +60,9 @@ StHFTriplet::StHFTriplet(StPicoTrack const * const particle1, StPicoTrack const 
    ///   pair means particle1-particle2 pair||  particle2-particle3 pair ||  particle1-particle3 pair
    ///   triplet means ...
 
-   // to be used for testing with preview II pico production
-   StDcaGeometry p1DcaG, p2DcaG, p3DcaG;
-   p1DcaG.set(particle1->params(), particle1->errMatrix());
-   p2DcaG.set(particle2->params(), particle2->errMatrix());
-   p3DcaG.set(particle3->params(), particle3->errMatrix());
-   StPhysicalHelixD p1Helix = p1DcaG.helix();
-   StPhysicalHelixD p2Helix = p2DcaG.helix();
-   StPhysicalHelixD p3Helix = p3DcaG.helix();
-   // to be used in official production
-   //StPhysicalHelixD p1Helix = particle1->dcaGeometry().helix();
-   //StPhysicalHelixD p2Helix = particle2->dcaGeometry().helix();
-   //StPhysicalHelixD p3Helix = particle3->dcaGeometry().helix();
+   StPhysicalHelixD p1Helix = particle1->dcaGeometry().helix();
+   StPhysicalHelixD p2Helix = particle2->dcaGeometry().helix();
+   StPhysicalHelixD p3Helix = particle3->dcaGeometry().helix();
 
    // move origins of helices to the primary vertex origin
    p1Helix.moveOrigin(p1Helix.pathLength(vtx));
