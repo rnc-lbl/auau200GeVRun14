@@ -60,15 +60,8 @@ StHFSecondaryPair::StHFSecondaryPair(StPicoTrack const * const particle1, StPico
    ///   p2 means particle 2
    ///   pair means partic1 , particle2. pair
 
-   // to be used for testing with preview II pico production
-   StDcaGeometry p1DcaG, p2DcaG;
-   p1DcaG.set(particle1->params(), particle1->errMatrix());
-   p2DcaG.set(particle2->params(), particle2->errMatrix());
-   StPhysicalHelixD p1Helix = p1DcaG.helix();
-   StPhysicalHelixD p2Helix = p2DcaG.helix();
-   // to be used in official production
-   //StPhysicalHelixD p1Helix = particle1->dcaGeometry().helix();
-   //StPhysicalHelixD p2Helix = particle2->dcaGeometry().helix();
+   StPhysicalHelixD p1Helix = particle1->dcaGeometry().helix();
+   StPhysicalHelixD p2Helix = particle2->dcaGeometry().helix();
 
    // move origins of helices to the primary vertex origin
    p1Helix.moveOrigin(p1Helix.pathLength(vtx));
