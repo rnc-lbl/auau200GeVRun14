@@ -19,8 +19,9 @@ StHFSecondaryPair::StHFSecondaryPair(): mLorentzVector(StLorentzVectorF()),
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
    mParticle1Idx(std::numeric_limits<unsigned short>::max()), mParticle2Idx(std::numeric_limits<unsigned short>::max()),
-   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min())
-
+  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min()),
+  //Added by lomnitz to initialze vertex pos
+  mV0x(std::numeric_limits<float>::max()), mV0y(std::numeric_limits<float>::max()), mV0z(std::numeric_limits<float>::max())
 {
 }
 //------------------------------------
@@ -28,7 +29,9 @@ StHFSecondaryPair::StHFSecondaryPair(StHFSecondaryPair const * t) : mLorentzVect
    mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength),
    mParticle1Dca(t->mParticle1Dca), mParticle2Dca(t->mParticle2Dca),
    mParticle1Idx(t->mParticle1Idx), mParticle2Idx(t->mParticle2Idx),
-   mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar)
+   mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar),
+   //Added by Lomnitz 
+   mV0x(t->mV0x), mV0y(t->mV0y), mV0z(t->mV0z)								    
 {
 }
 
@@ -41,7 +44,9 @@ StHFSecondaryPair::StHFSecondaryPair(StPicoTrack const * const particle1, StPico
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Idx(p1Idx), mParticle2Idx(p2Idx),
-  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min())
+  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min()),
+  //Lomnitz
+  mV0x(std::numeric_limits<float>::max()), mV0y(std::numeric_limits<float>::max()), mV0z(std::numeric_limits<float>::max())
 {
    if ((!particle1 || !particle2) || (particle1->id() == particle2->id()))
    {
@@ -95,6 +100,12 @@ StHFSecondaryPair::StHFSecondaryPair(StPicoTrack const * const particle1, StPico
    StLorentzVectorF const pairFourMomReverse(-mLorentzVector.px(), -mLorentzVector.py(), -mLorentzVector.pz(), mLorentzVector.e());
    StLorentzVectorF const p1FourMomStar = p1FourMom.boost(pairFourMomReverse);
    mCosThetaStar = std::cos(p1FourMomStar.vect().angle(mLorentzVector.vect()));
+
+   //Lomnitz
+   StThreeVectorF cosnt vtx = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 ;
+   mV0x=vtx.x();
+   mV0y=vtx.y();
+   mV0z=vtx.z(); 
 
    // calculate pointing angle and decay length
    StThreeVectorF const vtxToV0 = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 - vtx;
