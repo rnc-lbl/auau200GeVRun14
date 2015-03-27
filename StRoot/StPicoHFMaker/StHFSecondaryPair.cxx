@@ -21,7 +21,7 @@ StHFSecondaryPair::StHFSecondaryPair(): mLorentzVector(StLorentzVectorF()),
    mParticle1Idx(std::numeric_limits<unsigned short>::max()), mParticle2Idx(std::numeric_limits<unsigned short>::max()),
   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min()),
   //Added by lomnitz to initialze vertex pos
-  mV0x(std::numeric_limits<float>::max()), mV0y(std::numeric_limits<float>::max()), mV0z(std::numeric_limits<float>::max())
+  mV0x(std::numeric_limits<float>::max()), mV0y(std::numeric_limits<float>::max()),  mV0z(std::numeric_limits<float>::max())
 {
 }
 //------------------------------------
@@ -31,7 +31,8 @@ StHFSecondaryPair::StHFSecondaryPair(StHFSecondaryPair const * t) : mLorentzVect
    mParticle1Idx(t->mParticle1Idx), mParticle2Idx(t->mParticle2Idx),
    mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar),
    //Added by Lomnitz 
-   mV0x(t->mV0x), mV0y(t->mV0y), mV0z(t->mV0z)								    
+   mV0x(t->mV0x), mV0y(t->mV0y), mV0z(t->mV0z)
+
 {
 }
 
@@ -45,8 +46,9 @@ StHFSecondaryPair::StHFSecondaryPair(StPicoTrack const * const particle1, StPico
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Idx(p1Idx), mParticle2Idx(p2Idx),
   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min()),
-  //Lomnitz
-  mV0x(std::numeric_limits<float>::max()), mV0y(std::numeric_limits<float>::max()), mV0z(std::numeric_limits<float>::max())
+  //Lomnitz: initialization of members
+  mV0x(std::numeric_limits<float>::max()), mV0y(std::numeric_limits<float>::max()),  mV0z(std::numeric_limits<float>::max())
+ 
 {
    if ((!particle1 || !particle2) || (particle1->id() == particle2->id()))
    {
@@ -110,4 +112,27 @@ StHFSecondaryPair::StHFSecondaryPair(StPicoTrack const * const particle1, StPico
    mParticle2Dca = (p2Helix.origin() - vtx).mag();
 }
 
+//Added method to update variables with secondary vertex
+void StHFSecondaryPair::UpdateVertex(StPicoTrack const * const secondaryP1, StPicoTrack const * const secondaryP2, StThreeVectorF const &vtx2){
+
+  //Vertex information
+  StThreeVectorF const tertiary(mV0x,mV0y,mV0z);
+  StThreeVectorF const vtx2ToTertiary(tertiary - vtx2);
+  
+  //  Calculate decay length, pointing angle, etc. with updated vertex
+  mPointingAngle = vtx2ToTertiary.angle(mLorentzVector.vect());
+  mDecayLength = vtx2ToTertiary.mag();
+  // Need to recalculate particle dca to updated vertex, this is an issue
+  StPhysicalHelixD p1Helix = secondaryP1->dcaGeometry().helix();
+  StPhysicalHelixD p2Helix = secondaryP2->dcaGeometry().helix();
+  
+  // move origins of helices to the primary vertex origin
+  p1Helix.moveOrigin(p1Helix.pathLength(vtx2));
+  p2Helix.moveOrigin(p2Helix.pathLength(vtx2));
+
+  mParticle1Dca = (p1Helix.origin() - vtx2).mag();
+  mParticle2Dca = (p2Helix.origin() - vtx2).mag();
+
+  return;
+}
 #endif // __ROOT__

@@ -18,7 +18,6 @@
 #include "StLorentzVectorF.hh"
 
 class StPicoTrack;
-class StPicoEvent;
 
 class StHFSecondaryPair : public TObject
 {
@@ -37,6 +36,8 @@ class StHFSecondaryPair : public TObject
 	   StThreeVectorF const & vtx, float bField);
 
   ~StHFSecondaryPair() {;}
+  //Added method to update info using reconstructed secondary v0 in pair maker
+  void UpdateVertex(StPicoTrack const * secondaryP1, StPicoTrack const * secondaryP2, StThreeVectorF const & vtx2);
 
   StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
   float m()    const;
@@ -51,10 +52,14 @@ class StHFSecondaryPair : public TObject
   unsigned short   particle2Idx() const;
   float dcaDaughters() const;
   float cosThetaStar() const;
-  //Added by Lomnitz
+  //Added by Lomnitz access to vertex info
   float v0x() const;
   float v0y() const;
   float v0z() const;
+  //Added by Lomnitz access to momentum info
+  float px() const;
+  float py() const;
+  float pz() const;
  private:
   // disable copy constructor and assignment operator by making them private (once C++11 is available in STAR you can use delete specifier instead)
   StHFSecondaryPair(StHFSecondaryPair const &);
@@ -76,7 +81,7 @@ class StHFSecondaryPair : public TObject
   float mV0x;
   float mV0y;
   float mV0z;
-
+  
   ClassDef(StHFSecondaryPair,1)
 };
 
@@ -84,6 +89,11 @@ inline float StHFSecondaryPair::m()    const { return mLorentzVector.m();}
 inline float StHFSecondaryPair::pt()   const { return mLorentzVector.perp();}
 inline float StHFSecondaryPair::eta()  const { return mLorentzVector.pseudoRapidity();}
 inline float StHFSecondaryPair::phi()  const { return mLorentzVector.phi();}
+//Lomnitz: Added access to momentum information 
+inline float StHFSecondaryPair::px() const {return mLorentzVector.px();}
+inline float StHFSecondaryPair::py() const {return mLorentzVector.py();}
+inline float StHFSecondaryPair::pz() const {return mLorentzVector.pz();}
+//
 inline float StHFSecondaryPair::pointingAngle() const { return mPointingAngle;}
 inline float StHFSecondaryPair::decayLength()   const { return mDecayLength;}
 inline float StHFSecondaryPair::particle1Dca()  const { return mParticle1Dca;}

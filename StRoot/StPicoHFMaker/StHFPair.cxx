@@ -101,7 +101,9 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
 }
 
 //------------------------------------
+//Lomnitz: Added secondaryP1 and secondaryP2 tracks to constructor, needed to update vertex for secondary pair.
 StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondaryPair const * const particle2,
+		   StPicoTrack const * const secondaryP1, StPicoTrack const * const secondaryP2,
 		   float p1MassHypo, float p2MassHypo, 
 		   unsigned short const p1Idx, unsigned short const p2Idx,
 		   StThreeVectorF const & vtx, float const bField)  : 
@@ -113,8 +115,8 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondaryPair const 
 {
 
 #if 0
-
-   if ((!particle1 || !particle2) || (particle1->id() == particle2->id()))
+  //Checking that particle1 and secondary particle exist, and particle1 id different from both used to reconstruct secondarypair
+  if ((!particle1 || !particle2) || (particle1->id() == particle2->particle1Idx()) || ( particle1->id() == particle2->particle2Idx())
    {
       mParticle1Idx = std::numeric_limits<unsigned short>::max();
       mParticle2Idx = std::numeric_limits<unsigned short>::max();
@@ -126,8 +128,11 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondaryPair const 
    ///   p2 means particle 2
    ///   pair means partic1 , particle2. pair
 
+   //Lomnitz: Need to define p2Helix using secondary pair info
+   StThreeVectorF const p2Mom(particle2->px(),particle2->py(),particle2->pz());
+   StThreeVectorF const p2Origin(particle2->v0x(),particle2->v0y(),particle2->v0z());
    StPhysicalHelixD p1Helix = particle1->dcaGeometry().helix();
-   StPhysicalHelixD p2Helix = particle2->dcaGeometry().helix();
+   StPhysicalHelixD p2Helix(p2Mom,p2Origin,bField*kilogauss,particle2->charge());
 
    // move origins of helices to the primary vertex origin
    p1Helix.moveOrigin(p1Helix.pathLength(vtx));
@@ -135,7 +140,6 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondaryPair const 
 
    // use straight lines approximation to get point of DCA of particle1-particle2 pair
    StThreeVectorF const p1Mom = p1Helix.momentum(bField * kilogauss);
-   StThreeVectorF const p2Mom = p2Helix.momentum(bField * kilogauss);
    StPhysicalHelixD const p1StraightLine(p1Mom, p1Helix.origin(), 0, particle1->charge());
    StPhysicalHelixD const p2StraightLine(p2Mom, p2Helix.origin(), 0, particle2->charge());
 
@@ -164,7 +168,10 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFSecondaryPair const 
    StThreeVectorF const vtxToV0 = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 - vtx;
    mPointingAngle = vtxToV0.angle(mLorentzVector.vect());
    mDecayLength = vtxToV0.mag();
-
+   
+   //Lomnitz: Update secondary dca, etc. using reconstructed v0
+    particle2->UpdateVertex(secondaryP1, secondaryP2, (p1AtDcaToP2 + p2AtDcaToP1) * 0.5);
+   
    // calculate DCA of tracks to primary vertex
    mParticle1Dca = (p1Helix.origin() - vtx).mag();
    mParticle2Dca = (p2Helix.origin() - vtx).mag();
