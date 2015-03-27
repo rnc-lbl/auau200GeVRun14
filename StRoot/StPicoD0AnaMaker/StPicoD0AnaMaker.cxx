@@ -112,7 +112,7 @@ Int_t StPicoD0AnaMaker::Make()
       StPicoTrack const* kaon = picoDst->track(kp->kaonIdx());
       StPicoTrack const* pion = picoDst->track(kp->pionIdx());
 
-      mNtuple->Fill(kaon->pMom().perp(), pion->pMom().perp(), kaon->charge()*pion->charge(), kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
+      mNtuple->Fill(kaon->gPt(), pion->gPt(), kaon->charge()*pion->charge(), kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
                     kp->decayLength(), kp->kaonDca(), kp->pionDca(), kp->dcaDaughters(), kp->cosThetaStar());
    }
 
