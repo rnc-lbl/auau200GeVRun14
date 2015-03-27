@@ -22,7 +22,6 @@ void runPicoD0AnaMaker(TString d0list,TString outFileName)
   for(int iEvent = 0; iEvent<nEntries; ++iEvent)
   {
     chain->Clear();
-    chain->Make();
     int iret = chain->Make();
 	  if (iret) { cout << "Bad return code!" << iret << endl; break;}
   }
