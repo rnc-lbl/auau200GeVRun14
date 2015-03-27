@@ -126,7 +126,9 @@ bool StPicoD0AnaMaker::isGoodPair(StKaonPion const* const kp) const
   StPicoTrack const* kaon = mPicoDstMaker->picoDst()->track(kp->kaonIdx());
   StPicoTrack const* pion = mPicoDstMaker->picoDst()->track(kp->pionIdx());
 
-  return fabs(kaon->nSigmaKaon()) < cuts::nSigmaKaon &&
+  bool tracking = kaon->nHitsFit() > cuts::nHitsFit && pion->nHitsFit() > cuts::nHitsFit;
+
+  return tracking && fabs(kaon->nSigmaKaon()) < cuts::nSigmaKaon &&
          fabs(pion->nSigmaPion()) < cuts::nSigmaPion && 
          kp->m() > cuts::minMass && kp->m() < cuts::maxMass &&
          std::cos(kp->pointingAngle()) > cuts::cosTheta &&
