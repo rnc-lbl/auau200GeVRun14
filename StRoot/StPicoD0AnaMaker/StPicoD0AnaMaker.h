@@ -49,7 +49,7 @@ class StPicoD0AnaMaker : public StMaker
 
 inline int StPicoD0AnaMaker::getEntries() const 
 {
-  return mChain? mChain->GetEntriesFast() : 0;
+  return mChain? mChain->GetEntries() : 0;
 }
 
 inline void StPicoD0AnaMaker::readNextEvent()

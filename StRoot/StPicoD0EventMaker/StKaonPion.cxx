@@ -6,7 +6,6 @@
 
 #include "StLorentzVectorF.hh"
 #include "StThreeVectorF.hh"
-#include "StDcaGeometry.h" // remove in official production
 #include "StPhysicalHelixD.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
@@ -19,7 +18,7 @@ StKaonPion::StKaonPion(): mLorentzVector(),
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()),
    mKaonIdx(std::numeric_limits<unsigned short>::max()), mPionIdx(std::numeric_limits<unsigned short>::max()),
-   mDcaDaughters(std::numeric_limits<unsigned short>::max()), mCosThetaStar(std::numeric_limits<char>::min())
+   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min())
 
 {
 }
@@ -38,7 +37,7 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()),
    mKaonIdx(kIdx), mPionIdx(pIdx),
-   mDcaDaughters(std::numeric_limits<unsigned short>::max()), mCosThetaStar(std::numeric_limits<char>::min())
+   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min())
 {
    if ((!kaon || !pion) || (kaon->id() == pion->id()))
    {
@@ -54,14 +53,8 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
 
 
    // to be used for testing with preview II pico production
-   StDcaGeometry kDcaG, pDcaG;
-   kDcaG.set(kaon->params(), kaon->errMatrix());
-   pDcaG.set(pion->params(), pion->errMatrix());
-   StPhysicalHelixD kHelix = kDcaG.helix();
-   StPhysicalHelixD pHelix = pDcaG.helix();
-   // to be used in official production
-   //StPhysicalHelixD kHelix = kaon->dcaGeometry().helix();
-   //StPhysicalHelixD pHelix = pion->dcaGeometry().helix();
+   StPhysicalHelixD kHelix = kaon->dcaGeometry().helix();
+   StPhysicalHelixD pHelix = pion->dcaGeometry().helix();
 
    // move origins of helices to the primary vertex origin
    kHelix.moveOrigin(kHelix.pathLength(vtx));
