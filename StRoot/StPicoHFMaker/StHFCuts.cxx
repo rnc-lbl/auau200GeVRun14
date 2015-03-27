@@ -56,10 +56,8 @@ bool StHFCuts::IsGoodTrack(StPicoTrack const * const trk) const
   // Require at least one hit on every layer of PXL and IST.
   // It is done here for tests on the preview II data.
   // The new StPicoTrack which is used in official production has a method to check this
-  if (trk->nHitsFit() >= mNHitsFitMax
-      && (!mRequireHFT || trk->nHitsMapHFT() & 0xB)) return true;
-  
-  return false;
+  return ((!mRequireHFT || trk->isHFTTrack()) && 
+	  trk->nHitsFit() >= mNHitsFitMax);
 }
 
 // _________________________________________________________
