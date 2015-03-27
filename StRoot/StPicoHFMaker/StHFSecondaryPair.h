@@ -51,7 +51,10 @@ class StHFSecondaryPair : public TObject
   unsigned short   particle2Idx() const;
   float dcaDaughters() const;
   float cosThetaStar() const;
-          
+  //Added by Lomnitz
+  float v0x() const;
+  float v0y() const;
+  float v0z() const;
  private:
   // disable copy constructor and assignment operator by making them private (once C++11 is available in STAR you can use delete specifier instead)
   StHFSecondaryPair(StHFSecondaryPair const &);
@@ -69,6 +72,11 @@ class StHFSecondaryPair : public TObject
   float mDcaDaughters;
   float mCosThetaStar;
 
+  //Added by Lomnitz to save reco vertex pos
+  float mV0x;
+  float mV0y;
+  float mV0z;
+
   ClassDef(StHFSecondaryPair,1)
 };
 
@@ -84,7 +92,10 @@ inline unsigned short   StHFSecondaryPair::particle1Idx() const { return mPartic
 inline unsigned short   StHFSecondaryPair::particle2Idx() const { return mParticle2Idx;}
 inline float StHFSecondaryPair::dcaDaughters() const { return mDcaDaughters;}
 inline float StHFSecondaryPair::cosThetaStar() const { return mCosThetaStar;}
-
+//Lomnitz:  Added to access secondary vertex info
+inline float StHFSecondaryPair::v0x() const { return mV0x;}
+inline float StHFSecondaryPair::v0y() const { return mV0y;}
+inline float StHFSecondaryPair::v0z() const { return mV0z;}
 #endif
 #endif
 
