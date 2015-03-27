@@ -33,6 +33,7 @@ class StHFPair : public TObject
 	   StThreeVectorF const & vtx, float bField);
 
   StHFPair(StPicoTrack const * particle1, StHFSecondaryPair const * particle2, 
+	   StPicoTrack const * secondaryP1, StPicoTrack const * secondaryP2,
 	   float p1MassHypo, float p2MassHypo,
 	   unsigned short particle1Idx, unsigned short particle2Idx,
 	   StThreeVectorF const & vtx, float bField);
