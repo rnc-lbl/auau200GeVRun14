@@ -103,7 +103,7 @@ Int_t StPicoD0AnaMaker::Make()
    // -------------- USER ANALYSIS -------------------------
    TClonesArray const * aKaonPion = mPicoD0Event->kaonPionArray();
 
-   for (int idx = 0; idx < aKaonPion->GetEntriesFast(); ++idx)
+   for (int idx = 0; idx < aKaonPion->GetEntries(); ++idx)
    {
       // this is an example of how to get the kaonPion pairs and their corresponsing tracks
       StKaonPion const* kp = (StKaonPion*)aKaonPion->At(idx);
