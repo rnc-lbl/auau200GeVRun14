@@ -29,6 +29,8 @@ def main():
             totalMuDstEvents += elements['nMuDstEvents']
             if not elements['prodDay'] in nEventsVsDay: nEventsVsDay[elements['prodDay']] = 0
             nEventsVsDay[elements['prodDay']] += elements['nPicoEvents']
+        else:
+            print f
 
     plotNumberOfEventsVsDay(nEventsVsDay)
     makeIndexFile(totalMuDstEvents,totalPicoEvents)
@@ -42,13 +44,13 @@ def makeIndexFile(nMuDstEvents,nPicoEvents):
 def plotNumberOfEventsVsDay(nEventsVsDay):
 
     x = [datetime.datetime.strptime(d,'%m/%d/%Y').date() for d in nEventsVsDay.keys()]
-    y = [x/1.e6 for x in nEventsVsDay.values()]
+    y = [v/1.e6 for v in nEventsVsDay.values()]
 
-    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
     plt.gca().xaxis.set_major_locator(mdates.DayLocator())
     plt.scatter(x,y)
     plt.gcf().autofmt_xdate()
-    plt.gca().set_ylim([0,40])
+    plt.gca().set_ylim([0,70])
     plt.ylabel('nEvents (m)')
     plt.savefig(gNumberOfEventsVsDayFileName)
 
