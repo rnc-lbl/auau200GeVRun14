@@ -95,17 +95,17 @@ StHFSecondaryPair::StHFSecondaryPair(StPicoTrack const * const particle1, StPico
    mCosThetaStar = std::cos(p1FourMomStar.vect().angle(mLorentzVector.vect()));
 
    //Lomnitz
-   StThreeVectorF cosnt vtx = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 ;
-   mV0x=vtx.x();
-   mV0y=vtx.y();
-   mV0z=vtx.z(); 
+   StThreeVectorF const tertiaryVtx = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 ;
+   mV0x = tertiaryVtx.x();
+   mV0y = tertiaryVtx.y();
+   mV0z = tertiaryVtx.z(); 
 
-   // calculate pointing angle and decay length
-   StThreeVectorF const vtxToV0 = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 - vtx;
+   // calculate pointing angle and decay length -- with respect to primary vertex - only rough estimate)
+   StThreeVectorF const vtxToV0 = tertiaryVtx - vtx;
    mPointingAngle = vtxToV0.angle(mLorentzVector.vect());
    mDecayLength = vtxToV0.mag();
 
-   // calculate DCA of tracks to primary vertex
+   // calculate DCA of tracks to primary vertexv( only rough estimate 
    mParticle1Dca = (p1Helix.origin() - vtx).mag();
    mParticle2Dca = (p2Helix.origin() - vtx).mag();
 }
