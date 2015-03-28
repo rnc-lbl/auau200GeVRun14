@@ -33,7 +33,7 @@ StKaonPion::StKaonPion(StKaonPion const * t) : mLorentzVector(t->mLorentzVector)
 //------------------------------------
 StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const pion,
                        unsigned short const kIdx, unsigned short const pIdx,
-                       StThreeVectorF const & vtx, float const bField) : mLorentzVector(StLorentzVectorF()),
+                       StThreeVectorF const & vtx, float const bField) : mLorentzVector(),
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()),
    mKaonIdx(kIdx), mPionIdx(pIdx),
