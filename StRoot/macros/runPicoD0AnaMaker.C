@@ -1,5 +1,14 @@
 void runPicoD0AnaMaker(TString d0list,TString outFileName)
 {
+  //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
+  string SL_version = "SL15c";
+  string env_SL = getenv ("STAR");
+  if(env_SL.find(SL_version)==string::npos)
+  {
+      cout<<"Environment Star Library does not match the requested library in runPicoD0EventMaker.C. Exiting..."<<endl;
+      exit(1);
+  }
+
 	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
 	loadSharedLibraries();
 
@@ -22,7 +31,6 @@ void runPicoD0AnaMaker(TString d0list,TString outFileName)
   for(int iEvent = 0; iEvent<nEntries; ++iEvent)
   {
     chain->Clear();
-    chain->Make();
     int iret = chain->Make();
 	  if (iret) { cout << "Bad return code!" << iret << endl; break;}
   }
