@@ -18,7 +18,7 @@ def main():
     # while True:
         directoryToSync = gRcf+':'+gLogsLocationAtRcf
         subprocess.call(('rsync','-avzhp',directoryToSync,gLogsLocationAtPdsf))
-        subprocess.call(('./python','plotPicoProductionStatistics.py',gDirectoryName))
+        subprocess.call(('./plotPicoProductionStatistics.py',gDirectoryName))
 
         # os.system("date")
         # print "... waiting for another ",gWaitTime/60," minutes before trying to submit again"
