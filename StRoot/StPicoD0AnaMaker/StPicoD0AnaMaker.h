@@ -1,6 +1,20 @@
 #ifndef StPicoD0AnaMaker_h
 #define StPicoD0AnaMaker_h
 
+/* **************************************************
+ *  A Maker to read a StPicoEvent and StPicoD0Event
+ *  simultaneously and do analysis. 
+ *
+ *  Please write your analysis in the ::Make() function.
+ *
+ *  Authors:  Xin Dong        (xdong@lbl.gov)
+ *            Michael Lomnitz (mlomitz@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *
+ * **************************************************
+ */
+
 #include "TChain.h"
 #include "StMaker.h"
 

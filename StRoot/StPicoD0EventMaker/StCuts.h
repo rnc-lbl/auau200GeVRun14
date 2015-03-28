@@ -1,6 +1,18 @@
 #ifndef CUTS_H
 #define CUTS_H
 
+/* **************************************************
+ *  Cuts namespace.
+ *
+ *  Authors:  Xin Dong        (xdong@lbl.gov)
+ *            Michael Lomnitz (mlomitz@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *
+ * **************************************************
+ */
+
+
 namespace cuts
 {
    //event
