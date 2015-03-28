@@ -1,6 +1,18 @@
 #ifndef StPicoD0Event__h
 #define StPicoD0Event__h
 
+/* **************************************************
+ *  A specialized class for storing eventwise D0
+ *  candidates. 
+ *
+ *  Authors:  Xin Dong        (xdong@lbl.gov)
+ *            Michael Lomnitz (mlomitz@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *
+ * **************************************************
+ */
+
 class StPicoEvent;
 
 #include "TObject.h"
