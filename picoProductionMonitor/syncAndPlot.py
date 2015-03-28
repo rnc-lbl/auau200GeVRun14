@@ -7,7 +7,7 @@ import fcntl
 import time
 import subprocess
 
-gWaitTime = 60*120 # 120 minutes before trying to submit again
+# gWaitTime = 60*120 # 120 minutes before trying to submit again
 gRcf = 'mstftsm@rftpexp.rhic.bnl.gov'
 gLogsLocationAtRcf = '/star/institutions/lbl_prod/Run14_AuAu200GeV/production/CheckLog'
 gLogsLocationAtPdsf = '.'
@@ -15,14 +15,14 @@ gDirectoryName = './CheckLog'
 
 def main():
 
-    while True:
+    # while True:
         directoryToSync = gRcf+':'+gLogsLocationAtRcf
         subprocess.call(('rsync','-avzhp',directoryToSync,gLogsLocationAtPdsf))
-        subprocess.call(('./plotPicoProductionStatistics.py',gDirectoryName))
+        subprocess.call(('./python','plotPicoProductionStatistics.py',gDirectoryName))
 
-        os.system("date")
-        print "... waiting for another ",gWaitTime/60," minutes before trying to submit again"
-        time.sleep(gWaitTime)
+        # os.system("date")
+        # print "... waiting for another ",gWaitTime/60," minutes before trying to submit again"
+        # time.sleep(gWaitTime)
 
 
 if __name__ == '__main__':
