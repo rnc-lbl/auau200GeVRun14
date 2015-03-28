@@ -10,6 +10,7 @@ import matplotlib.dates as mdates
 
 gLogsExtension = 'nEventsCheck.log'
 gNumberOfEventsVsDayFileName = 'numberOfEventsVsDay.png'
+gTotalNumberOfEventsVsDayFileName = 'totalNumberOfEventsVsDay.png'
 
 def main():
     logsDirectory = sys.argv[1]
@@ -32,30 +33,50 @@ def main():
         else:
             print f
 
-    plotNumberOfEventsVsDay(nEventsVsDay)
+    plotNumberOfEventsVsDay(nEventsVsDay.items())
     makeIndexFile(totalMuDstEvents,totalPicoEvents)
 
 def makeIndexFile(nMuDstEvents,nPicoEvents):
     os.system('rm -f index.md index.html')
     os.system('echo \#\#Total number of produced picoDst events = %i >> index.md'%nPicoEvents)
     os.system('echo ![]\(%s\) >> index.md'%gNumberOfEventsVsDayFileName)
+    os.system('echo ![]\(%s\) >> index.md'%gTotalNumberOfEventsVsDayFileName)
     os.system('./markdown index.md > index.html')
     os.system('chmod a+r index.md')
     os.system('chmod a+r index.html')
 
 def plotNumberOfEventsVsDay(nEventsVsDay):
 
-    x = [datetime.datetime.strptime(d,'%m/%d/%Y').date() for d in nEventsVsDay.keys()]
-    y = [v/1.e6 for v in nEventsVsDay.values()]
+    nEventsVsDay = sorted(nEventsVsDay)
+    x = [datetime.datetime.strptime(d[0],'%m/%d/%Y').date() for d in nEventsVsDay]
+    y = [v[1]/1.e6 for v in nEventsVsDay]
 
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
     plt.gca().xaxis.set_major_locator(mdates.DayLocator())
     plt.scatter(x,y)
     plt.gcf().autofmt_xdate()
     plt.gca().set_ylim([0,70])
-    plt.ylabel('nEvents (m)')
+    plt.gca().yaxis.grid() 
+    plt.ylabel('nEvents (m)/Day')
     plt.savefig(gNumberOfEventsVsDayFileName)
     os.system('chmod a+r '+gNumberOfEventsVsDayFileName)
+    plt.close()
+
+    yy = [y[0]]
+    for i in xrange(1,len(y)):
+        yy.append(y[i]+yy[i-1])
+
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+    plt.scatter(x,yy)
+    plt.plot(x,yy)
+    plt.show()
+    plt.gcf().autofmt_xdate()
+    plt.gca().set_ylim([50,300])
+    plt.gca().yaxis.grid() 
+    plt.ylabel('Total nEvents (m)')
+    plt.savefig(gTotalNumberOfEventsVsDayFileName)
+    os.system('chmod a+r '+gTotalNumberOfEventsVsDayFileName)
 
 
 def getLogElements(f):
