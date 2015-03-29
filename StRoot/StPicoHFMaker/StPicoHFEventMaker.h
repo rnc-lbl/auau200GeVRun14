@@ -51,7 +51,7 @@ class StPicoHFEventMaker : public StMaker
 
     void SetHFBaseCuts(StHFCuts* cuts) { mHFCuts = cuts; }
 
-    enum eMakerMode {analyse, write};
+    enum eMakerMode {analyse, write, read};
     
     void SetMakerMode(unsigned short us) { mMakerMode = us; }
     void SetDecayMode(unsigned short us) { mDecayMode = us; }
@@ -79,10 +79,13 @@ class StPicoHFEventMaker : public StMaker
     unsigned int    mDecayMode; // 
     unsigned int    mMakerMode; // 
 
+    TTree          *mTree;
+    TList          *mOutList;
+
     std::vector<unsigned short> mIdxPicoPions;
     std::vector<unsigned short> mIdxPicoKaons;
     std::vector<unsigned short> mIdxPicoProtons;
-   
+
   private:
     Int_t Init();
     Int_t Make();
@@ -100,7 +103,6 @@ class StPicoHFEventMaker : public StMaker
     StPicoEvent*    mPicoEvent;
 
     TFile* mOutputFile;
-    TTree* mTree;
 
     ClassDef(StPicoHFEventMaker, 1)
 };
