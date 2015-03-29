@@ -5,7 +5,7 @@
 /* **************************************************
  *  Generic class storing event-wise information in HF analysis
  *   constructor takes option mode
- *     mode 0 : primary pair (default)        : StPicoHFEvent::air
+ *     mode 0 : primary pair (default)        : StPicoHFEvent::pair
  *     mode 1 : primary triplet               : StPicoHFEvent::triplet
  *     mode 2 : primary pair + secondary pair : StPicoHFEvent::secondPair
  *
@@ -39,9 +39,9 @@ public:
    void    addHFPrimary(StHFTriplet const*);
    void    addHFSecondary(StHFSecondaryPair const*);
 
-   TClonesArray const * hFPrimaryArray()     const { return mHFPrimaryArray;}
+   inline TClonesArray const * hFPrimaryArray()     const;
    int                  nHFPrimary()         const;
-   TClonesArray const * hFSecondaryArray()   const { return mHFSecondaryArray;}
+   inline TClonesArray const * hFSecondaryArray()     const ;
    int                  nHFSecondary()       const;
 
    // for variables from StPicoEvent
@@ -67,8 +67,10 @@ private:
    ClassDef(StPicoHFEvent, 1)
 };
 
-inline int   StPicoHFEvent::nHFPrimary()   const { return mNHFPrimary; }
-inline int   StPicoHFEvent::nHFSecondary() const { return mNHFSecondary; }
+inline TClonesArray const * StPicoHFEvent::hFPrimaryArray()    const { return mHFPrimaryArray;}
+inline int                  StPicoHFEvent::nHFPrimary()        const { return mNHFPrimary; }
+inline TClonesArray const * StPicoHFEvent::hFSecondaryArray()  const { return mHFSecondaryArray;}
+inline int                  StPicoHFEvent::nHFSecondary()      const { return mNHFSecondary; }
 
 inline Int_t StPicoHFEvent::runId()        const { return mRunId; }
 inline Int_t StPicoHFEvent::eventId()      const { return mEventId; }
