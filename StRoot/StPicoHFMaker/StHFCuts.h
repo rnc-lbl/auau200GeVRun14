@@ -17,6 +17,7 @@
 #include "TObject.h"
 
 class StPicoTrack;
+class StPicoEvent;
 
 class StHFPair;
 class StHFSecondaryPair;
@@ -40,6 +41,7 @@ class StHFCuts : public TObject
   void SetCutRequireHFT(bool b)        { mRequireHFT       = b; }
   void SetCutNHitsFitnHitsMax(float f) { mNHitsFitnHitsMax = f; }
 
+
   /* void SetCutNSigmaPion(float f)       { mNSigmaPion = f; } */
   /* void SetCutPionPt(float f)           { mPionPt = f; } */
   /* void SetCutPionEta(float f)          { mPionEta = f; } */
@@ -52,22 +54,26 @@ class StHFCuts : public TObject
   /* void SetCutProtonPt(float f)         { mProtonPt = f; } */
   /* void SetCutProtonEta(float f)        { mProtonEta = f; } */
 
-  void SetCutPrimaryPair(float dcaDaughtersMax, float decayLengthMin, float cosThetaMin, 
-			 float massMin, float massMax)  {
-    mPrimaryDcaDaughtersMax = dcaDaughtersMax; mPrimaryDecayLengthMin = decayLengthMin;
+  void SetCutPrimaryPair(float dcaDaughtersMax, float decayLengthMin, float decayLengthMax, 
+			 float cosThetaMin, float massMin, float massMax)  {
+    mPrimaryDcaDaughtersMax = dcaDaughtersMax; 
+    mPrimaryDecayLengthMin = decayLengthMin; mPrimaryDecayLengthMax = decayLengthMax;
     mPrimaryCosThetaMin = cosThetaMin;
     mPrimaryMassMin = massMin; mPrimaryMassMax = massMax; }
 
-  void SetCutSecondaryPair(float dcaDaughtersMax, float decayLengthMin, float cosThetaMin, 
-			 float massMin, float massMax)  {
-    mSecondaryDcaDaughtersMax = dcaDaughtersMax; mSecondaryDecayLengthMin = decayLengthMin;
+  void SetCutSecondaryPair(float dcaDaughtersMax, float decayLengthMin, float decayLengthMax, 
+			   float cosThetaMin, float massMin, float massMax)  {
+    mSecondaryDcaDaughtersMax = dcaDaughtersMax;
+    mSecondaryDecayLengthMin = decayLengthMin; mSecondaryDecayLengthMax = decayLengthMax;
     mSecondaryCosThetaMin = cosThetaMin;
     mSecondaryMassMin = massMin; mSecondaryMassMax = massMax; }
 
   void SetCutTriplet(float dcaDaughters12Max, float dcaDaughters23Max, float dcaDaughters31Max, 
-		     float decayLengthMin, float cosThetaMin, float massMin, float massMax)  {
+		     float decayLengthMin, float decayLengthMax, 
+		     float cosThetaMin, float massMin, float massMax)  {
     mTripletDcaDaughters12Max = dcaDaughters12Max; mTripletDcaDaughters23Max = dcaDaughters23Max; mTripletDcaDaughters31Max = dcaDaughters31Max; 
-    mTripletDecayLengthMin = decayLengthMin; mTripletCosThetaMin = cosThetaMin;
+    mTripletDecayLengthMin = decayLengthMin; mTripletDecayLengthMax = decayLengthMax; 
+    mTripletCosThetaMin = cosThetaMin;
     mTripletMassMin = massMin; mTripletMassMax = massMax; }
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
@@ -94,12 +100,14 @@ class StHFCuts : public TObject
 
   const float&    CutPrimaryDcaDaughtersMax()   const { return mPrimaryDcaDaughtersMax; }
   const float&    CutPrimaryDecayLengthMin()    const { return mPrimaryDecayLengthMin; }
+  const float&    CutPrimaryDecayLengthMax()    const { return mPrimaryDecayLengthMax; }
   const float&    CutPrimaryCosThetaMin()       const { return mPrimaryCosThetaMin; }
   const float&    CutPrimaryMassMin()           const { return mPrimaryMassMin; }
   const float&    CutPrimaryMassMax()           const { return mPrimaryMassMax; }
 
   const float&    CutSecondaryDcaDaughtersMax() const { return mSecondaryDcaDaughtersMax; }
   const float&    CutSecondaryDecayLengthMin()  const { return mSecondaryDecayLengthMin; }
+  const float&    CutSecondaryDecayLengthMax()  const { return mSecondaryDecayLengthMax; }
   const float&    CutSecondaryCosThetaMin()     const { return mSecondaryCosThetaMin; }
   const float&    CutSecondaryMassMin()         const { return mSecondaryMassMin; }
   const float&    CutSecondaryMassMax()         const { return mSecondaryMassMax; }
@@ -108,6 +116,7 @@ class StHFCuts : public TObject
   const float&    CutTripletDcaDaughters23Max()   const { return mTripletDcaDaughters23Max; }
   const float&    CutTripletDcaDaughters31Max()   const { return mTripletDcaDaughters31Max; }
   const float&    CutTripletDecayLengthMin()    const { return mTripletDecayLengthMin; }
+  const float&    CutTripletDecayLengthMax()    const { return mTripletDecayLengthMax; }
   const float&    CutTripletCosThetaMin()       const { return mTripletCosThetaMin; }
   const float&    CutTripletMassMin()           const { return mTripletMassMin; }
   const float&    CutTripletMassMax()           const { return mTripletMassMax; }
@@ -115,6 +124,7 @@ class StHFCuts : public TObject
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
   bool IsGoodTrack(StPicoTrack const *trk) const;
+  bool IsGoodEvent(StPicoEvent const * const event, int *aEventCuts, const int eventStatMax);
 
   bool IsGoodPrimaryPair(StHFPair const & pair) const;
   bool IsGoodSecondaryPair(StHFSecondaryPair const & pair) const;
@@ -164,6 +174,7 @@ class StHFCuts : public TObject
   // ------------------------------------------
   float mPrimaryDcaDaughtersMax;
   float mPrimaryDecayLengthMin; 
+  float mPrimaryDecayLengthMax; 
   float mPrimaryCosThetaMin;
   float mPrimaryMassMin;
   float mPrimaryMassMax;
@@ -173,6 +184,7 @@ class StHFCuts : public TObject
   // ------------------------------------------
   float mSecondaryDcaDaughtersMax;
   float mSecondaryDecayLengthMin; 
+  float mSecondaryDecayLengthMax; 
   float mSecondaryCosThetaMin;
   float mSecondaryMassMin;
   float mSecondaryMassMax;
@@ -184,6 +196,7 @@ class StHFCuts : public TObject
   float mTripletDcaDaughters23Max;
   float mTripletDcaDaughters31Max;
   float mTripletDecayLengthMin; 
+  float mTripletDecayLengthMax; 
   float mTripletCosThetaMin;
   float mTripletMassMin;
   float mTripletMassMax;
