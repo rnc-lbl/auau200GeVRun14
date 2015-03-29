@@ -1,5 +1,5 @@
 *.swp
 *.consign
 *.d
-.sl64_gcc447
+.sl64_gcc4*
 temp_gccflags.c
