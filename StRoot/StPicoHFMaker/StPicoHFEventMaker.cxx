@@ -2,6 +2,7 @@
 
 #include "TTree.h"
 #include "TFile.h"
+#include "TFile.h"
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
 #include "../StPicoDstMaker/StPicoDst.h"
@@ -23,11 +24,9 @@ ClassImp(StPicoHFEventMaker)
 //-----------------------------------------------------------------------------
 StPicoHFEventMaker::StPicoHFEventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName)
 : StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mPicoHFEvent(NULL), 
-  mBField(0.), mDecayMode(StPicoHFEvent::pair), mMakerMode(0),
-  mPicoDstMaker(picoMaker), mPicoEvent(NULL), mOutputFile(NULL), mTree(NULL) {
+  mBField(0.), mDecayMode(StPicoHFEvent::pair), mMakerMode(0), mTree(NULL), mOutList(NULL),
+  mPicoDstMaker(picoMaker), mPicoEvent(NULL), mOutputFile(NULL) {
   
-   mOutputFile = new TFile(outName, "RECREATE");
-   mOutputFile->SetCompressionLevel(1);
 }
 
  //-----------------------------------------------------------------------------
@@ -38,23 +37,39 @@ StPicoHFEventMaker::StPicoHFEventMaker(char const* name, StPicoDstMaker* picoMak
 
  //-----------------------------------------------------------------------------
 Int_t StPicoHFEventMaker::Init() {
+
   if (!mHFCuts)
     mHFCuts = StHFCuts::Instance();
   
   mPicoHFEvent = new StPicoHFEvent(mDecayMode);
+
+  mOutputFile = new TFile(GetName(), "RECREATE");
+  mOutputFile->SetCompressionLevel(1);
+
+  if (mMakerMode == StPicoHFEventMaker::write) {
+    // -- create OutputTree
+    int BufSize = (int)pow(2., 16.);
+    int Split = 1;
+    if (!mTree) 
+      mTree = new TTree("T", "T", BufSize);
+    mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
+    mTree->Branch("dEvent", "StPicoHFEvent", &mPicoHFEvent, BufSize, Split);
+  }
+
+  // -- Add List which holds all histograms
+  bool oldStatus = TH1::AddDirectoryStatus();
+  TH1::AddDirectory(false);
   
-  // -- create OutputTree
-  int BufSize = (int)pow(2., 16.);
-  int Split = 1;
-  if (!mTree) 
-    mTree = new TTree("T", "T", BufSize);
-  mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
-  mTree->Branch("dEvent", "StPicoHFEvent", &mPicoHFEvent, BufSize, Split);
-  
-  //   mOutputList = new TList();
-  
-  Reset();
+  mOutList = new TList();
+  mOutList->SetOwner(true);
+
+  TH1::AddDirectory(oldStatus);
+
+  // -- Call method of daughter class
   InitHF();
+
+  Reset();
+
   return kStOK;
 }
 
@@ -64,6 +79,7 @@ Int_t StPicoHFEventMaker::Finish() {
 
   mOutputFile->cd();
   mOutputFile->Write();
+  mOutList->Write(mOutList->GetName(), TObject::kSingleKey);
   mOutputFile->Close();
   return kStOK;
 }
@@ -122,7 +138,8 @@ Int_t StPicoHFEventMaker::Make() {
 
    // This should never be inside the good event block
    // because we want to save information about all events, good or bad
-   mTree->Fill();
+   if (mMakerMode == StPicoHFEventMaker::write)
+     mTree->Fill();
 
    Reset();
 
@@ -162,10 +179,18 @@ bool StPicoHFEventMaker::isGoodEvent() {
    mBField = mPicoEvent->bField();
    mPrimVtx = mPicoEvent->primaryVertex();
 
+   const int mEventStatMax = 6;
+   int  aEventStat[mEventStatMax];
+   
+   bool bResult = mHFCuts->IsGoodEvent(mPicoEvent, aEventStat,  mEventStatMax);
+   return bResult;
+
+   /*
    return ((mPicoEvent->triggerWord() & mHFCuts->CutTriggerWord()) &&
 	   mPicoEvent->ranking() > 0 &&	
 	   fabs(mPicoEvent->primaryVertex().z()) < mHFCuts->CutVzMax() &&
 	   fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < mHFCuts->CutVzVpdVzMax());
+   */
 }
 
 //-----------------------------------------------------------------------------
@@ -178,3 +203,45 @@ float StPicoHFEventMaker::getTofBeta(StPicoTrack const * const trk) const {
    return  0.;
 }
 
+#if 0
+
+//________________________________________________________________________
+void InitializeEventStats() {
+  // -- Initialize event statistics histograms
+  
+  const int    eventStatMax   = 6; 
+  const char *aEventCutNames[]   = {"all", "bad run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it^{VPD}_{z}", "centrality", "accepted"};
+
+  mOutList->Add(new TH1F("hEventStat0","Event cut statistics 0;Event Cuts;Events", eventStatMax, -0.5, eventStatMax-0.5));
+  TH1F *hEventStat0 = static_cast<TH1F*>(fOutList->Last());
+
+  mOutList->Add(new TH1F("hEventStat1","Event cut statistics 1;Event Cuts;Events", eventStatMax, -0.5, eventStatMax-0.5));
+  TH1F *hEventStat1 = static_cast<TH1F*>(fOutList->Last());
+
+  for (Int_t ii=0; ii < eventStatMax-1; ii++) {
+    hEventStat0->GetXaxis()->SetBinLabel(ii+1, aEventCutNames[ii]);
+    hEventStat1->GetXaxis()->SetBinLabel(ii+1, aEventCutNames[ii]);
+  }
+
+  //  hEventStat0->GetXaxis()->SetBinLabel(fHEventStatMax, Form("Centrality [0-%s]%%", aCentralityMaxNames[9-1]));
+  //  hEventStat1->GetXaxis()->SetBinLabel(fHEventStatMax, Form("Centrality [0-%s]%%", aCentralityMaxNames[9-1]));
+}
+
+
+
+//________________________________________________________________________
+void InitializeCentralityStats() {
+  // -- Initialize trigger statistics histograms
+  
+
+
+  fOutList->Add(new TH1F("hCentralityStat","Centrality statistics;Centrality Bins;Events", fNCentralityBins,-0.5,fNCentralityBins-0.5));
+  TH1F* hCentralityStat = static_cast<TH1F*>(fOutList->Last());
+  
+  for (Int_t ii=0; ii < fNCentralityBins; ii++)
+    hCentralityStat->GetXaxis()->SetBinLabel(ii+1, aCentralityNames[ii]);
+
+  fOutList->Add(new TH1F("hRefMult2Stat","RefMult2 Statistics; RefMult2;Events", 351, 0., 350.));
+  fOutList->Add(new TH1F("hRefMult2CorrStat","RefMult2Corr Statistics; RefMult2;Events", 351, 0., 350.));
+}
+#endif
