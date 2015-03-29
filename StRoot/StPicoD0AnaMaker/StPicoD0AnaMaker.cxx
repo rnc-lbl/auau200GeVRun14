@@ -103,7 +103,7 @@ Int_t StPicoD0AnaMaker::Make()
    // -------------- USER ANALYSIS -------------------------
    TClonesArray const * aKaonPion = mPicoD0Event->kaonPionArray();
 
-   for (int idx = 0; idx < aKaonPion->GetEntriesFast(); ++idx)
+   for (int idx = 0; idx < aKaonPion->GetEntries(); ++idx)
    {
       // this is an example of how to get the kaonPion pairs and their corresponsing tracks
       StKaonPion const* kp = (StKaonPion*)aKaonPion->At(idx);
@@ -112,7 +112,7 @@ Int_t StPicoD0AnaMaker::Make()
       StPicoTrack const* kaon = picoDst->track(kp->kaonIdx());
       StPicoTrack const* pion = picoDst->track(kp->pionIdx());
 
-      mNtuple->Fill(kaon->pMom().perp(), pion->pMom().perp(), kaon->charge()*pion->charge(), kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
+      mNtuple->Fill(kaon->gPt(), pion->gPt(), kaon->charge()*pion->charge(), kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
                     kp->decayLength(), kp->kaonDca(), kp->pionDca(), kp->dcaDaughters(), kp->cosThetaStar());
    }
 
@@ -126,7 +126,9 @@ bool StPicoD0AnaMaker::isGoodPair(StKaonPion const* const kp) const
   StPicoTrack const* kaon = mPicoDstMaker->picoDst()->track(kp->kaonIdx());
   StPicoTrack const* pion = mPicoDstMaker->picoDst()->track(kp->pionIdx());
 
-  return fabs(kaon->nSigmaKaon()) < cuts::nSigmaKaon &&
+  bool tracking = kaon->nHitsFit() > cuts::nHitsFit && pion->nHitsFit() > cuts::nHitsFit;
+
+  return tracking && fabs(kaon->nSigmaKaon()) < cuts::nSigmaKaon &&
          fabs(pion->nSigmaPion()) < cuts::nSigmaPion && 
          kp->m() > cuts::minMass && kp->m() < cuts::maxMass &&
          std::cos(kp->pointingAngle()) > cuts::cosTheta &&
