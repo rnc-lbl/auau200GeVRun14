@@ -2,6 +2,19 @@
 #define StKaonPion_hh
 #ifdef __ROOT__
 
+/* **************************************************
+ *  A specialized pair class for calculating K-π pair 
+ *  lorentz vector and topological decay parameters 
+ *  and storing them.
+ *
+ *  Authors:  Xin Dong        (xdong@lbl.gov)
+ *            Michael Lomnitz (mrlomnitz@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *
+ * **************************************************
+ */
+
 #include "TObject.h"
 #include "TClonesArray.h"
 #include "StLorentzVectorF.hh"
