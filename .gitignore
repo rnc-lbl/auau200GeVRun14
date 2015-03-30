@@ -1,5 +1,10 @@
 *.swp
 *.consign
 *.d
+*.root
+*.pdf
+*.png
+*.gif
+*.jpg
 .sl64_gcc447
 temp_gccflags.c
