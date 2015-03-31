@@ -13,13 +13,14 @@
 #include "../StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoD0Event.h"
 #include "StPicoD0EventMaker.h"
+#include "StPicoD0Hists.h"
 #include "StCuts.h"
 
 ClassImp(StPicoD0EventMaker)
 
 //-----------------------------------------------------------------------------
 StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
-   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL)
+   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL), mPicoD0Hists(NULL)
 {
    mPicoD0Event = new StPicoD0Event();
 
@@ -31,6 +32,8 @@ StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* pi
    mTree = new TTree("T", "T", BufSize);
    mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
    mTree->Branch("dEvent", "StPicoD0Event", &mPicoD0Event, BufSize, Split);
+
+   mPicoD0Event = new StPicoD0Hists(fileBaseName);
 }
 
 //-----------------------------------------------------------------------------
@@ -38,6 +41,7 @@ StPicoD0EventMaker::~StPicoD0EventMaker()
 {
    /* mTree is owned by mOutputFile directory, it will be destructed once
     * the file is closed in ::Finish() */
+   delete mPicoD0Hists;
 }
 
 //-----------------------------------------------------------------------------
@@ -52,6 +56,7 @@ Int_t StPicoD0EventMaker::Finish()
    mOutputFile->cd();
    mOutputFile->Write();
    mOutputFile->Close();
+   mPicoD0Hists->closeFile();
    return kStOK;
 }
 //-----------------------------------------------------------------------------
