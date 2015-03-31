@@ -7,40 +7,37 @@
 
 #include "TH1F.h"
 
-#include "StTRIGGERS.h"
+#include "../StPicoDstMaker/StPicoConstants.h"
 #include "StPicoPrescales.h"
 
 using namespace std;
-using namespace trigDef;
 
 ClassImp(StPicoPrescales);
 
-StPicoPrescales* StPicoPrescales::mInstance = 0;
-
-
-StPicoPrescales::StPicoPrescales()
+StPicoPrescales::StPicoPrescales(string prescalesFilesDirectoryName): mPrescalesFilesDirectoryName(prescalesFilesDirectoryName)
 {
-   for (unsigned int iTrg = 0; iTrg < triggers.size(); ++iTrg)
-   {
-      readList(iTrg);
-   }
+
+  for(int i=0;i<nTrigger;++i)
+  {
+    mTriggersIds.push_back(Pico::mTriggerId[i]);
+    readList(mTriggersIds.back());
+  }
+
+  for(int i=0;i<nTriggerMtd;++i)
+  {
+    mTriggersIds.push_back(Pico::mTriggerIdMtd[i]);
+    readList(mTriggersIds.back());
+  }
 
    mLastQuery = mTable.end();
 }
-//___________________________________
-StPicoPrescales const* StPicoPrescales::instance()
-{
-   if (!mInstance) mInstance = new StPicoPrescales();
-
-   return mInstance;
-}
 //___________________________________________
-void StPicoPrescales::readList(unsigned int trg)
+void StPicoPrescales::readList(unsigned int trgId)
 {
    stringstream st;
-   st << triggers[trg];
-   string listFileName = "StRoot/StDmesonAna/" + st.str() + ".txt";
-   cout << "Reading prescale values for trigger " << triggers[trg] << endl;
+   st << trgId;
+   string listFileName = mPrescalesFilesDirectoryName + "/" + st.str() + ".txt";
+   cout << "Reading prescale values for trigger " << trgId << endl;
    cout << "From list " << listFileName << endl;
 
    //Open list
@@ -68,17 +65,17 @@ void StPicoPrescales::readList(unsigned int trg)
 
       if (it == mTable.end())
       {
-         vecPrescales vec(triggers.size(), -1);
-         vec[trg] = prescale;
+         vecPrescales vec(mTriggersIds.size(), -1);
+         vec[trgId] = prescale;
          mTable.insert(pair<unsigned int, vecPrescales>(run, vec));
       }
       else
       {
-         if (it->second.at(trg) == -1) it->second.at(trg) = prescale;
+         if (it->second.at(trgId) == -1) it->second.at(trgId) = prescale;
          else
          {
             cout << "Two prescale values for same run and same trigger." << endl;
-            cout << "Run= " << run << " Trigger= " << triggers[trg] << " StPicoPrescales= " << it->second.at(trg) << " " << prescale << endl;
+            cout << "Run= " << run << " Trigger= " << mTriggersIds[trgId] << " StPicoPrescales= " << it->second.at(trgId) << " " << prescale << endl;
          }
       }
    }
@@ -89,7 +86,7 @@ void StPicoPrescales::readList(unsigned int trg)
 //__________________________________
 float StPicoPrescales::getPrescale(unsigned int run, unsigned int trg)
 {
-   if(trg > triggers.size())
+   if(trg > mTriggersIds.size())
    {
      cout << "StPicoPrescales requested triggers doesn't exist. See StTRIGGERS.h for triggers definition." << endl;
      return -1;
@@ -123,7 +120,7 @@ void StPicoPrescales::fillPrescalesHist(TH1F* hist, unsigned int trg)
 {
    if(!hist) return;
 
-   if(trg > triggers.size())
+   if(trg > mTriggersIds.size())
    {
      cout << "StPicoPrescales requested triggers doesn't exist. See StTRIGGERS.h for triggers definition." << endl;
      return;

@@ -7,13 +7,14 @@
 
 #include <map>
 #include <vector>
+#include <string>
 
 class TH1F;
 
 class StPicoPrescales
 {
   public:
-    static StPicoPrescales const* instance();
+    StPicoPrescales(std::string prescalesFilesDirectoryName);
 
     float getPrescale(unsigned int run,unsigned int trg);
     unsigned int runIndex(unsigned int run);
@@ -21,17 +22,14 @@ class StPicoPrescales
     int getNumberOfRuns() const;
     void fillPrescalesHist(TH1F*,unsigned int trg);
 
-  protected:
-    StPicoPrescales();
-
   private:
-    static StPicoPrescales* mInstance;
-
+    std::string mPrescalesFilesDirectoryName;
+    std::vector<unsigned int> mTriggersIds;
     typedef std::vector<float> vecPrescales;
     std::map<unsigned int,vecPrescales> mTable;
     std::map<unsigned int,vecPrescales>::iterator mLastQuery;
 
-    void readList(unsigned int trg);
+    void readList(unsigned int trgId);
 
     ClassDef(StPicoPrescales,1)
 };
