@@ -12,11 +12,11 @@
  * **************************************************
  */
 
-class string;
+#include <string>
 
 namespace cuts
 {
-   extern string prescalesFilesDirectoryName;
+   extern std::string prescalesFilesDirectoryName;
    //event
    extern UShort_t triggerWord;
    extern float const vz;

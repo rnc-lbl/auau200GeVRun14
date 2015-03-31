@@ -9,7 +9,7 @@
  * **************************************************
  */
 
-#include <string>
+#include "StCuts.h"
 
 namespace cuts
 {
@@ -17,7 +17,7 @@ namespace cuts
    // lists are obtained from http://www.star.bnl.gov/protected/common/common2014/trigger2014/plots_au200gev/
    prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
    //event
-   StriggerWord = 0x1F; //first five bits see http://rnc.lbl.gov/~xdong/SoftHadron/picoDst.html
+   triggerWord = 0x1F; //first five bits see http://rnc.lbl.gov/~xdong/SoftHadron/picoDst.html
    vz = 6.0;// cm.
    vzVpdVz = 3.0; // 3 cm.
 
