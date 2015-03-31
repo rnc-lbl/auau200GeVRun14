@@ -19,6 +19,7 @@ class TFile;
 class TString;
 class StPicoEvent;
 class StPicoTrack;
+class StPicoPrescales;
 class StKaonPion;
 
 
@@ -34,9 +35,10 @@ class StPicoD0Hists
   private:
    StPicoD0Hists(){}
 
+   StPicoPrescales* mPrescales;
    TFile* mOutFile;
-   TH2F* mh2VzVsVzVpd;
-   TH2F* mh2VrVsVz;
+   // TH2F* mh2VzVsVzVpd;
+   // TH2F* mh2VrVsVz;
    TH1F* mh1TotalEventsInRun;
    TH1F* mh1TotalHftTracksInRun;
    TH1F* mh1TotalRefMultInRun;
@@ -46,7 +48,7 @@ class StPicoD0Hists
    TH2F* mh2NKaonsVsNPions;
    TH2F* mh2KaonDcaVsPt;
    TH2F* mh2PionDcaVsPt;
-   TH2F* mh2CosThetaVsPt;
+   // TH2F* mh2CosThetaVsPt;
    TH2F* mh2InvariantMassVsPt;
 
    ClassDef(StPicoD0Hists, 1)
