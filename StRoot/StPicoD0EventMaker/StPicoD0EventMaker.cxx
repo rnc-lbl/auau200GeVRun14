@@ -33,7 +33,7 @@ StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* pi
    mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
    mTree->Branch("dEvent", "StPicoD0Event", &mPicoD0Event, BufSize, Split);
 
-   mPicoD0Event = new StPicoD0Hists(fileBaseName);
+   mPicoD0Hists = new StPicoD0Hists(fileBaseName);
 }
 
 //-----------------------------------------------------------------------------
