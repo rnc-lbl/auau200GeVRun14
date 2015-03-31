@@ -15,13 +15,15 @@
 #include <map>
 #include <vector>
 #include <string>
+#include "TObject.h"
 
 class TH1F;
 
-class StPicoPrescales
+class StPicoPrescales : public TObject
 {
   public:
     StPicoPrescales(std::string prescalesFilesDirectoryName);
+    virtual ~StPicoPrescales();
 
     float prescale(unsigned int run,unsigned int trg);
     unsigned int runIndex(unsigned int run);
