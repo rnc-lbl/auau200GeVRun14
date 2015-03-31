@@ -4,10 +4,11 @@
 
 /* **************************************************
  *  Generic class storing event-wise information in HF analysis
- *   constructor takes option mode
- *     mode 0 : primary pair (default)        : StPicoHFEvent::pair
- *     mode 1 : primary triplet               : StPicoHFEvent::triplet
- *     mode 2 : primary pair + secondary pair : StPicoHFEvent::secondPair
+ *  constructor takes option mode:
+ *   - StPicoHFEvent::kTwoParticleDecay       ->  two particle decay at secondary vertex (A -> B + C)
+ *   - StPicoHFEvent::kThreeParticleDecay     ->  three particle decay at secondary vertex (A -> B + C + d)
+ *   - StPicoHFEvent::kTwoAndTwoParticleDecay ->  two particle decay at secondary vertex (A -> B + C)
+ *                                                and two particle decay at tertiary vertex (C -> D + E)
  *
  *  Authors:  Xin Dong        (xdong@lbl.gov)
  *            Michael Lomnitz (mrlomnitz@lbl.gov)
@@ -17,13 +18,12 @@
  * **************************************************
  */
 
-class StPicoEvent;
-
 #include "TObject.h"
 #include "TClonesArray.h"
 
+class StPicoEvent;
+
 class StHFPair;
-class StHFSecondaryPair;
 class StHFTriplet;
 
 class StPicoHFEvent : public TObject
@@ -32,45 +32,50 @@ public:
    StPicoHFEvent();
    StPicoHFEvent(unsigned int mode);
    ~StPicoHFEvent(){ clear("C");}
-   void    clear(char const *option = "");
-   void    addPicoEvent(StPicoEvent const & picoEvent);
+   void  clear(char const *option = "");
+   void  addPicoEvent(StPicoEvent const & picoEvent);
 
-   void    addHFPrimary(StHFPair const*);
-   void    addHFPrimary(StHFTriplet const*);
-   void    addHFSecondary(StHFSecondaryPair const*);
+   // -- add pair or triplet to the event
+   void  addHFSecondaryVertexPair(StHFPair const*);
+   void  addHFSecondaryVertexTriplet(StHFTriplet const*);
+   void  addHFTertiaryVertexPair(StHFPair const*);
 
-   inline TClonesArray const * hFPrimaryArray()     const;
-   int                  nHFPrimary()         const;
-   inline TClonesArray const * hFSecondaryArray()     const ;
-   int                  nHFSecondary()       const;
+   // -- get array with particles from secondary and tertiary vertex
+   TClonesArray const * aHFSecondaryVertices() const;
+   int                  nHFSecondaryVertices() const;
+   TClonesArray const * aHFTertiaryVertices()  const;
+   int                  nHFTertiaryVertices()  const;
 
-   // for variables from StPicoEvent
-   Int_t   runId()   const;
-   Int_t   eventId() const;
+   // -- get variables from StPicoEvent
+   Int_t runId()   const;
+   Int_t eventId() const;
 
-   enum eHFEventMode {pair, triplet, secondaryPair};
+   // -- different event/decay modes
+   enum eHFEventMode {kTwoParticleDecay, kThreeParticleDecay,kTwoAndTwoParticleDecay };
 
 private:
 
-   // some variables below are kept in ROOT types to match the same ones in StPicoEvent
-   Int_t   mRunId;           // run number
-   Int_t   mEventId;         // event number
-   int     mNHFPrimary;      // number of stored primary combinations
-   int     mNHFSecondary;    // number of stored secondary combinations
+   // -- some variables below are kept in ROOT types to match the same ones in StPicoEvent
+   Int_t mRunId;                                      // run number
+   Int_t mEventId;                                    // event number
 
-   TClonesArray*        mHFPrimaryArray;
-   static TClonesArray* fgHFPrimaryArray;
+   int   mNHFSecondaryVertices;                       // number of stored secondary vertex candidates
+   int   mNHFTertiaryVertices;                        // number of stored tertiary vertex candidates
 
-   TClonesArray*        mHFSecondaryArray;
-   static TClonesArray* fgHFSecondaryArray;
+   TClonesArray*        mHFSecondaryVerticesArray;    // secondary vertex candidates
+   static TClonesArray* fgHFSecondaryVerticesArray;
+
+   TClonesArray*        mHFTertiaryVerticesArray;     // tertiary vertex candidates
+   static TClonesArray* fgHFTertiaryVerticesArray;
 
    ClassDef(StPicoHFEvent, 1)
 };
 
-inline TClonesArray const * StPicoHFEvent::hFPrimaryArray()    const { return mHFPrimaryArray;}
-inline int                  StPicoHFEvent::nHFPrimary()        const { return mNHFPrimary; }
-inline TClonesArray const * StPicoHFEvent::hFSecondaryArray()  const { return mHFSecondaryArray;}
-inline int                  StPicoHFEvent::nHFSecondary()      const { return mNHFSecondary; }
+inline TClonesArray const * StPicoHFEvent::aHFSecondaryVertices() const { return mHFSecondaryVerticesArray;}
+inline int                  StPicoHFEvent::nHFSecondaryVertices() const { return mNHFSecondaryVertices; }
+
+inline TClonesArray const * StPicoHFEvent::aHFTertiaryVertices()  const { return mHFTertiaryVerticesArray;}
+inline int                  StPicoHFEvent::nHFTertiaryVertices()  const { return mNHFTertiaryVertices; }
 
 inline Int_t StPicoHFEvent::runId()        const { return mRunId; }
 inline Int_t StPicoHFEvent::eventId()      const { return mEventId; }
