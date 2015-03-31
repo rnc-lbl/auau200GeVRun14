@@ -13,6 +13,8 @@
  * **************************************************
  */
 
+#include "TObject.h"
+
 class TH1F;
 class TH2F;
 class TFile;
@@ -23,11 +25,11 @@ class StPicoPrescales;
 class StKaonPion;
 
 
-class StPicoD0Hists
+class StPicoD0Hists: public TObject
 {
   public:
    StPicoD0Hists(TString fileBaseName);
-   ~StPicoD0Hists();
+   virtual ~StPicoD0Hists();
    void addEvent(StPicoEvent const & picoEvent);
    void addKaonPion(StKaonPion const*, StPicoTrack const* kaon, StPicoTrack const* pion);
    void closeFile();
