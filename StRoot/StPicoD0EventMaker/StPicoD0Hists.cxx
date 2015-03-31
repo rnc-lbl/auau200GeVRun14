@@ -13,9 +13,9 @@
 ClassImp(StPicoD0Hists)
 
 //-----------------------------------------------------------------------
-StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(NULL), mh2VzVsVzVpd(NULL),
-  mh2VrVsVz(NULL), mh1TotalEventsInRun(NULL), mh1TotalHftTracksInRun(NULL), mh1TotalRefMultInRun(NULL),
-  mh1TotalD0CandidatesInRun(NULL), mh2KaonDcaVsPt(NULL), mh2PionDcaVsPt(NULL), mh2CosThetaVsPt(NULL)
+StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(NULL),
+  mh1TotalEventsInRun(NULL), mh1TotalHftTracksInRun(NULL), mh1TotalRefMultInRun(NULL),
+  mh1TotalD0CandidatesInRun(NULL), mh2KaonDcaVsPt(NULL), mh2PionDcaVsPt(NULL)
 {
   mPrescales = new StPicoPrescales(cuts::prescalesFilesDirectoryName);
 
@@ -42,6 +42,8 @@ StPicoD0Hists::~StPicoD0Hists()
 //-----------------------------------------------------------------------
 void StPicoD0Hists::addEvent(StPicoEvent const & picoEvent)
 {
+  int runIndex = mPrescales->runIndex(picoEvent.runId());
+  mh1TotalEventsInRun->Fill(runIndex);
 }
 //---------------------------------------------------------------------
 void StPicoD0Hists::addKaonPion(StKaonPion const* const kp, StPicoTrack const* const kaon, StPicoTrack const* const pion)
