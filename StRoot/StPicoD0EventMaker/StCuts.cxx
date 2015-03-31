@@ -15,26 +15,26 @@ namespace cuts
 {
    // path to lists of triggers prescales
    // lists are obtained from http://www.star.bnl.gov/protected/common/common2014/trigger2014/plots_au200gev/
-   prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
+   std::string const prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
    //event
-   triggerWord = 0x1F; //first five bits see http://rnc.lbl.gov/~xdong/SoftHadron/picoDst.html
-   vz = 6.0;// cm.
-   vzVpdVz = 3.0; // 3 cm.
+   UShort_t const triggerWord = 0x1F; //first five bits see http://rnc.lbl.gov/~xdong/SoftHadron/picoDst.html
+   float const vz = 6.0;// cm.
+   float const vzVpdVz = 3.0; // 3 cm.
 
    //tracking
-   nHitsFit = 15;
-   requireHFT = true;
+   int const nHitsFit = 15;
+   bool const requireHFT = true;
 
    //pions
-   nSigmaPion = 3.0;
+   float const nSigmaPion = 3.0;
 
    //kaons
-   nSigmaKaon = 2.5;
+   float const nSigmaKaon = 2.5;
 
    // kaonPion pair cuts
-   cosTheta = 0; // minimum
-   dcaDaughters = 0.0200; // maximum
-   decayLength = 0.0030; // minimum
-   minMass = 1.6;
-   maxMass = 2.1;
+   float const cosTheta = 0; // minimum
+   float const dcaDaughters = 0.0200; // maximum
+   float const decayLength = 0.0030; // minimum
+   float const minMass = 1.6;
+   float const maxMass = 2.1;
 }

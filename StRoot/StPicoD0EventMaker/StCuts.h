@@ -18,7 +18,7 @@ namespace cuts
 {
    extern std::string prescalesFilesDirectoryName;
    //event
-   extern UShort_t triggerWord;
+   extern UShort_t const triggerWord;
    extern float const vz;
    extern float const vzVpdVz;
 
