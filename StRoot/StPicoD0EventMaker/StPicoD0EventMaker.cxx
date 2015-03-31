@@ -3,6 +3,7 @@
 
 #include "TTree.h"
 #include "TFile.h"
+#include "TString.h"
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
 #include "../StPicoDstMaker/StPicoDst.h"
@@ -17,12 +18,13 @@
 ClassImp(StPicoD0EventMaker)
 
 //-----------------------------------------------------------------------------
-StPicoD0EventMaker::StPicoD0EventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName)
-   : StMaker(name), mPicoDstMaker(picoMaker), mPicoEvent(NULL)
+StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
+   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL)
 {
    mPicoD0Event = new StPicoD0Event();
 
-   mOutputFile = new TFile(outName, "RECREATE");
+   TString baseName(fileBaseName);
+   mOutputFile = new TFile(Form("%s.picoD0.root",fileBaseName), "RECREATE");
    mOutputFile->SetCompressionLevel(1);
    int BufSize = (int)pow(2., 16.);
    int Split = 1;

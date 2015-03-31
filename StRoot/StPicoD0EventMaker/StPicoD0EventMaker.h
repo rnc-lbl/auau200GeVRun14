@@ -26,7 +26,7 @@ class StKaonPion;
 class StPicoD0EventMaker : public StMaker 
 {
   public:
-    StPicoD0EventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName);
+    StPicoD0EventMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName);
     virtual ~StPicoD0EventMaker();
     
     virtual Int_t Init();

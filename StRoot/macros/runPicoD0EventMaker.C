@@ -6,7 +6,7 @@ class StPicoDstMaker;
 
 
 StChain *chain;
-void runPicoD0EventMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="test.root")
+void runPicoD0EventMaker(const Char_t *inputFile, const Char_t *outputFile="test.root")
 { 
   //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL15c";
