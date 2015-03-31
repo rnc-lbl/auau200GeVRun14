@@ -27,11 +27,12 @@ class StPicoPrescales
   private:
     static StPicoPrescales* mInstance;
 
+    std::vector<unsigned int> mTriggersIds;
     typedef std::vector<float> vecPrescales;
     std::map<unsigned int,vecPrescales> mTable;
     std::map<unsigned int,vecPrescales>::iterator mLastQuery;
 
-    void readList(unsigned int trg);
+    void readList(unsigned int trgId);
 
     ClassDef(StPicoPrescales,1)
 };
