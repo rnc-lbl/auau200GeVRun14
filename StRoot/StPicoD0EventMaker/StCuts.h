@@ -12,9 +12,13 @@
  * **************************************************
  */
 
+#include <string>
 
 namespace cuts
 {
+   // path to lists of triggers prescales
+   // lists are obtained from http://www.star.bnl.gov/protected/common/common2014/trigger2014/plots_au200gev/
+   string prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
    //event
    UShort_t triggerWord = 0x1F; //first five bits see http://rnc.lbl.gov/~xdong/SoftHadron/picoDst.html
    float const vz = 6.0;// cm.
