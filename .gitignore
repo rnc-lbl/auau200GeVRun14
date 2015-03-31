@@ -1,6 +1,7 @@
 *.swp
 *.consign
 *.d
+.sl64_gcc4*
 *.root
 *.pdf
 *.png
