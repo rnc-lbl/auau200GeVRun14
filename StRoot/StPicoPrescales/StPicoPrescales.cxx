@@ -92,7 +92,7 @@ void StPicoPrescales::readList(unsigned int trg)
 }
 
 //__________________________________
-float StPicoPrescales::getPrescale(unsigned int run, unsigned int trg)
+float StPicoPrescales::prescale(unsigned int run, unsigned int trg)
 {
    if(trg > mTriggersIds.size())
    {
@@ -119,7 +119,7 @@ float StPicoPrescales::getPrescale(unsigned int run, unsigned int trg)
 }
 
 //__________________________________
-int StPicoPrescales::getNumberOfRuns() const
+int StPicoPrescales::numberOfRuns() const
 {
    return mTable.size();
 }
