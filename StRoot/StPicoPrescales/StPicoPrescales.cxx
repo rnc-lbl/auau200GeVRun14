@@ -20,24 +20,27 @@ StPicoPrescales::StPicoPrescales(string prescalesFilesDirectoryName): mPrescales
   for(int i=0;i<nTrigger;++i)
   {
     mTriggersIds.push_back(Pico::mTriggerId[i]);
-    readList(mTriggersIds.back());
   }
 
   for(int i=0;i<nTriggerMtd;++i)
   {
     mTriggersIds.push_back(Pico::mTriggerIdMtd[i]);
-    readList(mTriggersIds.back());
+  }
+
+  for(size_t iTrg=0;iTrg<mTriggersIds.size();++iTrg)
+  {
+    readList(iTrg);
   }
 
    mLastQuery = mTable.end();
 }
 //___________________________________________
-void StPicoPrescales::readList(unsigned int trgId)
+void StPicoPrescales::readList(unsigned int trg)
 {
    stringstream st;
-   st << trgId;
+   st << mTriggersIds[trg];
    string listFileName = mPrescalesFilesDirectoryName + "/" + st.str() + ".txt";
-   cout << "Reading prescale values for trigger " << trgId << endl;
+   cout << "Reading prescale values for trigger " << mTriggersIds[trg] << endl;
    cout << "From list " << listFileName << endl;
 
    //Open list
@@ -66,16 +69,16 @@ void StPicoPrescales::readList(unsigned int trgId)
       if (it == mTable.end())
       {
          vecPrescales vec(mTriggersIds.size(), -1);
-         vec[trgId] = prescale;
+         vec[trg] = prescale;
          mTable.insert(pair<unsigned int, vecPrescales>(run, vec));
       }
       else
       {
-         if (it->second.at(trgId) == -1) it->second.at(trgId) = prescale;
+         if (it->second.at(trg) == -1) it->second.at(trg) = prescale;
          else
          {
             cout << "Two prescale values for same run and same trigger." << endl;
-            cout << "Run= " << run << " Trigger= " << mTriggersIds[trgId] << " StPicoPrescales= " << it->second.at(trgId) << " " << prescale << endl;
+            cout << "Run= " << run << " Trigger= " << mTriggersIds[trg] << " StPicoPrescales= " << it->second.at(trg) << " " << prescale << endl;
          }
       }
    }
