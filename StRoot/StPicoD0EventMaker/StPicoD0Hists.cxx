@@ -2,9 +2,9 @@
 #include "TH2F.h"
 #include "TFile.h"
 #include "TString.h"
-#include "../StPicoDstMaker/StPicoEvent.h"
 #include "../StPicoDstMaker/StPicoTrack.h"
 #include "../StPicoPrescales/StPicoPrescales.h"
+#include "StPicoD0Event.h"
 #include "StKaonPion.h"
 #include "StCuts.h"
 
@@ -40,9 +40,9 @@ StPicoD0Hists::~StPicoD0Hists()
   // when the file if closed.
 }
 //-----------------------------------------------------------------------
-void StPicoD0Hists::addEvent(StPicoEvent const & picoEvent)
+void StPicoD0Hists::addEvent(StPicoD0Event const & picoD0Event)
 {
-  int runIndex = mPrescales->runIndex(picoEvent.runId());
+  int runIndex = mPrescales->runIndex(picoD0Event.runId());
   mh1TotalEventsInRun->Fill(runIndex);
 }
 //---------------------------------------------------------------------

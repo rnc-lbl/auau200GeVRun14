@@ -108,6 +108,8 @@ Int_t StPicoD0EventMaker::Make()
       mPicoD0Event->nKaons(idxPicoKaons.size());
       mPicoD0Event->nPions(idxPicoPions.size());
 
+      mPicoD0Hists->addEvent(*mPicoD0Event);
+
       for (unsigned short ik = 0; ik < idxPicoKaons.size(); ++ik)
       {
          StPicoTrack const * kaon = picoDst->track(idxPicoKaons[ik]);

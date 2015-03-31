@@ -19,9 +19,9 @@ class TH1F;
 class TH2F;
 class TFile;
 class TString;
-class StPicoEvent;
 class StPicoTrack;
 class StPicoPrescales;
+class StPicoD0Event;
 class StKaonPion;
 
 
@@ -30,7 +30,7 @@ class StPicoD0Hists: public TObject
   public:
    StPicoD0Hists(TString fileBaseName);
    virtual ~StPicoD0Hists();
-   void addEvent(StPicoEvent const & picoEvent);
+   void addEvent(StPicoD0Event const & picoD0Event);
    void addKaonPion(StKaonPion const*, StPicoTrack const* kaon, StPicoTrack const* pion);
    void closeFile();
 
