@@ -29,7 +29,7 @@ class StPicoPrescales
     std::map<unsigned int,vecPrescales> mTable;
     std::map<unsigned int,vecPrescales>::iterator mLastQuery;
 
-    void readList(unsigned int trgId);
+    void readList(unsigned int trg);
 
     ClassDef(StPicoPrescales,1)
 };
