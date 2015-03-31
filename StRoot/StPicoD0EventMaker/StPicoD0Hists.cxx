@@ -22,9 +22,10 @@ StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(
   mOutFile = new TFile(Form("%s.picoD0.hists.root",fileBaseName.Data()),"RECREATE");
 
   int nRuns = mPrescales->numberOfRuns();
+  TH1::SetDefaultSumw2();
   mh1TotalEventsInRun = new TH1F("mh1TotalEventsInRun","totalEventsInRun;runIndex",nRuns+1,0,nRuns+1);
-  mh1TotalHftTracksInRun = new TH1F("mh1TotalHftTracksInRun","totalHftTracksInRun;runIndex",nRuns+1,0,nRuns+1);
-  mh1TotalRefMultInRun = new TH1F("mh1TotalRefMultInRun","totalRefMultInRun;runIndex",nRuns+1,0,nRuns+1);
+  mh1TotalHftTracksInRun = new TH1F("mh1TotalHftTracksInRun","totalHftTracksInRun;runIndex;totalHftTracksInRun",nRuns+1,0,nRuns+1);
+  mh1TotalGRefMultInRun = new TH1F("mh1TotalGRefMultInRun","totalGRefMultInRun;runIndex;totalGRefMultInRun",nRuns+1,0,nRuns+1);
   mh1TotalKaonsInRun = new TH1F("mh1TotalKaonsInRun","totalKaonsInRun;runIndex",nRuns+1,0,nRuns+1);
   mh1TotalPionsInRun = new TH1F("mh1TotalPionsInRun","totalPionsInRun;runIndex",nRuns+1,0,nRuns+1);
   mh1TotalD0CandidatesInRun = new TH1F("mh1TotalD0CandidatesInRun","totalD0CandidatesInRun;runIndex",nRuns+1,0,nRuns+1);

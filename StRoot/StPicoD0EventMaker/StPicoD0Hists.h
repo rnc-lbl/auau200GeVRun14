@@ -43,7 +43,7 @@ class StPicoD0Hists: public TObject
    // TH2F* mh2VrVsVz;
    TH1F* mh1TotalEventsInRun;
    TH1F* mh1TotalHftTracksInRun;
-   TH1F* mh1TotalRefMultInRun;
+   TH1F* mh1TotalGRefMultInRun;
    TH1F* mh1TotalKaonsInRun;
    TH1F* mh1TotalPionsInRun;
    TH1F* mh1TotalD0CandidatesInRun;
