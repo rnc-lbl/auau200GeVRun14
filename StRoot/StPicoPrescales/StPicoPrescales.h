@@ -24,7 +24,7 @@ class StPicoPrescales : public TObject
 {
   public:
     StPicoPrescales(std::string prescalesFilesDirectoryName);
-    virtual ~StPicoPrescales();
+    virtual ~StPicoPrescales(){}
 
     float prescale(unsigned int run,unsigned int trg);
     unsigned int runIndex(unsigned int run);
