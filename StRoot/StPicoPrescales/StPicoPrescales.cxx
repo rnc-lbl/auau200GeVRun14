@@ -14,10 +14,7 @@ using namespace std;
 
 ClassImp(StPicoPrescales);
 
-StPicoPrescales* StPicoPrescales::mInstance = 0;
-
-
-StPicoPrescales::StPicoPrescales()
+StPicoPrescales::StPicoPrescales(string prescalesFilesDirectoryName): mPrescalesFilesDirectoryName(prescalesFilesDirectoryName)
 {
 
   for(int i=0;i<nTrigger;++i)
@@ -34,19 +31,12 @@ StPicoPrescales::StPicoPrescales()
 
    mLastQuery = mTable.end();
 }
-//___________________________________
-StPicoPrescales const* StPicoPrescales::instance()
-{
-   if (!mInstance) mInstance = new StPicoPrescales();
-
-   return mInstance;
-}
 //___________________________________________
 void StPicoPrescales::readList(unsigned int trgId)
 {
    stringstream st;
    st << trgId;
-   string listFileName = "StRoot/StDmesonAna/" + st.str() + ".txt";
+   string listFileName = mPrescalesFilesDirectoryName + "/" + st.str() + ".txt";
    cout << "Reading prescale values for trigger " << trgId << endl;
    cout << "From list " << listFileName << endl;
 
