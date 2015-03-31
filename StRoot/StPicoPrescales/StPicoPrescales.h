@@ -1,4 +1,11 @@
 /* 
+ * This is a utility class which has a lookup table 
+ * of precsales for different triggers and runs.
+ *
+ * Table is constructed from lists. Constructor
+ * expects to find lists for all triggers defined in 
+ * StPicoDstMaker/StPicoConstants.cxx
+ *
  * Author: Mustafa Mustafa (mmustafa@lbl.gov)
  */
 
