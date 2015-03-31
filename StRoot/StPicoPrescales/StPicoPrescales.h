@@ -11,6 +11,7 @@
 
 #ifndef StPRESCALES_H
 #define	StPRESCALES_H
+#ifdef __ROOT__
 
 #include <map>
 #include <vector>
@@ -43,5 +44,6 @@ class StPicoPrescales : public TObject
     ClassDef(StPicoPrescales,1)
 };
 
+#endif
 #endif	/* StPRESCALES_H */
 
