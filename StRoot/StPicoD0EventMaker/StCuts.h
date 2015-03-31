@@ -12,7 +12,7 @@
  * **************************************************
  */
 
-#include "RTypes.h"
+#include "Rtypes.h"
 #include <string>
 
 namespace cuts
