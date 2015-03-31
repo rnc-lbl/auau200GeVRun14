@@ -13,55 +13,96 @@
 #include "../StPicoDstMaker/StPicoEvent.h"
 
 #include "StHFPair.h"
-#include "StHFSecondaryPair.h"
 #include "StHFTriplet.h"
 
 ClassImp(StHFCuts)
 
 // _________________________________________________________
-StHFCuts::StHFCuts() : mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
+StHFCuts::StHFCuts() 
+: TNamed("HFCutsBase", "HFCutsBase"), mEventStatMax(6),
+  mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
   
-  // mNSigmaPion(3.),    mPionPt(0.2),   mPionEta(999.),
-  // mNSigmaKaon(2.5),   mKaonPt(0.2),   mKaonEta(999.),
-  // mNSigmaProton(2.5), mProtonPt(0.2), mProtonEta(999.),
+  mTPCNSigmaPionMax(3.), 
+  mTOFNSigmaPionMax(3.), 
+  mPionPtMin(std::numeric_limits<float>::min()),  mPionPtMax(std::numeric_limits<float>::max()), 
+  mPionEtaMin(std::numeric_limits<float>::min()), mPionEtaMax(std::numeric_limits<float>::max()), 
+  mPionPtTOFMin(std::numeric_limits<float>::min()), mPionPtTOFMax(std::numeric_limits<float>::max()), 
+
+  mTPCNSigmaKaonMax(3.), 
+  mTOFNSigmaKaonMax(3.), 
+  mKaonPtMin(std::numeric_limits<float>::min()),  mKaonPtMax(std::numeric_limits<float>::max()), 
+  mKaonEtaMin(std::numeric_limits<float>::min()), mKaonEtaMax(std::numeric_limits<float>::max()), 
+  mKaonPtTOFMin(std::numeric_limits<float>::min()), mKaonPtTOFMax(std::numeric_limits<float>::max()), 
+
+  mTPCNSigmaProtonMax(3.), 
+  mTOFNSigmaProtonMax(3.), 
+  mProtonPtMin(std::numeric_limits<float>::min()),  mProtonPtMax(std::numeric_limits<float>::max()), 
+  mProtonEtaMin(std::numeric_limits<float>::min()), mProtonEtaMax(std::numeric_limits<float>::max()), 
+  mProtonPtTOFMin(std::numeric_limits<float>::min()), mProtonPtTOFMax(std::numeric_limits<float>::max()), 
+
+  mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairCosThetaMin(std::numeric_limits<float>::min()), 
+  mSecondaryPairMassMin(std::numeric_limits<float>::min()), mSecondaryPairMassMax(std::numeric_limits<float>::max()), 
+
+  mTertiaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairDecayLengthMin(std::numeric_limits<float>::min()), mTertiaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairCosThetaMin(std::numeric_limits<float>::min()), 
+  mTertiaryPairMassMin(std::numeric_limits<float>::min()), mTertiaryPairMassMax(std::numeric_limits<float>::max()), 
+
+  mSecondaryTripletDcaDaughters12Max(std::numeric_limits<float>::max()), mSecondaryTripletDcaDaughters23Max(std::numeric_limits<float>::max()), 
+  mSecondaryTripletDcaDaughters31Max(std::numeric_limits<float>::max()), 
+  mSecondaryTripletDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryTripletDecayLengthMax(std::numeric_limits<float>::max()), 
+  mSecondaryTripletCosThetaMin(std::numeric_limits<float>::min()), 
+  mSecondaryTripletMassMin(std::numeric_limits<float>::min()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()) {
+  // -- default constructor
+}
+
+// _________________________________________________________
+StHFCuts::StHFCuts(const Char_t *name, const Char_t *title) 
+  : TNamed(name, title), mEventStatMax(6),
+  mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
+  mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
   
-  mPrimaryDcaDaughtersMax(0.0200), mPrimaryDecayLengthMin(0.0030), mPrimaryDecayLengthMax(1.), 
-  mPrimaryCosThetaMin(0.), mPrimaryMassMin(1.6), mPrimaryMassMax(2.1),
+  mTPCNSigmaPionMax(3.), 
+  mTOFNSigmaPionMax(3.), 
+  mPionPtMin(std::numeric_limits<float>::min()),  mPionPtMax(std::numeric_limits<float>::max()), 
+  mPionEtaMin(std::numeric_limits<float>::min()), mPionEtaMax(std::numeric_limits<float>::max()), 
+  mPionPtTOFMin(std::numeric_limits<float>::min()), mPionPtTOFMax(std::numeric_limits<float>::max()), 
 
-  mSecondaryDcaDaughtersMax(0.0200), mSecondaryDecayLengthMin(0.0030), mSecondaryDecayLengthMax(1.),
-  mSecondaryCosThetaMin(0.), mSecondaryMassMin(1.6), mSecondaryMassMax(2.1),
+  mTPCNSigmaKaonMax(3.), 
+  mTOFNSigmaKaonMax(3.), 
+  mKaonPtMin(std::numeric_limits<float>::min()),  mKaonPtMax(std::numeric_limits<float>::max()), 
+  mKaonEtaMin(std::numeric_limits<float>::min()), mKaonEtaMax(std::numeric_limits<float>::max()), 
+  mKaonPtTOFMin(std::numeric_limits<float>::min()), mKaonPtTOFMax(std::numeric_limits<float>::max()), 
 
-  mTripletDcaDaughters12Max(0.0200), mTripletDcaDaughters23Max(0.0200), mTripletDcaDaughters31Max(0.0200), 
-  mTripletDecayLengthMin(0.0030),   mTripletDecayLengthMax(1.), 
-  mTripletCosThetaMin(0.), mTripletMassMin(1.6), mTripletMassMax(2.1) {
-  // -- private constructor 
+  mTPCNSigmaProtonMax(3.), 
+  mTOFNSigmaProtonMax(3.), 
+  mProtonPtMin(std::numeric_limits<float>::min()),  mProtonPtMax(std::numeric_limits<float>::max()), 
+  mProtonEtaMin(std::numeric_limits<float>::min()), mProtonEtaMax(std::numeric_limits<float>::max()), 
+  mProtonPtTOFMin(std::numeric_limits<float>::min()), mProtonPtTOFMax(std::numeric_limits<float>::max()), 
+
+  mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairCosThetaMin(std::numeric_limits<float>::min()), 
+  mSecondaryPairMassMin(std::numeric_limits<float>::min()), mSecondaryPairMassMax(std::numeric_limits<float>::max()), 
+
+  mTertiaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairDecayLengthMin(std::numeric_limits<float>::min()), mTertiaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairCosThetaMin(std::numeric_limits<float>::min()), 
+  mTertiaryPairMassMin(std::numeric_limits<float>::min()), mTertiaryPairMassMax(std::numeric_limits<float>::max()), 
+
+  mSecondaryTripletDcaDaughters12Max(std::numeric_limits<float>::max()), mSecondaryTripletDcaDaughters23Max(std::numeric_limits<float>::max()), 
+  mSecondaryTripletDcaDaughters31Max(std::numeric_limits<float>::max()), 
+  mSecondaryTripletDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryTripletDecayLengthMax(std::numeric_limits<float>::max()), 
+  mSecondaryTripletCosThetaMin(std::numeric_limits<float>::min()), 
+  mSecondaryTripletMassMin(std::numeric_limits<float>::min()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()) {
+  // -- constructor
 }
 
-StHFCuts* StHFCuts::mStHFCuts = NULL;
-
 // _________________________________________________________
-StHFCuts* StHFCuts::Instance() {
-  // -- Get Instance of singleton
-  
-  if (!mStHFCuts)
-    mStHFCuts = new StHFCuts;
-
-  return mStHFCuts;
-}
-
-// _________________________________________________________
-bool StHFCuts::IsGoodTrack(StPicoTrack const * const trk) const
-{
-  // Require at least one hit on every layer of PXL and IST.
-  // It is done here for tests on the preview II data.
-  // The new StPicoTrack which is used in official production has a method to check this
-  return ((!mRequireHFT || trk->isHFTTrack()) && 
-	  trk->nHitsFit() >= mNHitsFitMax);
-}
-
-// _________________________________________________________
-bool StHFCuts::IsGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts = NULL, const int eventStatMax = 0) {
+bool StHFCuts::isGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts = NULL) {
 
   // -- quick method without 
   if (!aEventCuts) {
@@ -72,10 +113,10 @@ bool StHFCuts::IsGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts 
   }
     
   // -- reset event cuts
-  for (Int_t ii = 0; ii < eventStatMax; ++ii)
+  for (unsigned int ii = 0; ii < mEventStatMax; ++ii)
     aEventCuts[ii] = 0;
   
-  Int_t iCut = 0;
+  unsigned  int iCut = 0;
 
   // -- 0 - before event cuts
   aEventCuts[iCut] = 0;
@@ -102,12 +143,11 @@ bool StHFCuts::IsGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts 
   
   // -- 5 check for centrality info
 
-
-
+  // ... if needed
 
   // -- is rejected
   bool isGoodEvent = true;
-  for (Int_t ii = 0; ii < eventStatMax; ++ii)
+  for (unsigned int ii = 0; ii < mEventStatMax; ++ii)
     if  (aEventCuts[ii])
       isGoodEvent = false;
         
@@ -115,30 +155,109 @@ bool StHFCuts::IsGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts 
 }
 
 // _________________________________________________________
-bool StHFCuts::IsGoodPrimaryPair(StHFPair const & pair) const {
-  return ( pair.m() > mPrimaryMassMin && pair.m() < mPrimaryMassMax &&
-	   std::cos(pair.pointingAngle()) > mPrimaryCosThetaMin &&
-	   pair.decayLength() > mPrimaryDecayLengthMin && pair.decayLength() < mPrimaryDecayLengthMax &&
-	   pair.dcaDaughters() < mPrimaryDcaDaughtersMax);
+bool StHFCuts::isGoodTrack(StPicoTrack const * const trk) const {
+  // -- require at least one hit on every layer of PXL and IST.
+  return ((!mRequireHFT || trk->isHFTTrack()) && 
+	  trk->nHitsFit() >= mNHitsFitMax);
 }
 
 // _________________________________________________________
-bool StHFCuts::IsGoodSecondaryPair(StHFSecondaryPair const & pair) const {
-  return ( pair.m() > mSecondaryMassMin && pair.m() < mSecondaryMassMax &&
-	   std::cos(pair.pointingAngle()) > mSecondaryCosThetaMin &&
-	   pair.decayLength() > mSecondaryDecayLengthMin && pair.decayLength() < mSecondaryDecayLengthMax &&
-	   pair.dcaDaughters() < mSecondaryDcaDaughtersMax);
+bool StHFCuts::isGoodTPCPion(StPicoTrack const * const trk) const {
+  // -- check for good pion in TPC
+
+  return ( trk->pMom().perp() >= mPionPtMin && trk->pMom().perp() < mPionPtMax &&
+	   trk->pMom().pseudoRapidity() >= mPionEtaMin && trk->pMom().pseudoRapidity() < mPionEtaMax &&
+	   fabs(trk->nSigmaPion()) < mTPCNSigmaPionMax );
 }
 
 // _________________________________________________________
-bool StHFCuts::IsGoodTriplet(StHFTriplet const & triplet) const {
-  return ( triplet.m() > mTripletMassMin && triplet.m() < mTripletMassMax &&
-	   std::cos(triplet.pointingAngle()) > mTripletCosThetaMin &&
-	   triplet.decayLength() > mTripletDecayLengthMin && triplet.decayLength() < mTripletDecayLengthMax &&
-	   triplet.dcaDaughters12() < mTripletDcaDaughters12Max &&
-	   triplet.dcaDaughters23() < mTripletDcaDaughters23Max &&
-	   triplet.dcaDaughters31() < mTripletDcaDaughters31Max);
+bool StHFCuts::isGoodTPCKaon(StPicoTrack const * const trk) const {
+  // -- check for good kaon in TPC
+
+  return ( trk->pMom().perp() >= mKaonPtMin && trk->pMom().perp() < mKaonPtMax &&
+	   trk->pMom().pseudoRapidity() >= mKaonEtaMin && trk->pMom().pseudoRapidity() < mKaonEtaMax &&
+	   fabs(trk->nSigmaKaon()) < mTPCNSigmaKaonMax );
 }
 
+// _________________________________________________________
+bool StHFCuts::isGoodTPCProton(StPicoTrack const * const trk) const {
+  // -- check for good proton in TPC
+
+  return ( trk->pMom().perp() >= mProtonPtMin && trk->pMom().perp() < mProtonPtMax &&
+	   trk->pMom().pseudoRapidity() >= mProtonEtaMin && trk->pMom().pseudoRapidity() < mProtonEtaMax &&
+	   fabs(trk->nSigmaProton()) < mTPCNSigmaProtonMax );
+}
+
+// _________________________________________________________
+bool StHFCuts::isGoodTOFPion(StPicoTrack const *trk, float const & bTofBeta) const {
+  // -- check for good pion in TOF - in a different pT range than for TPC
+
+  // -- JMT FIX ME WITH REAL TOF CHECK
+
+  return ( trk->pMom().perp() >= mPionPtTOFMin && trk->pMom().perp() < mPionPtTOFMax &&
+	   fabs(trk->nSigmaPion()) < mTOFNSigmaPionMax );
+}
+
+// _________________________________________________________
+bool StHFCuts::isGoodTOFKaon(StPicoTrack const *trk, float const & bTofBeta) const {
+  // -- check for good kaon in TOF - in a different pT range than for TPC
+
+  // -- JMT FIX ME WITH REAL TOF CHECK
+
+  return ( trk->pMom().perp() >= mKaonPtTOFMin && trk->pMom().perp() < mKaonPtTOFMax &&
+	   fabs(trk->nSigmaKaon()) < mTOFNSigmaKaonMax );
+}
+
+// _________________________________________________________
+bool StHFCuts::isGoodTOFProton(StPicoTrack const *trk, float const & bTofBeta) const {
+  // -- check for good proton in TOF - in a different pT range than for TPC
+
+  // -- JMT FIX ME WITH REAL TOF CHECK
+
+  return ( trk->pMom().perp() >= mProtonPtTOFMin && trk->pMom().perp() < mProtonPtTOFMax &&
+	   fabs(trk->nSigmaProton()) < mTOFNSigmaProtonMax );
+}
+
+// _________________________________________________________
+bool StHFCuts::isClosePair(StHFPair const & pair) const {
+  // -- check for a pair which is close in dca w/o mass constraint,
+  //    using secondary vertex cuts
+
+  return ( std::cos(pair.pointingAngle()) > mSecondaryPairCosThetaMin &&
+	   pair.decayLength() > mSecondaryPairDecayLengthMin && pair.decayLength() < mSecondaryPairDecayLengthMax &&
+	   pair.dcaDaughters() < mSecondaryPairDcaDaughtersMax);
+}
+
+// _________________________________________________________
+bool StHFCuts::isGoodSecondaryVertexPair(StHFPair const & pair) const {
+  // -- check for good secondary vertex pair
+
+  return ( pair.m() > mSecondaryPairMassMin && pair.m() < mSecondaryPairMassMax &&
+	   std::cos(pair.pointingAngle()) > mSecondaryPairCosThetaMin &&
+	   pair.decayLength() > mSecondaryPairDecayLengthMin && pair.decayLength() < mSecondaryPairDecayLengthMax &&
+	   pair.dcaDaughters() < mSecondaryPairDcaDaughtersMax);
+}
+
+// _________________________________________________________
+bool StHFCuts::isGoodTertiaryVertexPair(StHFPair const & pair) const {
+  // -- check for good tertiary vertex pair
+
+  return ( pair.m() > mTertiaryPairMassMin && pair.m() < mTertiaryPairMassMax &&
+	   std::cos(pair.pointingAngle()) > mTertiaryPairCosThetaMin &&
+	   pair.decayLength() > mTertiaryPairDecayLengthMin && pair.decayLength() < mTertiaryPairDecayLengthMax &&
+	   pair.dcaDaughters() < mTertiaryPairDcaDaughtersMax);
+}
+
+// _________________________________________________________
+bool StHFCuts::isGoodSecondaryVertexTriplet(StHFTriplet const & triplet) const {
+  // -- check for good secondary vertex triplet
+
+  return ( triplet.m() > mSecondaryTripletMassMin && triplet.m() < mSecondaryTripletMassMax &&
+	   std::cos(triplet.pointingAngle()) > mSecondaryTripletCosThetaMin &&
+	   triplet.decayLength() > mSecondaryTripletDecayLengthMin && triplet.decayLength() < mSecondaryTripletDecayLengthMax &&
+	   triplet.dcaDaughters12() < mSecondaryTripletDcaDaughters12Max &&
+	   triplet.dcaDaughters23() < mSecondaryTripletDcaDaughters23Max &&
+	   triplet.dcaDaughters31() < mSecondaryTripletDcaDaughters31Max);
+}
 
 #endif // __ROOT__
