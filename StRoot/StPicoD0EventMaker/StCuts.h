@@ -12,11 +12,12 @@
  * **************************************************
  */
 
+#include "RTypes.h"
 #include <string>
 
 namespace cuts
 {
-   extern std::string prescalesFilesDirectoryName;
+   extern std::string const prescalesFilesDirectoryName;
    //event
    extern UShort_t const triggerWord;
    extern float const vz;
