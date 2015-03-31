@@ -23,10 +23,10 @@ class StPicoPrescales
   public:
     StPicoPrescales(std::string prescalesFilesDirectoryName);
 
-    float getPrescale(unsigned int run,unsigned int trg);
+    float prescale(unsigned int run,unsigned int trg);
     unsigned int runIndex(unsigned int run);
     bool runExists(unsigned int run);
-    int getNumberOfRuns() const;
+    int numberOfRuns() const;
     void fillPrescalesHist(TH1F*,unsigned int trg);
 
   private:
