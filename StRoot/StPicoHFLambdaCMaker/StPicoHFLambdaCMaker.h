@@ -4,18 +4,7 @@
 #include "../StPicoHFMaker/StPicoHFEventMaker.h"
 
 /* **************************************************
- *  Base class for HF analysis
- *
- *  Usage:
- *   Implement in inherited class
- *    InitHF()
- *    MakeHF()
- *
- *   To be implemented in derived class
- *       methods can be StHFCuts utility class
- *    isPion
- *    isKaon
- *    isProton
+ *  Class for HF LambdaC analysis
  *
  *  Authors:  Xin Dong (xdong@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
@@ -39,26 +28,29 @@ class StHFCuts;
 
 class StPicoHFLambdaCMaker : public StPicoHFEventMaker 
 {
-  public:
-    StPicoHFLambdaCMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName);
-    virtual ~StPicoHFLambdaCMaker();
-    
-    virtual Int_t InitHF();
-    virtual Int_t MakeHF();
-    virtual Int_t FinishHF();
+ public:
+  StPicoHFLambdaCMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName);
+  virtual ~StPicoHFLambdaCMaker();
+  
+  virtual Int_t InitHF();
+  virtual Int_t MakeHF();
+  //    virtual Int_t ClearHF();
+  virtual Int_t FinishHF();
+  
+  void setDecayChannel(unsigned int u) { mDecayChannel = u; }
 
-  protected:
-    virtual bool  isPion(StPicoTrack const*, float const & bTofBeta) const;
-    virtual bool  isKaon(StPicoTrack const*, float const & bTofBeta) const;
-    virtual bool  isProton(StPicoTrack const*, float const & bTofBeta) const;
-   
-  private:
-    /* virtual Int_t Init(); */
-    /* virtual Int_t Make(); */
-    /* virtual Int_t Finish(); */
+  enum eDecayChannel {kPionKaonProton, kProtonK0short, kPionLambda};
 
-    
-    ClassDef(StPicoHFLambdaCMaker, 1)
+ protected:
+  virtual bool  isPion(StPicoTrack const*, float const & bTofBeta) const;
+  virtual bool  isKaon(StPicoTrack const*, float const & bTofBeta) const;
+  virtual bool  isProton(StPicoTrack const*, float const & bTofBeta) const;
+  
+ private:
+  
+  unsigned int mDecayChannel;
+
+  ClassDef(StPicoHFLambdaCMaker, 1)
 };
 
 #endif
