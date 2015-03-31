@@ -1,83 +1,80 @@
 #include "StPicoDstMaker/StPicoEvent.h"
-#include "StPicoDstMaker/StPicoTrack.h"
 
 #include "StPicoHFEvent.h"
 #include "StHFPair.h"
-#include "StHFSecondaryPair.h"
 #include "StHFTriplet.h"
 
 ClassImp(StPicoHFEvent)
 
-TClonesArray *StPicoHFEvent::fgHFPrimaryArray = 0;
-TClonesArray *StPicoHFEvent::fgHFSecondaryArray = 0;
+TClonesArray *StPicoHFEvent::fgHFSecondaryVerticesArray = 0;
+TClonesArray *StPicoHFEvent::fgHFTertiaryVerticesArray  = 0;
 
-//-----------------------------------------------------------------------
-StPicoHFEvent::StPicoHFEvent() : mRunId(-1), mEventId(-1), mNHFPrimary(0), mNHFSecondary(0), 
-				 mHFPrimaryArray(NULL), mHFSecondaryArray(NULL) 
-{
+// _________________________________________________________
+StPicoHFEvent::StPicoHFEvent() : mRunId(-1), mEventId(-1), mNHFSecondaryVertices(0), mNHFTertiaryVertices(0),
+						  mHFSecondaryVerticesArray(NULL), mHFTertiaryVerticesArray(NULL) {
   // -- Default constructor
-
-   if (!fgHFPrimaryArray) fgHFPrimaryArray = new TClonesArray("StHFPair");
-   mHFPrimaryArray = fgHFPrimaryArray;
+  if (!fgHFSecondaryVerticesArray) fgHFSecondaryVerticesArray = new TClonesArray("StHFPair");
+  mHFSecondaryVerticesArray = fgHFSecondaryVerticesArray;
 }
 
-//-----------------------------------------------------------------------
-StPicoHFEvent::StPicoHFEvent(unsigned int mode) : mRunId(-1), mEventId(-1), mNHFPrimary(0), mNHFSecondary(0), 
-						  mHFPrimaryArray(NULL), mHFSecondaryArray(NULL) 
-{
+// _________________________________________________________
+StPicoHFEvent::StPicoHFEvent(unsigned int mode) : mRunId(-1), mEventId(-1), mNHFSecondaryVertices(0), mNHFTertiaryVertices(0),
+						  mHFSecondaryVerticesArray(NULL), mHFTertiaryVerticesArray(NULL) {
   // -- Constructor with mode selection
-  if (mode == StPicoHFEvent::secondaryPair) {
-    if (!fgHFPrimaryArray) fgHFPrimaryArray = new TClonesArray("StHFPair");
-    mHFPrimaryArray = fgHFPrimaryArray;
+  if (mode == StPicoHFEvent::kTwoAndTwoParticleDecay) {
+    if (!fgHFSecondaryVerticesArray) fgHFSecondaryVerticesArray = new TClonesArray("StHFPair");
+    mHFSecondaryVerticesArray = fgHFSecondaryVerticesArray;
 
-    if (!fgHFSecondaryArray) fgHFSecondaryArray = new TClonesArray("StHFSecondaryPair");
-    mHFSecondaryArray = fgHFSecondaryArray;
+    if (!fgHFTertiaryVerticesArray) fgHFTertiaryVerticesArray = new TClonesArray("StHFPair");
+    mHFTertiaryVerticesArray = fgHFTertiaryVerticesArray;
   }
-  else if (mode == StPicoHFEvent::triplet) {
-    if (!fgHFPrimaryArray) fgHFPrimaryArray = new TClonesArray("StHFTriplet");
-    mHFPrimaryArray = fgHFPrimaryArray;
+  else if (mode == StPicoHFEvent::kThreeParticleDecay) {
+    if (!fgHFSecondaryVerticesArray) fgHFSecondaryVerticesArray = new TClonesArray("StHFTriplet");
+    mHFSecondaryVerticesArray = fgHFSecondaryVerticesArray;
+  }
+  else if (mode == StPicoHFEvent::kTwoParticleDecay) {
+    if (!fgHFSecondaryVerticesArray) fgHFSecondaryVerticesArray = new TClonesArray("StHFPair");
+    mHFSecondaryVerticesArray = fgHFSecondaryVerticesArray;
   }
   else {
-    if (!fgHFPrimaryArray) fgHFPrimaryArray = new TClonesArray("StHFPair");
-    mHFPrimaryArray = fgHFPrimaryArray;
+    if (!fgHFSecondaryVerticesArray) fgHFSecondaryVerticesArray = new TClonesArray("StHFPair");
+    mHFSecondaryVerticesArray = fgHFSecondaryVerticesArray;
   }
 }
 
-//-----------------------------------------------------------------------
-void StPicoHFEvent::addPicoEvent(StPicoEvent const & picoEvent)
-{
-   // StPicoEvent variables
+// _________________________________________________________
+void StPicoHFEvent::addPicoEvent(StPicoEvent const & picoEvent) {
+   // -- add StPicoEvent variables
    mRunId   = picoEvent.runId();
    mEventId = picoEvent.eventId();
 }
 
-//-----------------------------------------------------------------------
-void StPicoHFEvent::clear(char const *option)
-{
-   mHFPrimaryArray->Clear(option);
-   if (mHFSecondaryArray)
-     mHFSecondaryArray->Clear(option);
-
-   mRunId   = -1;
-   mEventId = -1;
-   mNHFPrimary   = 0;
-   mNHFSecondary = 0;
+// _________________________________________________________
+void StPicoHFEvent::clear(char const *option) {
+  mHFSecondaryVerticesArray->Clear(option);
+  if (mHFTertiaryVerticesArray)
+    mHFTertiaryVerticesArray->Clear(option);
+  
+  mRunId                = -1;
+  mEventId              = -1;
+  mNHFSecondaryVertices = 0;
+  mNHFTertiaryVertices  = 0;
 }
 
-//---------------------------------------------------------------------
-void StPicoHFEvent::addHFPrimary(StHFPair const* t) {
-   TClonesArray &primaryArray = *mHFPrimaryArray;
-   new(primaryArray[mNHFPrimary++]) StHFPair(t);
+// _________________________________________________________
+void StPicoHFEvent::addHFSecondaryVertexPair(StHFPair const* t) {
+  TClonesArray &vertexArray = *mHFSecondaryVerticesArray;
+  new(vertexArray[mNHFSecondaryVertices++]) StHFPair(t);
 }
 
-//---------------------------------------------------------------------
-void StPicoHFEvent::addHFPrimary(StHFTriplet const* t) {
-   TClonesArray &primaryArray = *mHFPrimaryArray;
-   new(primaryArray[mNHFPrimary++]) StHFTriplet(t);
+// _________________________________________________________
+void StPicoHFEvent::addHFSecondaryVertexTriplet(StHFTriplet const* t) {
+  TClonesArray &vertexArray = *mHFSecondaryVerticesArray;
+  new(vertexArray[mNHFSecondaryVertices++]) StHFTriplet(t);
 }
 
-//---------------------------------------------------------------------
-void StPicoHFEvent::addHFSecondary(StHFSecondaryPair const* t) {
-   TClonesArray &secondaryArray = *mHFSecondaryArray;
-   new(secondaryArray[mNHFSecondary++]) StHFSecondaryPair(t);
+// _________________________________________________________
+void StPicoHFEvent::addHFTertiaryVertexPair(StHFPair const* t) {
+  TClonesArray &vertexArray = *mHFTertiaryVerticesArray;
+  new(vertexArray[mNHFTertiaryVertices++]) StHFPair(t);
 }
