@@ -42,8 +42,8 @@ def makeIndexFile(nMuDstEvents,nPicoEvents):
     os.system('echo ![]\(%s\) >> index.md'%gNumberOfEventsVsDayFileName)
     os.system('echo ![]\(%s\) >> index.md'%gTotalNumberOfEventsVsDayFileName)
     os.system('./markdown index.md > index.html')
-    os.system('chmod a+r index.md')
-    os.system('chmod a+r index.html')
+    os.system('chmod a+rw index.md')
+    os.system('chmod a+rw index.html')
 
 def plotNumberOfEventsVsDay(nEventsVsDay):
 
@@ -59,7 +59,7 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
     plt.gca().yaxis.grid() 
     plt.ylabel('nEvents (m)/Day')
     plt.savefig(gNumberOfEventsVsDayFileName)
-    os.system('chmod a+r '+gNumberOfEventsVsDayFileName)
+    os.system('chmod a+rw '+gNumberOfEventsVsDayFileName)
     plt.close()
 
     yy = [y[0]]
@@ -76,7 +76,7 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
     plt.gca().yaxis.grid() 
     plt.ylabel('Total nEvents (m)')
     plt.savefig(gTotalNumberOfEventsVsDayFileName)
-    os.system('chmod a+r '+gTotalNumberOfEventsVsDayFileName)
+    os.system('chmod a+rw '+gTotalNumberOfEventsVsDayFileName)
 
 
 def getLogElements(f):
