@@ -1,3 +1,4 @@
+#include <cmath>
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TFile.h"
@@ -15,7 +16,8 @@ ClassImp(StPicoD0Hists)
 //-----------------------------------------------------------------------
 StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(NULL),
   mh1TotalEventsInRun(NULL), mh1TotalHftTracksInRun(NULL), mh1TotalGRefMultInRun(NULL),
-  mh1TotalD0CandidatesInRun(NULL), mh2KaonDcaVsPt(NULL), mh2PionDcaVsPt(NULL)
+  mh1TotalD0CandidatesInRun(NULL), mh2KaonDcaVsPt(NULL), mh2PionDcaVsPt(NULL), 
+  mh2CosThetaVsPt(NULL), mh2DcaDaughtersVsPt(NULL), mh2InvariantMassVsPt(NULL)
 {
   mPrescales = new StPicoPrescales(cuts::prescalesFilesDirectoryName);
 
@@ -30,8 +32,10 @@ StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(
   mh1TotalPionsInRun = new TH1F("mh1TotalPionsInRun","totalPionsInRun;runIndex;totalPionsInRun",nRuns+1,0,nRuns+1);
   mh1TotalD0CandidatesInRun = new TH1F("mh1TotalD0CandidatesInRun","totalD0CandidatesInRun;runIndex;totalD0CandidatesInRun",nRuns+1,0,nRuns+1);
   mh2NKaonsVsNPions = new TH2F("mh2NKaonsVsNPions","nKaonsVsNPions;nPions;nKaons",1000,0,1000,300,0,300);
-  mh2KaonDcaVsPt = new TH2F("mh2KaonDcaVsPt","kaonDcaVsPt;p_{T}(k#pi)(GeV/c);K DCA(cm)",120,0,12,50,0,0.05);
-  mh2PionDcaVsPt = new TH2F("mh2PionDcaVsPt","pionDcaVsPt;p_{T}(k#pi)(GeV/c);#pi DCA(cm)",120,0,12,50,0,0.05);
+  mh2KaonDcaVsPt = new TH2F("mh2KaonDcaVsPt","kaonDcaVsPt;p_{T}(K#pi)(GeV/c);K DCA(cm)",120,0,12,50,0,0.05);
+  mh2PionDcaVsPt = new TH2F("mh2PionDcaVsPt","pionDcaVsPt;p_{T}(K#pi)(GeV/c);#pi DCA(cm)",120,0,12,50,0,0.05);
+  mh2CosThetaVsPt = new TH2F("mh2CosThetaVsPt","cosThetaVsPt;p_{T}(K#pi)(GeV/c);cos(#theta)",120,0,12,500,0,1.0);
+  mh2DcaDaughtersVsPt = new TH2F("mh2DcaDaughtersVsPt","dcaDaughtersVsPt;p_{T}(K#pi)(GeV/c);dcaDaughters(cm)",120,0,12,200,0,0.02);
   mh2InvariantMassVsPt = new TH2F("mh2InvariantMassVsPt","invariantMassVsPt;p_{T}(K#pi)(GeV/c);m_{K#pi}(GeV/c^{2})",120,0,12,50,1.6,2.1);
 }
 StPicoD0Hists::~StPicoD0Hists()
@@ -57,6 +61,8 @@ void StPicoD0Hists::addKaonPion(StKaonPion const* const kp, bool const fillMass)
 {
   mh2KaonDcaVsPt->Fill(kp->pt(),kp->kaonDca());
   mh2PionDcaVsPt->Fill(kp->pt(),kp->pionDca());
+  mh2CosThetaVsPt->Fill(kp->pt(),cos(kp->pointingAngle()));
+  mh2DcaDaughtersVsPt->Fill(kp->pt(),kp->dcaDaughters());
   if(fillMass) mh2InvariantMassVsPt->Fill(kp->pt(),kp->m());
 }
 //---------------------------------------------------------------------
@@ -72,6 +78,8 @@ void StPicoD0Hists::closeFile()
   mh2NKaonsVsNPions->Write();
   mh2KaonDcaVsPt->Write();
   mh2PionDcaVsPt->Write();
+  mh2CosThetaVsPt->Write();
+  mh2DcaDaughtersVsPt->Write();
   mh2InvariantMassVsPt->Write();
   mOutFile->Close();
 }
