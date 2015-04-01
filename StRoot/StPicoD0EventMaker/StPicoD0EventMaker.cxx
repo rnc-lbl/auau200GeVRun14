@@ -129,8 +129,11 @@ Int_t StPicoD0EventMaker::Make()
 
             mPicoD0Event->addKaonPion(&kaonPion);
 
-            bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
-            mPicoD0Hists->addKaonPion(&kaonPion,fillMass);
+            if(kaon->charge() * pion->charge() <0)
+            {
+              bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
+              mPicoD0Hists->addKaonPion(&kaonPion,fillMass);
+            }
 
          } // .. end make Kπ pairs
       } // .. end of kaons loop
