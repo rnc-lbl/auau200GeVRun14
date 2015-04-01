@@ -47,6 +47,8 @@ void drawQaHistograms(string filename)
   TH2F* h2NKaonsVsNPions           = (TH2F*)fInput->Get("mh2NKaonsVsNPions");
   TH2F* h2KaonDcaVsPt              = (TH2F*)fInput->Get("mh2KaonDcaVsPt");
   TH2F* h2PionDcaVsPt              = (TH2F*)fInput->Get("mh2PionDcaVsPt");
+  TH2F* h2CosThetaVsPt             = (TH2F*)fInput->Get("mh2CosThetaVsPt");
+  TH2F* h2DcaDaughtersVsPt             = (TH2F*)fInput->Get("mh2DcaDaughtersVsPt");
   TH2F* h2InvariantMassVsPt        = (TH2F*)fInput->Get("mh2InvariantMassVsPt");
 
   h1AverageHftTracksInRun->Divide(h1TotalEventsInRun);
@@ -74,6 +76,8 @@ void drawQaHistograms(string filename)
   h2KaonDcaVsPt->Draw("colz"); cv->SaveAs("h2KaonDcaVsPt.png");
   h2PionDcaVsPt->Draw("colz"); cv->SaveAs("h2PionDcaVsPt.png");
   h2PionDcaVsPt->Draw("colz"); cv->SaveAs("h2PionDcaVsPt.png");
+  h2CosThetaVsPt->Draw("colz"); cv->SaveAs("h2CosThetaVsPt.png");
+  h2DcaDaughtersVsPt->Draw("colz"); cv->SaveAs("h2DcaDaughtersVsPt.png");
   delete cv;
 
   fInput->Close();
