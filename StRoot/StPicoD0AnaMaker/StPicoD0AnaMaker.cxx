@@ -54,8 +54,7 @@ Int_t StPicoD0AnaMaker::Init()
 
 
    // -------------- USER VARIABLES -------------------------
-   mNtuple = new TNtuple("nt", "", "pt1:pt2:flag:m:pt:eta:phi:theta:"
-                         "decayL:kDca:pDca:dca12:cosThetaStar");
+   
    return kStOK;
 }
 //-----------------------------------------------------------------------------
@@ -68,7 +67,8 @@ Int_t StPicoD0AnaMaker::Finish()
 {
    LOG_INFO << " StPicoD0AnaMaker - writing data and closing output file " <<endm;
    mOutputFile->cd();
-   mNtuple->Write();
+   // save user variables here
+
    mOutputFile->Close();
 
    return kStOK;
@@ -112,8 +112,6 @@ Int_t StPicoD0AnaMaker::Make()
       StPicoTrack const* kaon = picoDst->track(kp->kaonIdx());
       StPicoTrack const* pion = picoDst->track(kp->pionIdx());
 
-      mNtuple->Fill(kaon->gPt(), pion->gPt(), kaon->charge()*pion->charge(), kp->m(), kp->pt(), kp->eta(), kp->phi(), kp->pointingAngle(),
-                    kp->decayLength(), kp->kaonDca(), kp->pionDca(), kp->dcaDaughters(), kp->cosThetaStar());
    }
 
    return kStOK;
