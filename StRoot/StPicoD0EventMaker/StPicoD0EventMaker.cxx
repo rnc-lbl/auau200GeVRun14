@@ -124,11 +124,13 @@ Int_t StPicoD0EventMaker::Make()
 
             StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
 
-            mPicoD0Hists->addKaonPion(&kaonPion,true);
 
             if (!isGoodPair(kaonPion)) continue;
 
             mPicoD0Event->addKaonPion(&kaonPion);
+
+            bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
+            mPicoD0Hists->addKaonPion(&kaonPion,fillMass);
 
          } // .. end make Kπ pairs
       } // .. end of kaons loop
@@ -179,4 +181,13 @@ bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
           std::cos(kp.pointingAngle()) > cuts::cosTheta &&
           kp.decayLength() > cuts::decayLength &&
           kp.dcaDaughters() < cuts::dcaDaughters;
+}
+//-----------------------------------------------------------------------------
+bool  StPicoD0EventMaker::isGoodQaPair(StKaonPion const& kp, StPicoTrack const& kaon,StPicoTrack const& pion)
+{
+  return pion.nHitsFit() >= cuts::qaNHitsFit && kaon.nHitsFit() >= cuts::qaNHitsFit &&
+         fabs(kaon.nSigmaKaon()) < cuts::qaNSigmaKaon && 
+         cos(kp.pointingAngle()) > cuts::qaCosTheta &&
+         kp.pionDca() > cuts::qaPDca && kp.kaonDca() > cuts::qaKDca &&
+         kp.dcaDaughters() < cuts::qaDcaDaughters;
 }

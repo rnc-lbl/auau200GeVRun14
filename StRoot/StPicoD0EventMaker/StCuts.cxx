@@ -31,10 +31,18 @@ namespace cuts
    //kaons
    float const nSigmaKaon = 2.5;
 
-   // kaonPion pair cuts
+   // tree kaonPion pair cuts
    float const cosTheta = 0; // minimum
    float const dcaDaughters = 0.0200; // maximum
    float const decayLength = 0.0030; // minimum
    float const minMass = 1.6;
    float const maxMass = 2.1;
+
+   // histograms kaonPion pair cuts
+   extern float qaNHitsFit = 20;
+   extern float qaNSigmaKaon = 2.0;
+   extern float qaCosTheta = 0.995;
+   extern float qaDcaDaughters = 0.0050;
+   extern float qaKDca = 0.008; // minimum
+   extern float qaPDca = 0.008;
 }
