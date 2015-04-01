@@ -39,8 +39,6 @@ class StPicoD0Hists: public TObject
 
    StPicoPrescales* mPrescales;
    TFile* mOutFile;
-   // TH2F* mh2VzVsVzVpd;
-   // TH2F* mh2VrVsVz;
    TH1F* mh1TotalEventsInRun;
    TH1F* mh1TotalHftTracksInRun;
    TH1F* mh1TotalGRefMultInRun;
@@ -50,7 +48,8 @@ class StPicoD0Hists: public TObject
    TH2F* mh2NKaonsVsNPions;
    TH2F* mh2KaonDcaVsPt;
    TH2F* mh2PionDcaVsPt;
-   // TH2F* mh2CosThetaVsPt;
+   TH2F* mh2CosThetaVsPt;
+   TH2F* mh2DcaDaughtersVsPt;
    TH2F* mh2InvariantMassVsPt;
 
    ClassDef(StPicoD0Hists, 1)
