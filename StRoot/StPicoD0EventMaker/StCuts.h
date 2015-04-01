@@ -33,11 +33,19 @@ namespace cuts
    //kaons
    extern float const nSigmaKaon;
 
-   // kaonPion pair cuts
+   // tree kaonPion pair cuts
    extern float const cosTheta;
    extern float const dcaDaughters;
    extern float const decayLength;
    extern float const minMass;
    extern float const maxMass;
+
+   // histograms kaonPion pair cuts
+   extern float qaNHitsFit;
+   extern float qaNSigmaKaon;
+   extern float qaCosTheta;
+   extern float qaDcaDaughters;
+   extern float qaKDca;
+   extern float qaPDca;
 }
 #endif

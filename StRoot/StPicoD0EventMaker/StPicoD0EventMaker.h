@@ -41,6 +41,7 @@ class StPicoD0EventMaker : public StMaker
     bool  isPion(StPicoTrack const*) const;
     bool  isKaon(StPicoTrack const*) const;
     bool  isGoodPair(StKaonPion const &) const;
+    bool  isGoodQaPair(StKaonPion const&, StPicoTrack const&,StPicoTrack const&);
 
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
