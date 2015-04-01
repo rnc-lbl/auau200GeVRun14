@@ -107,7 +107,7 @@ void setGraphicsStyle()
     TGaxis::SetMaxDigits(4);
     gStyle->SetPadTopMargin(0.055);
     gStyle->SetPadBottomMargin(0.15);
-    gStyle->SetPadRightMargin(0.026);
+    gStyle->SetPadRightMargin(0.115);
     gStyle->SetPadLeftMargin(0.115);
     gStyle->SetLabelSize(0.035,"X");
     gStyle->SetLabelSize(0.035,"Y");
