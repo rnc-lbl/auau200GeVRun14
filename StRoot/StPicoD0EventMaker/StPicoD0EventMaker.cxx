@@ -124,8 +124,11 @@ Int_t StPicoD0EventMaker::Make()
 
             StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
 
-            mPicoD0Event->addKaonPion(&kaonPion,true);
+            mPicoD0Hists->addKaonPion(&kaonPion,true);
+
             if (!isGoodPair(kaonPion)) continue;
+
+            mPicoD0Event->addKaonPion(&kaonPion);
 
          } // .. end make Kπ pairs
       } // .. end of kaons loop
