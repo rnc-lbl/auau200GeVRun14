@@ -22,7 +22,7 @@ ClassImp(StPicoD0AnaMaker)
 StPicoD0AnaMaker::StPicoD0AnaMaker(char const * name,char const * inputFilesList, 
     char const * outName,StPicoDstMaker* picoDstMaker): 
   StMaker(name),mPicoDstMaker(picoDstMaker),mPicoD0Event(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
-   mOutputFile(NULL), mChain(NULL), mEventCounter(0), mNtuple(NULL)
+   mOutputFile(NULL), mChain(NULL), mEventCounter(0)
 {}
 
 Int_t StPicoD0AnaMaker::Init()
