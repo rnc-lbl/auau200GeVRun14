@@ -62,7 +62,7 @@ void drawQaHistograms(string filename)
   setStyle(h1AverageD0CandidatesInRun,1,"<K#pi pair>");
 
   setGraphicsStyle();
-  TCanvas* cv = new TCanvas("cv","cv",2204,1240);
+  TCanvas* cv = new TCanvas("cv","cv",800,450);
   h1AverageHftTracksInRun->Draw(); cv->SaveAs("h1AverageHftTracksInRun.png");
   h1AverageGRefMultInRun->Draw(); cv->SaveAs("h1AverageGRefMultInRun.png");
   h1AverageKaonsInRun->Draw(); cv->SaveAs("h1AverageKaonsInRun.png");
