@@ -91,11 +91,14 @@ Int_t StPicoD0EventMaker::Make()
       std::vector<unsigned short> idxPicoKaons;
       std::vector<unsigned short> idxPicoPions;
 
+      unsigned int nHftTracks = 0;
+
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
       {
          StPicoTrack* trk = picoDst->track(iTrack);
 
          if (!trk || !isGoodTrack(trk)) continue;
+         ++nHftTracks;
 
          if (isPion(trk)) idxPicoPions.push_back(iTrack);
          if (isKaon(trk)) idxPicoKaons.push_back(iTrack);
@@ -107,8 +110,6 @@ Int_t StPicoD0EventMaker::Make()
 
       mPicoD0Event->nKaons(idxPicoKaons.size());
       mPicoD0Event->nPions(idxPicoPions.size());
-
-      mPicoD0Hists->addEvent(*mPicoD0Event);
 
       for (unsigned short ik = 0; ik < idxPicoKaons.size(); ++ik)
       {
@@ -123,12 +124,13 @@ Int_t StPicoD0EventMaker::Make()
 
             StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
 
+            mPicoD0Event->addKaonPion(&kaonPion,true);
             if (!isGoodPair(kaonPion)) continue;
 
-            mPicoD0Event->addKaonPion(&kaonPion);
          } // .. end make Kπ pairs
       } // .. end of kaons loop
 
+      mPicoD0Hists->addEvent(*mPicoEvent,*mPicoD0Event,nHftTracks);
       idxPicoKaons.clear();
       idxPicoPions.clear();
    } //.. end of good event fill
