@@ -17,8 +17,8 @@ ClassImp(StKaonPion)
 StKaonPion::StKaonPion(): mLorentzVector(),
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()),
-   mKaonIdx(std::numeric_limits<unsigned short>::max()), mPionIdx(std::numeric_limits<unsigned short>::max()),
-   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min())
+   mKaonIdx(std::numeric_limits<unsigned short>::quiet_NaN()), mPionIdx(std::numeric_limits<unsigned short>::quiet_NaN()),
+   mDcaDaughters(std::numeric_limits<float>::quiet_NaN()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN())
 
 {
 }
@@ -37,12 +37,12 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
    mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()),
    mKaonIdx(kIdx), mPionIdx(pIdx),
-   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::min())
+   mDcaDaughters(std::numeric_limits<float>::quiet_NaN()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN())
 {
    if ((!kaon || !pion) || (kaon->id() == pion->id()))
    {
-      mKaonIdx = std::numeric_limits<unsigned short>::max();
-      mPionIdx = std::numeric_limits<unsigned short>::max();
+      mKaonIdx = std::numeric_limits<unsigned short>::quiet_NaN();
+      mPionIdx = std::numeric_limits<unsigned short>::quiet_NaN();
       return;
    }
 
