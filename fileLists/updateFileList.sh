@@ -3,8 +3,8 @@
 baseFolder=/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/physics/P15ic
 
 outFolder=/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/fileLists/picoLists
-#outFolderGIT=/global/homes/j/jthaeder/picoDstTransfer/auau200GeVRun14/fileLists/picoLists
-outFolderGIT=`pwd`/picoLists
+outFolderGIT=/global/homes/j/jthaeder/picoDstTransfer/auau200GeVRun14/fileLists/picoLists
+#outFolderGIT=`pwd`/picoLists
 
 tmpFolder=/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/fileLists/tmp
 mkdir -p ${tmpFolder}/runs
