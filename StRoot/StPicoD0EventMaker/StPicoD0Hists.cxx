@@ -23,12 +23,12 @@ StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(
 
   int nRuns = mPrescales->numberOfRuns();
   TH1::SetDefaultSumw2();
-  mh1TotalEventsInRun = new TH1F("mh1TotalEventsInRun","totalEventsInRun;runIndex",nRuns+1,0,nRuns+1);
+  mh1TotalEventsInRun = new TH1F("mh1TotalEventsInRun","totalEventsInRun;runIndex;totalEventsInRun",nRuns+1,0,nRuns+1);
   mh1TotalHftTracksInRun = new TH1F("mh1TotalHftTracksInRun","totalHftTracksInRun;runIndex;totalHftTracksInRun",nRuns+1,0,nRuns+1);
   mh1TotalGRefMultInRun = new TH1F("mh1TotalGRefMultInRun","totalGRefMultInRun;runIndex;totalGRefMultInRun",nRuns+1,0,nRuns+1);
   mh1TotalKaonsInRun = new TH1F("mh1TotalKaonsInRun","totalKaonsInRun;runIndex;totalKaonsInRun",nRuns+1,0,nRuns+1);
   mh1TotalPionsInRun = new TH1F("mh1TotalPionsInRun","totalPionsInRun;runIndex;totalPionsInRun",nRuns+1,0,nRuns+1);
-  mh1TotalD0CandidatesInRun = new TH1F("mh1TotalD0CandidatesInRun","totalD0CandidatesInRun;runIndex:totalD0CandidatesInRun",nRuns+1,0,nRuns+1);
+  mh1TotalD0CandidatesInRun = new TH1F("mh1TotalD0CandidatesInRun","totalD0CandidatesInRun;runIndex;totalD0CandidatesInRun",nRuns+1,0,nRuns+1);
   mh2NKaonsVsNPions = new TH2F("mh2NKaonsVsNPions","nKaonsVsNPions;nPions;nKaons",1000,0,1000,300,0,300);
   mh2KaonDcaVsPt = new TH2F("mh2KaonDcaVsPt","kaonDcaVsPt;p_{T}(k#pi)(GeV/c);dca(cm)",120,0,12,50,0,0.05);
   mh2PionDcaVsPt = new TH2F("mh2PionDcaVsPt","pionDcaVsPt;p_{T}(k#pi)(GeV/c);dca(cm)",120,0,12,50,0,0.05);
@@ -45,7 +45,7 @@ void StPicoD0Hists::addEvent(StPicoEvent const& picoEvent,StPicoD0Event const & 
 {
   int runIndex = mPrescales->runIndex(picoD0Event.runId());
   mh1TotalEventsInRun->Fill(runIndex);
-  mh1TotalEventsInRun->Fill(runIndex,nHftTracks);
+  mh1TotalHftTracksInRun->Fill(runIndex,nHftTracks);
   mh1TotalGRefMultInRun->Fill(runIndex,picoEvent.grefMult());
   mh1TotalKaonsInRun->Fill(runIndex,picoD0Event.nKaons());
   mh1TotalPionsInRun->Fill(runIndex,picoD0Event.nPions());
