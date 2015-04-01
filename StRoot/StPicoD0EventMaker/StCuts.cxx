@@ -39,10 +39,10 @@ namespace cuts
    float const maxMass = 2.1;
 
    // histograms kaonPion pair cuts
-   extern float qaNHitsFit = 20;
-   extern float qaNSigmaKaon = 2.0;
-   extern float qaCosTheta = 0.995;
-   extern float qaDcaDaughters = 0.0050;
-   extern float qaKDca = 0.008; // minimum
-   extern float qaPDca = 0.008;
+   float qaNHitsFit = 20;
+   float qaNSigmaKaon = 2.0;
+   float qaCosTheta = 0.995;
+   float qaDcaDaughters = 0.0050;
+   float qaKDca = 0.008; // minimum
+   float qaPDca = 0.008;
 }
