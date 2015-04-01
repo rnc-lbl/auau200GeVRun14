@@ -129,7 +129,7 @@ Int_t StPicoD0EventMaker::Make()
 
             mPicoD0Event->addKaonPion(&kaonPion);
 
-            if(kaon->charge() * pion->charge() <0)
+            if(kaon->charge() * pion->charge() <0) // fill histograms for unlike sign pairs only
             {
               bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
               mPicoD0Hists->addKaonPion(&kaonPion,fillMass);
