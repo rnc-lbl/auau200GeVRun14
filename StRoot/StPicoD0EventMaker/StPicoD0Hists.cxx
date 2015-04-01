@@ -14,7 +14,7 @@ ClassImp(StPicoD0Hists)
 
 //-----------------------------------------------------------------------
 StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(NULL),
-  mh1TotalEventsInRun(NULL), mh1TotalHftTracksInRun(NULL), mh1TotalRefMultInRun(NULL),
+  mh1TotalEventsInRun(NULL), mh1TotalHftTracksInRun(NULL), mh1TotalGRefMultInRun(NULL),
   mh1TotalD0CandidatesInRun(NULL), mh2KaonDcaVsPt(NULL), mh2PionDcaVsPt(NULL)
 {
   mPrescales = new StPicoPrescales(cuts::prescalesFilesDirectoryName);
@@ -41,12 +41,12 @@ StPicoD0Hists::~StPicoD0Hists()
   // when the file is closed.
 }
 //-----------------------------------------------------------------------
-void StPicoD0Hists::addEvent(StPicoEvent const& picoEvent,StPicoD0Event const & picoD0Even,unsigned int const nHftTracks)
+void StPicoD0Hists::addEvent(StPicoEvent const& picoEvent,StPicoD0Event const & picoD0Event,unsigned int const nHftTracks)
 {
   int runIndex = mPrescales->runIndex(picoD0Event.runId());
   mh1TotalEventsInRun->Fill(runIndex);
   mh1TotalEventsInRun->Fill(runIndex,nHftTracks);
-  mh1TotalRefMultInRun->Fill(runIndex,picoEvent.grefMult());
+  mh1TotalGRefMultInRun->Fill(runIndex,picoEvent.grefMult());
   mh1TotalKaonsInRun->Fill(runIndex,picoD0Event.nKaons());
   mh1TotalPionsInRun->Fill(runIndex,picoD0Event.nPions());
   mh1TotalD0CandidatesInRun->Fill(runIndex,picoD0Event.nKaonPion());
@@ -65,7 +65,7 @@ void StPicoD0Hists::closeFile()
   mOutFile->cd();
   mh1TotalEventsInRun->Write();
   mh1TotalHftTracksInRun->Write();
-  mh1TotalRefMultInRun->Write();
+  mh1TotalGRefMultInRun->Write();
   mh1TotalKaonsInRun->Write();
   mh1TotalPionsInRun->Write();
   mh1TotalD0CandidatesInRun->Write();
