@@ -31,7 +31,7 @@ class StPicoD0Hists: public TObject
    StPicoD0Hists(TString fileBaseName);
    virtual ~StPicoD0Hists();
    void addEvent(StPicoEvent const &, StPicoD0Event const &,unsigned int const nHftTracks);
-   void addKaonPion(StKaonPion const*), bool fillMass;
+   void addKaonPion(StKaonPion const*, bool fillMass);
    void closeFile();
 
   private:
