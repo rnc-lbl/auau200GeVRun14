@@ -13,13 +13,14 @@
 #include "../StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoD0Event.h"
 #include "StPicoD0EventMaker.h"
+#include "StPicoD0Hists.h"
 #include "StCuts.h"
 
 ClassImp(StPicoD0EventMaker)
 
 //-----------------------------------------------------------------------------
 StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
-   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL)
+   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL), mPicoD0Hists(NULL)
 {
    mPicoD0Event = new StPicoD0Event();
 
@@ -31,6 +32,8 @@ StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* pi
    mTree = new TTree("T", "T", BufSize);
    mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
    mTree->Branch("dEvent", "StPicoD0Event", &mPicoD0Event, BufSize, Split);
+
+   mPicoD0Hists = new StPicoD0Hists(fileBaseName);
 }
 
 //-----------------------------------------------------------------------------
@@ -38,6 +41,7 @@ StPicoD0EventMaker::~StPicoD0EventMaker()
 {
    /* mTree is owned by mOutputFile directory, it will be destructed once
     * the file is closed in ::Finish() */
+   delete mPicoD0Hists;
 }
 
 //-----------------------------------------------------------------------------
@@ -52,6 +56,7 @@ Int_t StPicoD0EventMaker::Finish()
    mOutputFile->cd();
    mOutputFile->Write();
    mOutputFile->Close();
+   mPicoD0Hists->closeFile();
    return kStOK;
 }
 //-----------------------------------------------------------------------------
@@ -86,11 +91,14 @@ Int_t StPicoD0EventMaker::Make()
       std::vector<unsigned short> idxPicoKaons;
       std::vector<unsigned short> idxPicoPions;
 
+      unsigned int nHftTracks = 0;
+
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
       {
          StPicoTrack* trk = picoDst->track(iTrack);
 
          if (!trk || !isGoodTrack(trk)) continue;
+         ++nHftTracks;
 
          if (isPion(trk)) idxPicoPions.push_back(iTrack);
          if (isKaon(trk)) idxPicoKaons.push_back(iTrack);
@@ -116,12 +124,21 @@ Int_t StPicoD0EventMaker::Make()
 
             StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
 
+
             if (!isGoodPair(kaonPion)) continue;
 
             mPicoD0Event->addKaonPion(&kaonPion);
+
+            if(kaon->charge() * pion->charge() <0) // fill histograms for unlike sign pairs only
+            {
+              bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
+              mPicoD0Hists->addKaonPion(&kaonPion,fillMass);
+            }
+
          } // .. end make Kπ pairs
       } // .. end of kaons loop
 
+      mPicoD0Hists->addEvent(*mPicoEvent,*mPicoD0Event,nHftTracks);
       idxPicoKaons.clear();
       idxPicoPions.clear();
    } //.. end of good event fill
@@ -167,4 +184,13 @@ bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
           std::cos(kp.pointingAngle()) > cuts::cosTheta &&
           kp.decayLength() > cuts::decayLength &&
           kp.dcaDaughters() < cuts::dcaDaughters;
+}
+//-----------------------------------------------------------------------------
+bool  StPicoD0EventMaker::isGoodQaPair(StKaonPion const& kp, StPicoTrack const& kaon,StPicoTrack const& pion)
+{
+  return pion.nHitsFit() >= cuts::qaNHitsFit && kaon.nHitsFit() >= cuts::qaNHitsFit &&
+         fabs(kaon.nSigmaKaon()) < cuts::qaNSigmaKaon && 
+         cos(kp.pointingAngle()) > cuts::qaCosTheta &&
+         kp.pionDca() > cuts::qaPDca && kp.kaonDca() > cuts::qaKDca &&
+         kp.dcaDaughters() < cuts::qaDcaDaughters;
 }
