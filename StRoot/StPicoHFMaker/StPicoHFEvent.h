@@ -42,9 +42,9 @@ public:
 
    // -- get array with particles from secondary and tertiary vertex
    TClonesArray const * aHFSecondaryVertices() const;
-   int                  nHFSecondaryVertices() const;
+   unsigned int         nHFSecondaryVertices() const;
    TClonesArray const * aHFTertiaryVertices()  const;
-   int                  nHFTertiaryVertices()  const;
+   unsigned int         nHFTertiaryVertices()  const;
 
    // -- get variables from StPicoEvent
    Int_t runId()   const;
@@ -56,11 +56,11 @@ public:
 private:
 
    // -- some variables below are kept in ROOT types to match the same ones in StPicoEvent
-   Int_t mRunId;                                      // run number
-   Int_t mEventId;                                    // event number
+   Int_t                mRunId;                       // run number
+   Int_t                mEventId;                     // event number
 
-   int   mNHFSecondaryVertices;                       // number of stored secondary vertex candidates
-   int   mNHFTertiaryVertices;                        // number of stored tertiary vertex candidates
+   unsigned int         mNHFSecondaryVertices;        // number of stored secondary vertex candidates
+   unsigned int         mNHFTertiaryVertices;         // number of stored tertiary vertex candidates
 
    TClonesArray*        mHFSecondaryVerticesArray;    // secondary vertex candidates
    static TClonesArray* fgHFSecondaryVerticesArray;
@@ -72,10 +72,10 @@ private:
 };
 
 inline TClonesArray const * StPicoHFEvent::aHFSecondaryVertices() const { return mHFSecondaryVerticesArray;}
-inline int                  StPicoHFEvent::nHFSecondaryVertices() const { return mNHFSecondaryVertices; }
+inline unsigned int         StPicoHFEvent::nHFSecondaryVertices() const { return mNHFSecondaryVertices; }
 
 inline TClonesArray const * StPicoHFEvent::aHFTertiaryVertices()  const { return mHFTertiaryVerticesArray;}
-inline int                  StPicoHFEvent::nHFTertiaryVertices()  const { return mNHFTertiaryVertices; }
+inline unsigned int         StPicoHFEvent::nHFTertiaryVertices()  const { return mNHFTertiaryVertices; }
 
 inline Int_t StPicoHFEvent::runId()        const { return mRunId; }
 inline Int_t StPicoHFEvent::eventId()      const { return mEventId; }
