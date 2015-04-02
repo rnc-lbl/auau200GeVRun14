@@ -29,7 +29,7 @@ void runPicoD0AnaMaker(TString d0list,TString outFileName)
 	StPicoD0AnaMaker*  picoD0AnaMaker = new StPicoD0AnaMaker("picoD0AnaMaker",d0list,outFileName.Data(),picoDstMaker);
 	
 	StHFCuts* d0Cuts = new StHFCuts("d0Cuts");
-	picoD0AnaMaker->setHFCuts(d0cuts);
+	picoD0AnaMaker->setHFCuts(d0Cuts);
 
 	// -------------- USER variables -------------------------
 	// add your cuts here. 
@@ -46,7 +46,7 @@ void runPicoD0AnaMaker(TString d0list,TString outFileName)
 	// kaonPion pair cuts
 	float dcaDaughtersMax = 0.008;  // maximum
 	float decayLengthMin  = 0.0030; // minimum
-	float decayLengthMax  = std::numeric_limits<float>::max();
+	float decayLengthMax  = 999999; //std::numeric_limits<float>::max();
 	float cosThetaMin     = 0.90;   // minimum
 	float minMass         = 1.6;
 	float maxMass         = 2.1;
