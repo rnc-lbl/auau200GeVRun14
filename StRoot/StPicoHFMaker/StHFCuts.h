@@ -27,7 +27,7 @@ class StHFCuts : public TNamed
  public:
   
   StHFCuts();
-  StHFCuts(const Char_t *name, const Char_t *title);
+  StHFCuts(const Char_t *name);
   ~StHFCuts() {;}
   
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
@@ -38,13 +38,13 @@ class StHFCuts : public TNamed
 
   bool isGoodTrack(StPicoTrack const *trk) const;
   
-  bool isGoodTPCPion(StPicoTrack const *trk) const;
-  bool isGoodTPCKaon(StPicoTrack const *trk) const;
-  bool isGoodTPCProton(StPicoTrack const *trk) const;
+  bool isTPCPion(StPicoTrack const *trk) const;
+  bool isTPCKaon(StPicoTrack const *trk) const;
+  bool isTPCProton(StPicoTrack const *trk) const;
 
-  bool isGoodTOFPion(StPicoTrack const *trk,   float const & bTofBeta) const;
-  bool isGoodTOFKaon(StPicoTrack const *trk,   float const & bTofBeta) const;
-  bool isGoodTOFProton(StPicoTrack const *trk, float const & bTofBeta) const;
+  bool isTOFPion(StPicoTrack const *trk,   float const & bTofBeta) const;
+  bool isTOFKaon(StPicoTrack const *trk,   float const & bTofBeta) const;
+  bool isTOFProton(StPicoTrack const *trk, float const & bTofBeta) const;
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
