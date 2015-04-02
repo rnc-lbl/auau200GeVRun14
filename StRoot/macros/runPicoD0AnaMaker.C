@@ -16,6 +16,7 @@ void runPicoD0AnaMaker(TString d0list,TString outFileName)
   gSystem->Load("StPicoPrescales");
 	gSystem->Load("StPicoD0EventMaker");
 	gSystem->Load("StPicoD0AnaMaker");
+	gSystem->Load("StPicoHFMaker");
 
   chain = new StChain();
 
@@ -26,7 +27,31 @@ void runPicoD0AnaMaker(TString d0list,TString outFileName)
   gSystem->Exec(command.Data());
 	StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0,"correspondingPico.list","picoDstMaker");
 	StPicoD0AnaMaker*  picoD0AnaMaker = new StPicoD0AnaMaker("picoD0AnaMaker",d0list,outFileName.Data(),picoDstMaker);
-  
+	
+	StHFCuts* d0Cuts = new StHFCuts("d0Cuts");
+	picoD0AnaMaker->setHFCuts(d0cuts);
+
+	// -------------- USER variables -------------------------
+	// add your cuts here. 
+
+	// tracking
+	d0Cuts->setCutNHitsFitMax(20);
+
+	// pions
+	d0Cuts->setCutTPCNSigmaPion(3.0);
+
+	// kaons
+	d0Cuts->setCutTPCNSigmaKaon(2.0);
+   
+	// kaonPion pair cuts
+	float dcaDaughtersMax = 0.008;  // maximum
+	float decayLengthMin  = 0.0030; // minimum
+	float decayLengthMax  = std::numeric_limits<float>::max();
+	float cosThetaMin     = 0.90;   // minimum
+	float minMass         = 1.6;
+	float maxMass         = 2.1;
+	d0Cuts->setCutSecondaryPair(dcaDaughtersMax, decayLengthMin, decayLengthMax, cosThetaMin, minMass, maxMass);
+	  
   chain->Init();
   int nEntries = picoD0AnaMaker->getEntries();
   for(int iEvent = 0; iEvent<nEntries; ++iEvent)
