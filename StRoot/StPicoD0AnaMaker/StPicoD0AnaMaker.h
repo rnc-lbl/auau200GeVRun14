@@ -24,6 +24,8 @@ class TNtuple;
 class StPicoD0Event;
 class StKaonPion;
 class StPicoDstMaker;
+class StHFCuts;
+
 
 class StPicoD0AnaMaker : public StMaker
 {
@@ -37,7 +39,9 @@ class StPicoD0AnaMaker : public StMaker
     virtual Int_t Finish();
 
     int getEntries() const;
-    
+
+    void setHFCuts(StHFCuts* cuts);    
+
   private:
     StPicoD0AnaMaker() {}
     void readNextEvent();
@@ -52,6 +56,8 @@ class StPicoD0AnaMaker : public StMaker
     TFile* mOutputFile;
     TChain* mChain;
     int mEventCounter;
+
+    StHFCuts* mHFCuts;
 
     // -------------- USER variables -------------------------
     // add your member variables here. 
@@ -68,6 +74,11 @@ inline int StPicoD0AnaMaker::getEntries() const
 inline void StPicoD0AnaMaker::readNextEvent()
 {
   mChain->GetEntry(mEventCounter++);
+}
+
+inline void StPicoD0AnaMaker::setHFCuts(StHFCuts* cuts)   
+{ 
+  mHFCuts = cuts; 
 }
 
 #endif
