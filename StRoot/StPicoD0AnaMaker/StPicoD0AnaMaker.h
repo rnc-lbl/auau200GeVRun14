@@ -56,7 +56,6 @@ class StPicoD0AnaMaker : public StMaker
     // -------------- USER variables -------------------------
     // add your member variables here. 
     // Remember that ntuples size can be really big, use histograms where appropriate
-    TNtuple* mNtuple;
 
     ClassDef(StPicoD0AnaMaker, 1)
 };

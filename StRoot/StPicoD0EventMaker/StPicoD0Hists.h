@@ -13,33 +13,35 @@
  * **************************************************
  */
 
+#include "TObject.h"
+
 class TH1F;
 class TH2F;
 class TFile;
 class TString;
+class StPicoPrescales;
 class StPicoEvent;
-class StPicoTrack;
+class StPicoD0Event;
 class StKaonPion;
 
 
-class StPicoD0Hists
+class StPicoD0Hists: public TObject
 {
   public:
    StPicoD0Hists(TString fileBaseName);
-   ~StPicoD0Hists();
-   void addEvent(StPicoEvent const & picoEvent);
-   void addKaonPion(StKaonPion const*, StPicoTrack const* kaon, StPicoTrack const* pion);
+   virtual ~StPicoD0Hists();
+   void addEvent(StPicoEvent const &, StPicoD0Event const &,unsigned int const nHftTracks);
+   void addKaonPion(StKaonPion const*, bool fillMass);
    void closeFile();
 
   private:
    StPicoD0Hists(){}
 
+   StPicoPrescales* mPrescales;
    TFile* mOutFile;
-   TH2F* mh2VzVsVzVpd;
-   TH2F* mh2VrVsVz;
    TH1F* mh1TotalEventsInRun;
    TH1F* mh1TotalHftTracksInRun;
-   TH1F* mh1TotalRefMultInRun;
+   TH1F* mh1TotalGRefMultInRun;
    TH1F* mh1TotalKaonsInRun;
    TH1F* mh1TotalPionsInRun;
    TH1F* mh1TotalD0CandidatesInRun;
@@ -47,6 +49,7 @@ class StPicoD0Hists
    TH2F* mh2KaonDcaVsPt;
    TH2F* mh2PionDcaVsPt;
    TH2F* mh2CosThetaVsPt;
+   TH2F* mh2DcaDaughtersVsPt;
    TH2F* mh2InvariantMassVsPt;
 
    ClassDef(StPicoD0Hists, 1)
