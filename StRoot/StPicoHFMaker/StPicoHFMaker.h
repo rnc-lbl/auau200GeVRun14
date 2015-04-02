@@ -1,5 +1,5 @@
-#ifndef StPicoHFEventMaker_h
-#define StPicoHFEventMaker_h
+#ifndef StPicoHFMaker_h
+#define StPicoHFMaker_h
 
 #include "StMaker.h"
 #include "StLorentzVectorF.hh"
@@ -22,11 +22,11 @@
  *      StPicoHFEvent::kThreeParticleDecay
  *      StPicoHFEvent::kTwoAndTwoParticleDecay 
  *
- *  - Set use mode of StPicoHFEventMaker class  via setMakerMode(...)
- *     use enum of StPicoHFEventMaker::eMakerMode 
- *      StPicoHFEventMaker::kAnalyse - don't write candidate trees, just fill histograms
- *      StPicoHFEventMaker::kWrite   - write candidate trees
- *      StPicoHFEventMaker::kRead    - read candidate trees and fill histograms
+ *  - Set use mode of StPicoHFMaker class  via setMakerMode(...)
+ *     use enum of StPicoHFMaker::eMakerMode 
+ *      StPicoHFMaker::kAnalyse - don't write candidate trees, just fill histograms
+ *      StPicoHFMaker::kWrite   - write candidate trees
+ *      StPicoHFMaker::kRead    - read candidate trees and fill histograms
  *
  *  - Implement in daughter class, methods from StHFCuts utility class can/should be used
  *     methods are used to fill vectors for 'good' identified particles
@@ -56,12 +56,12 @@ class StHFPair;
 class StHFTriplet;
 class StHFCuts;
 
-class StPicoHFEventMaker : public StMaker 
+class StPicoHFMaker : public StMaker 
 {
   public:
-    StPicoHFEventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
+    StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
 		       char const* inputHFListHFtree);
-    virtual ~StPicoHFEventMaker();
+    virtual ~StPicoHFMaker();
     
     // -- TO BE IMPLEMENTED BY DAUGHTER CLASS
     virtual Int_t InitHF()                  { return kStOK; }
@@ -73,7 +73,7 @@ class StPicoHFEventMaker : public StMaker
     void setMakerMode(unsigned short us);
     void setDecayMode(unsigned short us);
 
-    // -- different modes to use the StPicoHFEventMaker class
+    // -- different modes to use the StPicoHFMaker class
     //    - kAnalyse - don't write candidate trees, just fill histograms
     //    - kWrite   - write candidate trees
     //    - kRead    - read candidate trees and fill histograms
@@ -148,13 +148,13 @@ class StPicoHFEventMaker : public StMaker
 
     TFile*          mOutputFileTree;    // ptr to file saving the HFtree
     TFile*          mOutputFileList;    // ptr to file saving the list of histograms
-    ClassDef(StPicoHFEventMaker, 1)
+    ClassDef(StPicoHFMaker, 1)
 };
 
-inline void StPicoHFEventMaker::setHFBaseCuts(StHFCuts* cuts)   { mHFCuts = cuts; }
-inline void StPicoHFEventMaker::setMakerMode(unsigned short us) { mMakerMode = us; }
-inline void StPicoHFEventMaker::setDecayMode(unsigned short us) { mDecayMode = us; }
+inline void StPicoHFMaker::setHFBaseCuts(StHFCuts* cuts)   { mHFCuts = cuts; }
+inline void StPicoHFMaker::setMakerMode(unsigned short us) { mMakerMode = us; }
+inline void StPicoHFMaker::setDecayMode(unsigned short us) { mDecayMode = us; }
 
-inline unsigned int StPicoHFEventMaker::isDecayMode()           { return mDecayMode; }
-inline unsigned int StPicoHFEventMaker::isMakerMode()           { return mMakerMode; }
+inline unsigned int StPicoHFMaker::isDecayMode()           { return mDecayMode; }
+inline unsigned int StPicoHFMaker::isMakerMode()           { return mMakerMode; }
 #endif
