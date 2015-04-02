@@ -9,16 +9,16 @@
 #include "StLorentzVectorF.hh"
 #include "phys_constants.h"
 
-#include "../StPicoDstMaker/StPicoDst.h"
-#include "../StPicoDstMaker/StPicoDstMaker.h"
-#include "../StPicoDstMaker/StPicoEvent.h"
-#include "../StPicoDstMaker/StPicoTrack.h"
-#include "../StPicoDstMaker/StPicoBTofPidTraits.h"
+#include "StPicoDstMaker/StPicoDst.h"
+#include "StPicoDstMaker/StPicoDstMaker.h"
+#include "StPicoDstMaker/StPicoEvent.h"
+#include "StPicoDstMaker/StPicoTrack.h"
+#include "StPicoDstMaker/StPicoBTofPidTraits.h"
 
-#include "../StPicoHFMaker/StPicoHFEvent.h"
-#include "../StPicoHFMaker/StHFCuts.h"
-#include "../StPicoHFMaker/StHFPair.h"
-#include "../StPicoHFMaker/StHFTriplet.h"
+#include "StPicoHFMaker/StPicoHFEvent.h"
+#include "StPicoHFMaker/StHFCuts.h"
+#include "StPicoHFMaker/StHFPair.h"
+#include "StPicoHFMaker/StHFTriplet.h"
 
 #include "StPicoHFLambdaCMaker.h"
 
@@ -27,7 +27,7 @@ ClassImp(StPicoHFLambdaCMaker)
 // _________________________________________________________
 StPicoHFLambdaCMaker::StPicoHFLambdaCMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
 					   char const* inputHFListHFtree = "") :
-  StPicoHFEventMaker(name, picoMaker, outputBaseFileName, inputHFListHFtree),
+  StPicoHFMaker(name, picoMaker, outputBaseFileName, inputHFListHFtree),
   mDecayChannel(kPionKaonProton),mNtupleSecondary(NULL), mNtupleTertiary(NULL) {
   // constructor
 }
@@ -59,14 +59,14 @@ int StPicoHFLambdaCMaker::FinishHF() {
 // _________________________________________________________
 int StPicoHFLambdaCMaker::MakeHF() {
 
-  if (isMakerMode() == StPicoHFEventMaker::kWrite) {
+  if (isMakerMode() == StPicoHFMaker::kWrite) {
     createCandidates();
   }
-  else if (isMakerMode() == StPicoHFEventMaker::kRead) {
+  else if (isMakerMode() == StPicoHFMaker::kRead) {
     readCandidates();
     analyseCandidates();
   }
-  else if (isMakerMode() == StPicoHFEventMaker::kAnalyse) {
+  else if (isMakerMode() == StPicoHFMaker::kAnalyse) {
     createCandidates();
     analyseCandidates();
   }

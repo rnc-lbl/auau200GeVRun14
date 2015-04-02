@@ -1,7 +1,7 @@
 #ifndef StPicoHFLambdaCMaker_h
 #define StPicoHFLambdaCMaker_h
 
-#include "../StPicoHFMaker/StPicoHFEventMaker.h"
+#include "StPicoHFMaker/StPicoHFMaker.h"
 
 /* **************************************************
  *  Class for HF LambdaC analysis
@@ -28,7 +28,7 @@ class StHFPair;
 class StHFTriplet;
 class StHFCuts;
 
-class StPicoHFLambdaCMaker : public StPicoHFEventMaker 
+class StPicoHFLambdaCMaker : public StPicoHFMaker 
 {
  public:
   StPicoHFLambdaCMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
