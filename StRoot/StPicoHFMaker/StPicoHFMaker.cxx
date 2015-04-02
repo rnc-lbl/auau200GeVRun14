@@ -7,11 +7,11 @@
 #include "phys_constants.h"
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
-#include "../StPicoDstMaker/StPicoDst.h"
-#include "../StPicoDstMaker/StPicoDstMaker.h"
-#include "../StPicoDstMaker/StPicoEvent.h"
-#include "../StPicoDstMaker/StPicoTrack.h"
-#include "../StPicoDstMaker/StPicoBTofPidTraits.h"
+#include "StPicoDstMaker/StPicoDst.h"
+#include "StPicoDstMaker/StPicoDstMaker.h"
+#include "StPicoDstMaker/StPicoEvent.h"
+#include "StPicoDstMaker/StPicoTrack.h"
+#include "StPicoDstMaker/StPicoBTofPidTraits.h"
 
 #include "StHFCuts.h"
 #include "StPicoHFEvent.h"
@@ -127,9 +127,11 @@ Int_t StPicoHFMaker::Finish() {
   //    NOT TO BE OVERWRITTEN by daughter class
   //    daughter class should implement FinishHF()
 
-  mOutputFileTree->cd();
-  mOutputFileTree->Write();
-  mOutputFileTree->Close();
+  if (mMakerMode == StPicoHFMaker::kWrite) {
+    mOutputFileTree->cd();
+    mOutputFileTree->Write();
+    mOutputFileTree->Close();
+  }
 
   mOutputFileList->cd();
   mOutList->Write(mOutList->GetName(), TObject::kSingleKey);

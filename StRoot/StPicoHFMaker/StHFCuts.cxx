@@ -9,8 +9,8 @@
 #include "StPhysicalHelixD.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
-#include "../StPicoDstMaker/StPicoTrack.h"
-#include "../StPicoDstMaker/StPicoEvent.h"
+#include "StPicoDstMaker/StPicoTrack.h"
+#include "StPicoDstMaker/StPicoEvent.h"
 
 #include "StHFPair.h"
 #include "StHFTriplet.h"
