@@ -39,14 +39,12 @@ class StHFPair : public TObject
 	   StThreeVectorF const & vtx, float bField);
 
   StHFPair(StPicoTrack const * particle1, StHFPair * particle2, 
-	   StPicoTrack const * tertiaryP1, StPicoTrack const * tertiaryP2,
 	   float p1MassHypo, float p2MassHypo,
 	   unsigned short p1Idx, unsigned short p2Idx,
 	   StThreeVectorF const & vtx, float bField);
 
   ~StHFPair() {;}
   
-  void updateVertex(StPicoTrack const * tertiaryP1, StPicoTrack const * tertiaryP2, StThreeVectorF const & vtx2);
 
   StLorentzVectorF const & lorentzVector() const;
   float m()    const;
@@ -54,9 +52,13 @@ class StHFPair : public TObject
   float eta()  const;
   float phi()  const;
   float pointingAngle() const;
+  float pointingAngle(StThreeVectorF const & vtx2) const;
   float decayLength() const;
+  float decayLength(StThreeVectorF const & vtx2) const;
   float particle1Dca() const;
+  float particle1Dca(StPicoTrack const * p1track, StThreeVectorF const & vtx2) const;
   float particle2Dca() const;
+  float particle2Dca(StPicoTrack const * p1track, StThreeVectorF const & vtx2) const;
   unsigned short particle1Idx() const;
   unsigned short particle2Idx() const;
   float dcaDaughters() const;
