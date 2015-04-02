@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job fileListSyntax="paths" minFilesPerProcess="100" maxFilesPerProcess="150" simulateSubmission="false">
+
+        <stdout discard="true" />
+        <stderr URL="file:./err/$JOBID.err" />
+                
+        <Generator>
+        <Location>./report/</Location>
+        <ScriptLocation>./csh/</ScriptLocation>
+        <ListLocation>./list/</ListLocation>
+        </Generator>
+                                                
+<command>
+starver SL15c
+
+setenv EDAY `perl $STAR/StRoot/macros/embedding/getYearDayFromFile.pl -d ${FILEBASENAME}`
+setenv ERUN `perl $STAR/StRoot/macros/embedding/getYearDayFromFile.pl -r ${FILEBASENAME}`
+setenv EOUTDIR '/path/to/your/directory/production/'$EDAY'/'$ERUN
+setenv ELOGDIR '/path/to/your/directory/log/'$EDAY'/'$ERUN
+echo $EOUTDIR
+echo $ELOGDIR
+
+if ( ! -f $EOUTDIR ) then
+  mkdir -pv $EOUTDIR
+  chmod -R g+rw $EOUTDIR
+endif
+              
+if ( ! -f $ELOGDIR ) then
+  mkdir -pv $ELOGDIR
+  chmod -R g+rw $ELOGDIR
+endif
+                  
+root4star -q -b -l StRoot/macros/runPicoD0AnaMaker.C\(\"$FILELIST\",\"$JOBID.root\"\) &gt;&amp; ${JOBID}.log
+tar -zcvf ${JOBID}.log.tgz ${JOBID}.log
+</command>
+
+    <input URL="filelist:/path/to/your/directory/&listOfFiles;" />
+    <output fromScratch="*.root" toURL="$EOUTDIR/" />
+    <output fromScratch="*.log.tgz" toURL="$ELOGDIR/" />
+
+<SandBox installer="ZIP">
+	<Package name="LocalLibraries">
+		<File>file:./StRoot/</File>
+		<File>file:./run14AuAu200GeVPrescales/</File>
+		<File>file:./.sl64_gcc447/</File>
+	</Package>
+</SandBox>
+
+</job>
