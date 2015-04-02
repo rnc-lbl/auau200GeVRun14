@@ -13,6 +13,7 @@ void runPicoD0AnaMaker(TString d0list,TString outFileName)
 	loadSharedLibraries();
 
 	gSystem->Load("StPicoDstMaker");
+  gSystem->Load("StPicoPrescales");
 	gSystem->Load("StPicoD0EventMaker");
 	gSystem->Load("StPicoD0AnaMaker");
 

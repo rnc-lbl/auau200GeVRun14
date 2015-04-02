@@ -1,6 +1,3 @@
-#ifndef CUTS_H
-#define CUTS_H
-
 /* **************************************************
  *  Cuts namespace.
  *
@@ -12,23 +9,23 @@
  * **************************************************
  */
 
+#include "StCuts.h"
 
 namespace cuts
 {
    // tracking
-   extern int const nHitsFit;
+   int const nHitsFit = 20;
 
    //pions
-   extern float const nSigmaPion;
+   float const nSigmaPion = 3.0;
 
    //kaons
-   extern float const nSigmaKaon;
+   float const nSigmaKaon = 2.0;
 
    // kaonPion pair cuts
-   extern float const cosTheta;
-   extern float const dcaDaughters;
-   extern float const decayLength;
-   extern float const minMass;
-   extern float const maxMass;
+   float const cosTheta = 0.90; // minimum
+   float const dcaDaughters = 0.008; // maximum
+   float const decayLength = 0.0030; // minimum
+   float const minMass = 1.6;
+   float const maxMass = 2.1;
 }
-#endif
