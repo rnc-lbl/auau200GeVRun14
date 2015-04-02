@@ -27,7 +27,7 @@ class StHFCuts : public TNamed
  public:
   
   StHFCuts();
-  StHFCuts(const Char_t *name, const Char_t *title);
+  StHFCuts(const Char_t *name);
   ~StHFCuts() {;}
   
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   

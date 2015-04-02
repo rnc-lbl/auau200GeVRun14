@@ -60,8 +60,8 @@ StHFCuts::StHFCuts()
 }
 
 // _________________________________________________________
-StHFCuts::StHFCuts(const Char_t *name, const Char_t *title) 
-  : TNamed(name, title), mEventStatMax(6),
+StHFCuts::StHFCuts(const Char_t *name) 
+  : TNamed(name, name), mEventStatMax(6),
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
   
