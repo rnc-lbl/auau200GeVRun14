@@ -60,8 +60,8 @@ StHFCuts::StHFCuts()
 }
 
 // _________________________________________________________
-StHFCuts::StHFCuts(const Char_t *name, const Char_t *title) 
-  : TNamed(name, title), mEventStatMax(6),
+StHFCuts::StHFCuts(const Char_t *name) 
+  : TNamed(name, name), mEventStatMax(6),
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
   
@@ -162,7 +162,7 @@ bool StHFCuts::isGoodTrack(StPicoTrack const * const trk) const {
 }
 
 // _________________________________________________________
-bool StHFCuts::isGoodTPCPion(StPicoTrack const * const trk) const {
+bool StHFCuts::isTPCPion(StPicoTrack const * const trk) const {
   // -- check for good pion in TPC
 
   return ( trk->pMom().perp() >= mPionPtMin && trk->pMom().perp() < mPionPtMax &&
@@ -171,7 +171,7 @@ bool StHFCuts::isGoodTPCPion(StPicoTrack const * const trk) const {
 }
 
 // _________________________________________________________
-bool StHFCuts::isGoodTPCKaon(StPicoTrack const * const trk) const {
+bool StHFCuts::isTPCKaon(StPicoTrack const * const trk) const {
   // -- check for good kaon in TPC
 
   return ( trk->pMom().perp() >= mKaonPtMin && trk->pMom().perp() < mKaonPtMax &&
@@ -180,7 +180,7 @@ bool StHFCuts::isGoodTPCKaon(StPicoTrack const * const trk) const {
 }
 
 // _________________________________________________________
-bool StHFCuts::isGoodTPCProton(StPicoTrack const * const trk) const {
+bool StHFCuts::isTPCProton(StPicoTrack const * const trk) const {
   // -- check for good proton in TPC
 
   return ( trk->pMom().perp() >= mProtonPtMin && trk->pMom().perp() < mProtonPtMax &&
@@ -189,7 +189,7 @@ bool StHFCuts::isGoodTPCProton(StPicoTrack const * const trk) const {
 }
 
 // _________________________________________________________
-bool StHFCuts::isGoodTOFPion(StPicoTrack const *trk, float const & bTofBeta) const {
+bool StHFCuts::isTOFPion(StPicoTrack const *trk, float const & bTofBeta) const {
   // -- check for good pion in TOF - in a different pT range than for TPC
 
   // -- JMT FIX ME WITH REAL TOF CHECK
@@ -199,7 +199,7 @@ bool StHFCuts::isGoodTOFPion(StPicoTrack const *trk, float const & bTofBeta) con
 }
 
 // _________________________________________________________
-bool StHFCuts::isGoodTOFKaon(StPicoTrack const *trk, float const & bTofBeta) const {
+bool StHFCuts::isTOFKaon(StPicoTrack const *trk, float const & bTofBeta) const {
   // -- check for good kaon in TOF - in a different pT range than for TPC
 
   // -- JMT FIX ME WITH REAL TOF CHECK
@@ -209,7 +209,7 @@ bool StHFCuts::isGoodTOFKaon(StPicoTrack const *trk, float const & bTofBeta) con
 }
 
 // _________________________________________________________
-bool StHFCuts::isGoodTOFProton(StPicoTrack const *trk, float const & bTofBeta) const {
+bool StHFCuts::isTOFProton(StPicoTrack const *trk, float const & bTofBeta) const {
   // -- check for good proton in TOF - in a different pT range than for TPC
 
   // -- JMT FIX ME WITH REAL TOF CHECK
