@@ -15,14 +15,14 @@
 #include "StPicoD0EventMaker/StPicoD0Event.h"
 #include "StPicoD0EventMaker/StKaonPion.h"
 #include "StPicoD0AnaMaker.h"
-#include "StCuts.h"
+#include "StPicoHFMaker/StHFCuts.h"
 
 ClassImp(StPicoD0AnaMaker)
 
 StPicoD0AnaMaker::StPicoD0AnaMaker(char const * name,char const * inputFilesList, 
     char const * outName,StPicoDstMaker* picoDstMaker): 
   StMaker(name),mPicoDstMaker(picoDstMaker),mPicoD0Event(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
-   mOutputFile(NULL), mChain(NULL), mEventCounter(0)
+  mOutputFile(NULL), mChain(NULL), mEventCounter(0), mHFCuts(NULL)
 {}
 
 Int_t StPicoD0AnaMaker::Init()
@@ -52,6 +52,8 @@ Int_t StPicoD0AnaMaker::Init()
    mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
    mOutputFile->cd();
 
+   if (!mHFCuts)
+    mHFCuts = new StHFCuts;   
 
    // -------------- USER VARIABLES -------------------------
    
@@ -124,12 +126,15 @@ bool StPicoD0AnaMaker::isGoodPair(StKaonPion const* const kp) const
   StPicoTrack const* kaon = mPicoDstMaker->picoDst()->track(kp->kaonIdx());
   StPicoTrack const* pion = mPicoDstMaker->picoDst()->track(kp->pionIdx());
 
-  bool tracking = kaon->nHitsFit() > cuts::nHitsFit && pion->nHitsFit() > cuts::nHitsFit;
+  //  To be replaced by mHFCuts->isGoodSecondaryVertexPair(kp))
+  bool pairCuts = kp->m() > mHFCuts->cutSecondaryPairMassMin() && 
+    kp->m() < mHFCuts->cutSecondaryPairMassMax() &&
+    std::cos(kp->pointingAngle()) > mHFCuts->cutSecondaryPairCosThetaMin() &&
+    kp->decayLength()  > mHFCuts->cutSecondaryPairDecayLengthMin() && 
+    kp->decayLength()  < mHFCuts->cutSecondaryPairDecayLengthMax() &&
+    kp->dcaDaughters() < mHFCuts->cutSecondaryPairDcaDaughtersMax();
 
-  return tracking && fabs(kaon->nSigmaKaon()) < cuts::nSigmaKaon &&
-         fabs(pion->nSigmaPion()) < cuts::nSigmaPion && 
-         kp->m() > cuts::minMass && kp->m() < cuts::maxMass &&
-         std::cos(kp->pointingAngle()) > cuts::cosTheta &&
-         kp->decayLength() > cuts::decayLength &&
-         kp->dcaDaughters() < cuts::dcaDaughters;
+  return (mHFCuts->isGoodTrack(kaon) && mHFCuts->isGoodTrack(pion) &&
+	  mHFCuts->isTPCKaon(kaon) && mHFCuts->isTPCPion(pion) && 
+	  pairCuts);
 }

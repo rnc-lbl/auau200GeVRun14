@@ -2,35 +2,39 @@
 
 #include "TTree.h"
 #include "TFile.h"
+#include "TChain.h"
 
 #include "phys_constants.h"
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
-#include "../StPicoDstMaker/StPicoDst.h"
-#include "../StPicoDstMaker/StPicoDstMaker.h"
-#include "../StPicoDstMaker/StPicoEvent.h"
-#include "../StPicoDstMaker/StPicoTrack.h"
-#include "../StPicoDstMaker/StPicoBTofPidTraits.h"
+#include "StPicoDstMaker/StPicoDst.h"
+#include "StPicoDstMaker/StPicoDstMaker.h"
+#include "StPicoDstMaker/StPicoEvent.h"
+#include "StPicoDstMaker/StPicoTrack.h"
+#include "StPicoDstMaker/StPicoBTofPidTraits.h"
 
 #include "StHFCuts.h"
 #include "StPicoHFEvent.h"
-#include "StPicoHFEventMaker.h"
+#include "StPicoHFMaker.h"
 #include "StHFPair.h"
 #include "StHFTriplet.h"
 
-ClassImp(StPicoHFEventMaker)
+ClassImp(StPicoHFMaker)
 
 // _________________________________________________________
-StPicoHFEventMaker::StPicoHFEventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName)
-: StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mPicoHFEvent(NULL), mBField(0.), 
-  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFEventMaker::kAnalyse), 
-  mTree(NULL), mOutList(NULL),
-  mPicoDstMaker(picoMaker), mPicoEvent(NULL), mOutputFile(NULL) {
+StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
+				       char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
+  StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
+  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyse), 
+  mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
+  mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
+  mOutputFileTree(NULL), mOutputFileList(NULL) {
   // -- constructor
 }
 
+
 // _________________________________________________________
-StPicoHFEventMaker::~StPicoHFEventMaker() {
+StPicoHFMaker::~StPicoHFMaker() {
    // -- destructor 
   
   if (mHFCuts)
@@ -42,7 +46,7 @@ StPicoHFEventMaker::~StPicoHFEventMaker() {
 }
 
 // _________________________________________________________
-Int_t StPicoHFEventMaker::Init() {
+Int_t StPicoHFMaker::Init() {
   // -- Inhertited from StMaker 
   //    NOT TO BE OVERWRITTEN by daughter class
   //    daughter class should implement InitHF()
@@ -53,28 +57,55 @@ Int_t StPicoHFEventMaker::Init() {
   
   // -- create HF event - using the proper decay mode to initialize
   mPicoHFEvent = new StPicoHFEvent(mDecayMode);
+ 
+  // -- READ ------------------------------------
+  if (mMakerMode == StPicoHFMaker::kRead) {
 
-  mOutputFile = new TFile(GetName(), "RECREATE");
-  mOutputFile->SetCompressionLevel(1);
+    if (!mHFChain) {
+      mHFChain = new TChain("T");
+      std::ifstream listOfFiles(mInputFileName.Data());
+      if (listOfFiles.is_open()) {
+	std::string file;
+	while (getline(listOfFiles, file)) {
+	  LOG_INFO << " StPicoHFMaker - Adding :" << file << endm;
+	  mHFChain->Add(file.c_str());
+	}
+      }
+      else { 
+	LOG_ERROR << " StPicoHFMaker - Could not open list of files. ABORT!" << endm;
+	return kStErr;
+      }
+    } // if (mMakerMode == StPicoHFMaker::kRead) {
 
-  if (mMakerMode == StPicoHFEventMaker::kWrite) {
+    mHFChain->GetBranch("hfEvent")->SetAutoDelete(kFALSE);
+    mHFChain->SetBranchAddress("hfEvent", &mPicoHFEvent);
+  }
+  
+  // -- file which holds list of histograms
+  mOutputFileList = new TFile(Form("%s.%s.root", mOuputFileBaseName.Data(), GetName()), "RECREATE");
+  mOutputFileList->SetCompressionLevel(1);
+
+  if (mMakerMode == StPicoHFMaker::kWrite) {
+    mOutputFileTree = new TFile(Form("%s.picoHFtree.root", mOuputFileBaseName.Data()), "RECREATE");
+    mOutputFileTree->SetCompressionLevel(1);
+    mOutputFileTree->cd();
+
     // -- create OutputTree
     int BufSize = (int)pow(2., 16.);
     int Split = 1;
     if (!mTree) 
       mTree = new TTree("T", "T", BufSize);
     mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
-    mTree->Branch("dEvent", "StPicoHFEvent", &mPicoHFEvent, BufSize, Split);
-  }
+    mTree->Branch("hfEvent", "StPicoHFEvent", &mPicoHFEvent, BufSize, Split);
+  } // if (mMakerMode == StPicoHFMaker::kWrite) {
 
-  // -- add List which holds all histograms
+  // -- disable automatic adding of objects to file
   bool oldStatus = TH1::AddDirectoryStatus();
   TH1::AddDirectory(false);
-  
+
+  // -- add list which holds all histograms  
   mOutList = new TList();
   mOutList->SetOwner(true);
-
-  TH1::AddDirectory(oldStatus);
 
   // -- create event stat histograms
   initializeEventStats();
@@ -82,32 +113,39 @@ Int_t StPicoHFEventMaker::Init() {
   // -- call method of daughter class
   InitHF();
 
+  TH1::AddDirectory(oldStatus);
+
   // -- reset event to be in a defined state
-  reset();
+  resetEvent();
 
   return kStOK;
 }
 
 // _________________________________________________________
-Int_t StPicoHFEventMaker::Finish() {
+Int_t StPicoHFMaker::Finish() {
   // -- Inhertited from StMaker 
   //    NOT TO BE OVERWRITTEN by daughter class
   //    daughter class should implement FinishHF()
 
-  mOutputFile->cd();
-  mOutputFile->Write();
+  if (mMakerMode == StPicoHFMaker::kWrite) {
+    mOutputFileTree->cd();
+    mOutputFileTree->Write();
+    mOutputFileTree->Close();
+  }
+
+  mOutputFileList->cd();
   mOutList->Write(mOutList->GetName(), TObject::kSingleKey);
 
   // -- call method of daughter class
   FinishHF();
 
-  mOutputFile->Close();
+  mOutputFileList->Close();
 
   return kStOK;
 }
 
 // _________________________________________________________
-void StPicoHFEventMaker::reset() {
+void StPicoHFMaker::resetEvent() {
   // -- reset event
 
   mIdxPicoPions.clear();
@@ -118,7 +156,7 @@ void StPicoHFEventMaker::reset() {
 }
 
 // _________________________________________________________
-void StPicoHFEventMaker::Clear(Option_t *opt) {
+void StPicoHFMaker::Clear(Option_t *opt) {
   // -- Inhertited from StMaker 
   //    NOT TO BE OVERWRITTEN by daughter class
   //    daughter class should implement ClearHF()
@@ -126,11 +164,11 @@ void StPicoHFEventMaker::Clear(Option_t *opt) {
   // -- call method of daughter class
   ClearHF();
 
-  reset();
+  resetEvent();
 }
 
 // _________________________________________________________
-Int_t StPicoHFEventMaker::Make() {
+Int_t StPicoHFMaker::Make() {
   // -- Inhertited from StMaker 
   //    NOT TO BE OVERWRITTEN by daughter class
   //    daughter class should implement MakeHF()
@@ -139,51 +177,67 @@ Int_t StPicoHFEventMaker::Make() {
   //    -> methods of StHFCuts can and should be used
 
   if (!mPicoDstMaker) {
-    LOG_WARN << " No PicoDstMaker! Skip! " << endm;
+    LOG_WARN << " StPicoHFMaker - No PicoDstMaker! Skip! " << endm;
     return kStWarn;
   }
 
   mPicoDst = mPicoDstMaker->picoDst();
   if (!mPicoDst) {
-    LOG_WARN << " No PicoDst! Skip! " << endm;
+    LOG_WARN << " StPicoHFMaker - No PicoDst! Skip! " << endm;
     return kStWarn;
   }
   
+  // -- read in HF tree
+  if (mMakerMode == StPicoHFMaker::kRead) {
+    mHFChain->GetEntry(mEventCounter++);
+
+    if (mPicoHFEvent->runId() != mPicoDst->event()->runId() || mPicoHFEvent->eventId() != mPicoDst->event()->eventId()) {
+      LOG_ERROR <<" StPicoHFMaker - !!!!!!!!!!!! ATTENTION !!!!!!!!!!!!!"<<endm;
+      LOG_ERROR <<" StPicoHFMaker - SOMETHING TERRIBLE JUST HAPPENED. StPicoEvent and StPicoHFEvent are not in sync."<<endm;
+      exit(1);
+    }
+  } // if (mMakerMode == StPicoHFMaker::kRead) {
+  
+
   Int_t iReturn = kStOK;
   
   if (setupEvent()) {
     UInt_t nTracks = mPicoDst->numberOfTracks();
     
-    for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
-      StPicoTrack* trk = mPicoDst->track(iTrack);
-
-      if (!trk || !mHFCuts->isGoodTrack(trk)) continue;
-
-      float const beta = getTofBeta(trk);
-      if (isPion(trk, beta))   mIdxPicoPions.push_back(iTrack);   // isPion method to be implemented by daughter class
-      if (isKaon(trk, beta))   mIdxPicoKaons.push_back(iTrack);   // isKaon method to be implemented by daughter class
-      if (isProton(trk, beta)) mIdxPicoProtons.push_back(iTrack); // isProton method to be implemented by daughter class
+    // -- Fill vectors of particle types
+    if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyse) {
+      for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
+	StPicoTrack* trk = mPicoDst->track(iTrack);
+	
+	if (!trk || !mHFCuts->isGoodTrack(trk)) continue;
+	
+	float const beta = getTofBeta(trk);
+	if (isPion(trk, beta))   mIdxPicoPions.push_back(iTrack);   // isPion method to be implemented by daughter class
+	if (isKaon(trk, beta))   mIdxPicoKaons.push_back(iTrack);   // isKaon method to be implemented by daughter class
+	if (isProton(trk, beta)) mIdxPicoProtons.push_back(iTrack); // isProton method to be implemented by daughter class
       
-    } // .. end tracks loop
+      } // .. end tracks loop
+    } // if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyse) {
 
     // -- call method of daughter class
     iReturn = MakeHF();
     
-  } // .. end of good event fill
+  } // if (setupEvent()) {
   
   // -- save information about all events, good or bad
-  if (mMakerMode == StPicoHFEventMaker::kWrite)
+  if (mMakerMode == StPicoHFMaker::kWrite)
     mTree->Fill();
   
   // -- reset event to be in a defined state
-  reset();
+  resetEvent();
   
   return (kStOK && iReturn);
 }
 
 // _________________________________________________________
-void StPicoHFEventMaker::createTertiaryK0Shorts() {
+void StPicoHFMaker::createTertiaryK0Shorts() {
   // -- Create candidate for tertiary K0shorts
+  //    only store pairs with opposite charge
 
   for (unsigned short idxPion1 = 0; idxPion1 < mIdxPicoPions.size(); ++idxPion1) {
     StPicoTrack const * pion1 = mPicoDst->track(mIdxPicoPions[idxPion1]);
@@ -194,10 +248,10 @@ void StPicoHFEventMaker::createTertiaryK0Shorts() {
       if (mIdxPicoPions[idxPion1] == mIdxPicoPions[idxPion2]) 
 	continue;
 
-      StHFPair candidateK0Short(pion1, pion2, 
-				M_PION_PLUS, M_PION_MINUS, 
+      StHFPair candidateK0Short(pion1, pion2, M_PION_PLUS, M_PION_MINUS, 
 				mIdxPicoPions[idxPion1], mIdxPicoPions[idxPion2], 
 				mPrimVtx, mBField);
+
       if (!mHFCuts->isGoodTertiaryVertexPair(candidateK0Short)) 
 	continue;
       
@@ -207,7 +261,7 @@ void StPicoHFEventMaker::createTertiaryK0Shorts() {
 }
 
 // _________________________________________________________
-bool StPicoHFEventMaker::setupEvent() {
+bool StPicoHFMaker::setupEvent() {
   // -- fill members from pico event, check for good eventa and fill event statistics
 
   mPicoEvent = mPicoDst->event();
@@ -227,7 +281,7 @@ bool StPicoHFEventMaker::setupEvent() {
 }
 
 // _________________________________________________________
-float StPicoHFEventMaker::getTofBeta(StPicoTrack const * const trk) const {
+float StPicoHFMaker::getTofBeta(StPicoTrack const * const trk) const {
   // -- provide beta of TOF for pico track
 
   if (Int_t const index2tof = trk->bTofPidTraitsIndex() >= 0) {
@@ -239,7 +293,7 @@ float StPicoHFEventMaker::getTofBeta(StPicoTrack const * const trk) const {
 }
 
 // _________________________________________________________
-void StPicoHFEventMaker::initializeEventStats() {
+void StPicoHFMaker::initializeEventStats() {
   // -- Initialize event statistics histograms
   
   const char *aEventCutNames[]   = {"all", "bad run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it^{VPD}_{z}", "centrality", "accepted"};
@@ -260,7 +314,7 @@ void StPicoHFEventMaker::initializeEventStats() {
 }
 
 //________________________________________________________________________
-void StPicoHFEventMaker::fillEventStats(int *aEventStat) {
+void StPicoHFMaker::fillEventStats(int *aEventStat) {
   // -- Fill event statistics 
 
   TH1F *hEventStat0 = static_cast<TH1F*>(mOutList->FindObject("hEventStat0"));
