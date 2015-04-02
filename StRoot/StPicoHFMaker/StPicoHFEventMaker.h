@@ -45,6 +45,8 @@
 
 class TTree;
 class TFile;
+class TChain;
+
 class StPicoDst;
 class StPicoDstMaker;
 class StPicoEvent;
@@ -57,7 +59,8 @@ class StHFCuts;
 class StPicoHFEventMaker : public StMaker 
 {
   public:
-    StPicoHFEventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName);
+    StPicoHFEventMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
+		       char const* inputHFListHFtree);
     virtual ~StPicoHFEventMaker();
     
     // -- TO BE IMPLEMENTED BY DAUGHTER CLASS
@@ -85,9 +88,12 @@ class StPicoHFEventMaker : public StMaker
 
     void  createTertiaryK0Shorts();
 
+    unsigned int isDecayMode();
+    unsigned int isMakerMode();
+
     float getTofBeta(StPicoTrack const*) const;
 
-    // -- members ------------------------
+    // -- protected members ------------------------
 
     StPicoDst      *mPicoDst;
 
@@ -98,11 +104,6 @@ class StPicoHFEventMaker : public StMaker
     float           mBField;
     StThreeVectorF  mPrimVtx;
 
-    unsigned int    mDecayMode; // use enum of StPicoHFEvent::eHFEventMode
-
-    unsigned int    mMakerMode; // use enum of StPicoEventMaker::eMakerMode
-
-    TTree          *mTree;
     TList          *mOutList;
 
     std::vector<unsigned short> mIdxPicoPions;
@@ -118,21 +119,35 @@ class StPicoHFEventMaker : public StMaker
     void  Clear(Option_t *opt="");
     Int_t Finish();
     
-    void  reset();
-
+    void  resetEvent();
     bool  setupEvent();
     
     void  initializeEventStats();
     void  fillEventStats(int *aEventStat);
 
-    // -- members ------------------------
+    // -- private members ------------------------
 
-    StPicoDstMaker* mPicoDstMaker;
+    unsigned int    mDecayMode; // use enum of StPicoHFEvent::eHFEventMode
+    unsigned int    mMakerMode; // use enum of StPicoEventMaker::eMakerMode
 
-    StPicoEvent*    mPicoEvent;
+    TString         mOuputFileBaseName; // base name for output files
+                                        //   for tree     -> <mOuputFileBaseName>.picoHFtree.root
+                                        //   for histList -> <mOuputFileBaseName>.GetName().root
 
-    TFile* mOutputFile;
+    TString         mInputFileName;     // filename of input list of HF trees (needs to be in the 
+                                        // same order as the picoDstList
 
+    StPicoDstMaker* mPicoDstMaker;      // ptr to picoDst maker
+
+    StPicoEvent*    mPicoEvent;         // ptr to picoDstEvent
+
+    TTree*          mTree;              // tree holding "mPicoHFEvent" for writing only
+
+    TChain*         mHFChain;           // chain to read in HF tree
+    int             mEventCounter;      // n Processed events in chain
+
+    TFile*          mOutputFileTree;    // ptr to file saving the HFtree
+    TFile*          mOutputFileList;    // ptr to file saving the list of histograms
     ClassDef(StPicoHFEventMaker, 1)
 };
 
@@ -140,4 +155,6 @@ inline void StPicoHFEventMaker::setHFBaseCuts(StHFCuts* cuts)   { mHFCuts = cuts
 inline void StPicoHFEventMaker::setMakerMode(unsigned short us) { mMakerMode = us; }
 inline void StPicoHFEventMaker::setDecayMode(unsigned short us) { mDecayMode = us; }
 
+inline unsigned int StPicoHFEventMaker::isDecayMode()           { return mDecayMode; }
+inline unsigned int StPicoHFEventMaker::isMakerMode()           { return mMakerMode; }
 #endif
