@@ -127,9 +127,11 @@ Int_t StPicoHFMaker::Finish() {
   //    NOT TO BE OVERWRITTEN by daughter class
   //    daughter class should implement FinishHF()
 
-  mOutputFileTree->cd();
-  mOutputFileTree->Write();
-  mOutputFileTree->Close();
+  if (mMakerMode == StPicoHFMaker::kWrite) {
+    mOutputFileTree->cd();
+    mOutputFileTree->Write();
+    mOutputFileTree->Close();
+  }
 
   mOutputFileList->cd();
   mOutList->Write(mOutList->GetName(), TObject::kSingleKey);
