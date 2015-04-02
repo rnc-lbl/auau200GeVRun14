@@ -107,7 +107,6 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
 
 // _________________________________________________________
 StHFPair::StHFPair(StPicoTrack const * const particle1, StHFPair * particle2,
-		   StPicoTrack const * const tertiaryP1, StPicoTrack const * const tertiaryP2,
 		   float p1MassHypo, float p2MassHypo, unsigned short const p1Idx, unsigned short const p2Idx,
 		   StThreeVectorF const & vtx, float const bField) :
   mLorentzVector(StLorentzVectorF()),
@@ -177,37 +176,43 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFPair * particle2,
   mPointingAngle = vtxToV0.angle(mLorentzVector.vect());
   mDecayLength = vtxToV0.mag();
    
-  // -- update tertiary  dca, etc. using reconstructed decay vertex
-  particle2->updateVertex(tertiaryP1, tertiaryP2, decayVtx);
-  
   // -- calculate DCA of tracks to primary vertex
   mParticle1Dca = (p1Helix.origin() - vtx).mag();
   mParticle2Dca = (p2Helix.origin() - vtx).mag();
 }
-
 // _________________________________________________________
-void StHFPair::updateVertex(StPicoTrack const * const tertiaryP1, StPicoTrack const * const tertiaryP2, StThreeVectorF const &vtx2) {
-  // -- update variables of tertiary vertex pair with constraint of secondary vertex  
-
-  // -- vertex information
-  StThreeVectorF const tertiary(mV0x,mV0y,mV0z);
+float StHFPair::pointingAngle(StThreeVectorF const & vtx2) const{
+  // -- Overloaded function recalculates pointing angle given secondary vertex
+  StThreeVectorF const tertiary(mV0x,mV0y,mV0z);  
   StThreeVectorF const vtx2ToTertiary(tertiary - vtx2);
-  
-  // -- calculate decay length, pointing angle, etc. with updated vertex
-  mPointingAngle = vtx2ToTertiary.angle(mLorentzVector.vect());
-  mDecayLength = vtx2ToTertiary.mag();
-
-  // -- need to recalculate particle dca to updated vertex, this is an issue
-  StPhysicalHelixD p1Helix = tertiaryP1->dcaGeometry().helix();
-  StPhysicalHelixD p2Helix = tertiaryP2->dcaGeometry().helix();
-  
+  float const nPointingAngle = vtx2ToTertiary.angle(mLorentzVector.vect());
+  return nPointingAngle;
+}
+// _________________________________________________________
+float StHFPair::decayLength(StThreeVectorF const & vtx2) const{
+  // -- Overloaded function recalculates decayLength given secondary vertex
+  StThreeVectorF const tertiary(mV0x,mV0y,mV0z);  
+  StThreeVectorF const vtx2ToTertiary(tertiary - vtx2); 
+  float const nDecayLength = vtx2ToTertiary.mag();  
+  return nDecayLength;
+}
+// _________________________________________________________
+float StHFPair::particle1Dca(StPicoTrack const * p1track, StThreeVectorF const & vtx2) const{
+  // -- Overloaded function recalculates daughter dca 2 updated vertex
+  StPhysicalHelixD p1Helix = p1track->dcaGeometry().helix();
   // -- move origins of helices to the primary vertex origin
   p1Helix.moveOrigin(p1Helix.pathLength(vtx2));
-  p2Helix.moveOrigin(p2Helix.pathLength(vtx2));
-  
-  mParticle1Dca = (p1Helix.origin() - vtx2).mag();
-  mParticle2Dca = (p2Helix.origin() - vtx2).mag();
-  
-  return;
+  float const nParticle1Dca = (p1Helix.origin() - vtx2).mag();
+  return nParticle1Dca;
 }
+// _________________________________________________________
+float StHFPair::particle2Dca(StPicoTrack const * p2track, StThreeVectorF const & vtx2) const{
+  // -- Overloaded function recalculates daughter dca 2 updated vertex
+  StPhysicalHelixD p2Helix = p2track->dcaGeometry().helix();
+  // -- move origins of helices to the primary vertex origin
+  p2Helix.moveOrigin(p2Helix.pathLength(vtx2));
+  float const nParticle2Dca = (p2Helix.origin() - vtx2).mag();
+  return nParticle2Dca;
+}
+
 
