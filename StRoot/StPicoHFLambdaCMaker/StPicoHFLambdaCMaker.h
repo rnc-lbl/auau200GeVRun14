@@ -7,15 +7,13 @@
  *  Class for HF LambdaC analysis
  *
  *  Authors:  Xin Dong (xdong@lbl.gov)
+ *            Michael Lomnitz (mlomitz@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *            Jochen Thaeder (jmthader@lbl.gov)   
- *            Michael Lomnitz (mlomitz@lbl.gov)
  *
  * **************************************************
  */
 
-class TTree;
-class TFile;
 class TNtuple;
 
 class StPicoDst;
@@ -55,7 +53,6 @@ class StPicoHFLambdaCMaker : public StPicoHFMaker
   bool isProton(StPicoTrack const*) const;
   
   int createCandidates();
-  int readCandidates();
   int analyseCandidates();
 
   // -- private members --------------------------

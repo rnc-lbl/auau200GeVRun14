@@ -1,7 +1,5 @@
 #include <vector>
 
-#include "TTree.h"
-#include "TFile.h"
 #include "TNtuple.h"
 #include "TClonesArray.h"
 
@@ -28,7 +26,7 @@ ClassImp(StPicoHFLambdaCMaker)
 StPicoHFLambdaCMaker::StPicoHFLambdaCMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
 					   char const* inputHFListHFtree = "") :
   StPicoHFMaker(name, picoMaker, outputBaseFileName, inputHFListHFtree),
-  mDecayChannel(kPionKaonProton),mNtupleSecondary(NULL), mNtupleTertiary(NULL) {
+  mDecayChannel(kPionKaonProton), mNtupleSecondary(NULL), mNtupleTertiary(NULL) {
   // constructor
 }
 
@@ -63,20 +61,11 @@ int StPicoHFLambdaCMaker::MakeHF() {
     createCandidates();
   }
   else if (isMakerMode() == StPicoHFMaker::kRead) {
-    readCandidates();
     analyseCandidates();
   }
   else if (isMakerMode() == StPicoHFMaker::kAnalyse) {
-    createCandidates();
     analyseCandidates();
   }
-
-  return kStOK;
-}
-
-// _________________________________________________________
-int StPicoHFLambdaCMaker::readCandidates() {
-  // -- read candidates from GF tree files which have been previously writtem
 
   return kStOK;
 }
@@ -101,13 +90,14 @@ int StPicoHFLambdaCMaker::createCandidates() {
 	if (mIdxPicoProtons[idxProton] == k0Short->particle1Idx() || mIdxPicoProtons[idxProton] == k0Short->particle1Idx()) 
 	  continue;
 
-	// JMT fix after update of michael
-	// StHFPair lambdaC(proton, k0Short, M_PROTON, M_KAON_0_SHORT, 
-	//		 mIdxPicoProtons[idxProton], mIdxPicoPions[idxPion], mPrimVtx, mBField);
-	// if (!mHFCuts->isGoodSecondaryVertePair(lambdaC)) 
-	//   continue;
+	// -- JMT UPDATE tertiary vertex
+
+	StHFPair lambdaC(proton, k0Short, M_PROTON, M_KAON_0_SHORT, 
+			 mIdxPicoProtons[idxProton], mIdxPicoPions[idxPion], mPrimVtx, mBField);
+	if (!mHFCuts->isGoodSecondaryVertePair(lambdaC)) 
+          continue;
 	
-	// mPicoHFEvent->addHFSecondaryVertexPair(&lambdaC);
+	mPicoHFEvent->addHFSecondaryVertexPair(&lambdaC);
 	
       } // for (unsigned int idxK0short = 0; idxK0short <  mPicoHFEvent->nHFTertiaryVertices(); ++idxK0short) {
     } // for (unsigned int idxProton = 0; idxProton < mIdxPicoProtons.size(); ++idxProton) {
