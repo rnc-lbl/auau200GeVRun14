@@ -16,6 +16,8 @@
 
 class TTree;
 class TFile;
+class TNtuple;
+
 class StPicoDst;
 class StPicoDstMaker;
 class StPicoEvent;
@@ -29,7 +31,8 @@ class StHFCuts;
 class StPicoHFLambdaCMaker : public StPicoHFEventMaker 
 {
  public:
-  StPicoHFLambdaCMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName);
+  StPicoHFLambdaCMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
+		       char const* inputHFListHFtree);
   virtual ~StPicoHFLambdaCMaker();
   
   virtual Int_t InitHF();
@@ -42,13 +45,25 @@ class StPicoHFLambdaCMaker : public StPicoHFEventMaker
   enum eDecayChannel {kPionKaonProton, kProtonK0short, kPionLambda};
 
  protected:
-  virtual bool  isPion(StPicoTrack const*, float const & bTofBeta) const;
-  virtual bool  isKaon(StPicoTrack const*, float const & bTofBeta) const;
-  virtual bool  isProton(StPicoTrack const*, float const & bTofBeta) const;
+  virtual bool isPion(StPicoTrack const*, float const & bTofBeta) const;
+  virtual bool isKaon(StPicoTrack const*, float const & bTofBeta) const;
+  virtual bool isProton(StPicoTrack const*, float const & bTofBeta) const;
   
  private:
+  bool isPion(StPicoTrack const*) const;
+  bool isKaon(StPicoTrack const*) const;
+  bool isProton(StPicoTrack const*) const;
   
+  int createCandidates();
+  int readCandidates();
+  int analyseCandidates();
+
+  // -- private members --------------------------
+
   unsigned int mDecayChannel;
+
+  TNtuple*  mNtupleSecondary;
+  TNtuple*  mNtupleTertiary;
 
   ClassDef(StPicoHFLambdaCMaker, 1)
 };

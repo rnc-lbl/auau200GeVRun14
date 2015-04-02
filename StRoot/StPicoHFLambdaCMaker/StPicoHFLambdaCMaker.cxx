@@ -2,6 +2,9 @@
 
 #include "TTree.h"
 #include "TFile.h"
+#include "TNtuple.h"
+#include "TClonesArray.h"
+
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
 #include "phys_constants.h"
@@ -22,9 +25,10 @@
 ClassImp(StPicoHFLambdaCMaker)
 
 // _________________________________________________________
-StPicoHFLambdaCMaker::StPicoHFLambdaCMaker(char const* name, StPicoDstMaker* picoMaker, char const* outName)
-: StPicoHFEventMaker(name, picoMaker, outName),
-  mDecayChannel(kPionKaonProton) {
+StPicoHFLambdaCMaker::StPicoHFLambdaCMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
+					   char const* inputHFListHFtree = "") :
+  StPicoHFEventMaker(name, picoMaker, outputBaseFileName, inputHFListHFtree),
+  mDecayChannel(kPionKaonProton),mNtupleSecondary(NULL), mNtupleTertiary(NULL) {
   // constructor
 }
 
@@ -34,23 +38,80 @@ StPicoHFLambdaCMaker::~StPicoHFLambdaCMaker() {
 }
 
 // _________________________________________________________
-Int_t StPicoHFLambdaCMaker::InitHF() {
+int StPicoHFLambdaCMaker::InitHF() {
+
+  mOutList->Add(new TNtuple);
+  mNtupleSecondary = static_cast<TNtuple*>(mOutList->Last());
+
+  if (isDecayMode() == StPicoHFEvent::kTwoAndTwoParticleDecay) {
+    mOutList->Add(new TNtuple);
+    mNtupleTertiary = static_cast<TNtuple*>(mOutList->Last());
+  }
+
   return kStOK;
 }
 
 // _________________________________________________________
-Int_t StPicoHFLambdaCMaker::FinishHF() {
+int StPicoHFLambdaCMaker::FinishHF() {
   return kStOK;
 }
 
 // _________________________________________________________
-Int_t StPicoHFLambdaCMaker::MakeHF() {
+int StPicoHFLambdaCMaker::MakeHF() {
+
+  if (isMakerMode() == StPicoHFEventMaker::kWrite) {
+    createCandidates();
+  }
+  else if (isMakerMode() == StPicoHFEventMaker::kRead) {
+    readCandidates();
+    analyseCandidates();
+  }
+  else if (isMakerMode() == StPicoHFEventMaker::kAnalyse) {
+    createCandidates();
+    analyseCandidates();
+  }
+
+  return kStOK;
+}
+
+// _________________________________________________________
+int StPicoHFLambdaCMaker::readCandidates() {
+  // -- read candidates from GF tree files which have been previously writtem
+
+  return kStOK;
+}
+
+// _________________________________________________________
+int StPicoHFLambdaCMaker::createCandidates() {
+  // create candidate pairs/ triplet and fill them in arrays (in StPicoHFEvent)
 
   // -- Decay channel proton - K0Short (pi+ - pi-)
   if (mDecayChannel == StPicoHFLambdaCMaker::kProtonK0short) {
+
     createTertiaryK0Shorts();
-  
-    // ... JMT
+
+    TClonesArray const * ak0Short = mPicoHFEvent->aHFTertiaryVertices();
+
+    for (unsigned int idxProton = 0; idxProton < mIdxPicoProtons.size(); ++idxProton) {
+      StPicoTrack const *proton = mPicoDst->track(mIdxPicoProtons[idxProton]);
+      
+      for (unsigned int idxK0short = 0; idxK0short < mPicoHFEvent->nHFTertiaryVertices(); ++idxK0short) {
+	StHFPair const* k0Short = static_cast<StHFPair*>(ak0Short->At(idxK0short));
+
+	if (mIdxPicoProtons[idxProton] == k0Short->particle1Idx() || mIdxPicoProtons[idxProton] == k0Short->particle1Idx()) 
+	  continue;
+
+	// JMT fix after update of michael
+	// StHFPair lambdaC(proton, k0Short, M_PROTON, M_KAON_0_SHORT, 
+	//		 mIdxPicoProtons[idxProton], mIdxPicoPions[idxPion], mPrimVtx, mBField);
+	// if (!mHFCuts->isGoodSecondaryVertePair(lambdaC)) 
+	//   continue;
+	
+	// mPicoHFEvent->addHFSecondaryVertexPair(&lambdaC);
+	
+      } // for (unsigned int idxK0short = 0; idxK0short <  mPicoHFEvent->nHFTertiaryVertices(); ++idxK0short) {
+    } // for (unsigned int idxProton = 0; idxProton < mIdxPicoProtons.size(); ++idxProton) {
+
   } // if (mDecayChannel == StPicoHFLambdaCMaker::kProtonK0short) {
 
   // -- Decay channel proton pi+ K-
@@ -86,28 +147,149 @@ Int_t StPicoHFLambdaCMaker::MakeHF() {
       } // for (unsigned short idxKaon = 0; idxKaon < mIdxPicoKaons.size(); ++idxKaon) {
     } // for (unsigned short idxProton = 0; idxProton < mIdxPicoProtons.size(); ++idxProton) {
   } // else  if (mDecayChannel == StPicoHFLambdaCMaker::kPionKaonProton) {
-  
-  return kStOK;
+
+ return kStOK;
 }
 
+// _________________________________________________________
+int StPicoHFLambdaCMaker::analyseCandidates() {
+  // -- analyse pairs/triplet, which have been filled in arrays 
+  //    (in StPicoHFEvent) before ( via createCandidates() or via readCandidates() )
+  //    fill histograms or nTuples ... etc
 
-//-----------------------------------------------------------------------------
-bool StPicoHFLambdaCMaker::isPion(StPicoTrack const * const trk, float const & bTofBeta) const {
-  // JMT add ETA cut
+  // -- Decay channel proton - K0Short (pi+ - pi-)
+  if (mDecayChannel == StPicoHFLambdaCMaker::kProtonK0short) {
+
+    // -- fill nTuple / hists for tertiary K0shorts 
+    // -----------------------------------------------
+    TClonesArray const * aK0Short = mPicoHFEvent->aHFTertiaryVertices();
+
+    for (unsigned int idxK0Short = 0; idxK0Short <  mPicoHFEvent->nHFTertiaryVertices(); ++idxK0Short) {
+      StHFPair const* k0Short = static_cast<StHFPair*>(aK0Short->At(idxK0Short));
+
+      StPicoTrack const* pion1  = mPicoDst->track(k0Short->particle1Idx());
+      StPicoTrack const* pion2  = mPicoDst->track(k0Short->particle2Idx());
+      
+      if (!isPion(pion1) || !isPion(pion1))
+	continue;
+
+      if (!mHFCuts->isGoodTertiaryVertexPair(k0Short)) 
+	continue;
+      
+      mNtupleTertiary->Fill(pion1->gPt(), pion2->gPt(), pion1->charge()*pion2->charge(),
+			    k0Short->m(), k0Short->pt(), k0Short->eta(), k0Short->phi(), k0Short->pointingAngle(),
+			    k0Short->decayLength(), k0Short->particle1Dca(), k0Short->particle2Dca(),  
+			    k0Short->cosThetaStar(), k0Short->dcaDaughters());
+			    			 
+    } // for (unsigned int idxK0Short = 0; idxK0Short <  mPicoHFEvent->nHFTertiaryVertices(); ++idxK0Short) {
+
+
+    // -- fill nTuple / hists for secondary lambdaCs
+    // -----------------------------------------------
+    TClonesArray const * aLambdaC = mPicoHFEvent->aHFSecondaryVertices();
+    
+    for (unsigned int idxLambdaC = 0; idxLambdaC <  mPicoHFEvent->nHFSecondaryVertices(); ++idxLambdaC) {
+      StHFPair const* lambdaC = static_cast<StHFPair*>(aLambdaC->At(idxLambdaC));
+      StHFPair const* k0Short = static_cast<StHFPair*>(aK0Short->At(lambdaC->particle2Idx()));
+
+      StPicoTrack const* proton = mPicoDst->track(lambdaC->particle1Idx());
+      StPicoTrack const* pion1  = mPicoDst->track(k0Short->particle1Idx());
+      StPicoTrack const* pion2  = mPicoDst->track(k0Short->particle2Idx());
+
+      if (!isProton(proton) || !isPion(pion1) || !isPion(pion1))
+	continue;
+      
+      // if (pion1->charge() == pion2->charge())
+      // 	continue;
+
+      // JMT - recalculate topological cuts with updated secondary vertex
+      
+      if (!mHFCuts->isGoodTertiaryVertexPair(k0Short)) 
+	continue;
+
+      if (!mHFCuts->isGoodSecondaryVertexPair(lambdaC)) 
+	continue;
+     
+      mNtupleSecondary->Fill(proton->gPt(), k0Short->pt(), pion1->charge()*pion2->charge(),
+			     lambdaC->m(), lambdaC->pt(), lambdaC->eta(), lambdaC->phi(), lambdaC->pointingAngle(),
+			     lambdaC->decayLength(), lambdaC->particle1Dca(), lambdaC->particle2Dca(), 
+			     lambdaC->cosThetaStar(), lambdaC->dcaDaughters());
+            
+    } // for (unsigned int idxLambdaC = 0; idxLambdaC <  mPicoHFEvent->nHFSecondaryVertices(); ++idxLambdaC) {
+  } // if (mDecayChannel == StPicoHFLambdaCMaker::kProtonK0short) {
+
+  // -- Decay channel proton pi+ K-
+  else  if (mDecayChannel == StPicoHFLambdaCMaker::kPionKaonProton) {
+    
+    // -- fill nTuple / hists for secondary lambdaCs
+    // -----------------------------------------------
+    TClonesArray const * aLambdaC = mPicoHFEvent->aHFSecondaryVertices();
+    
+    for (unsigned int idxLambdaC = 0; idxLambdaC <  mPicoHFEvent->nHFSecondaryVertices(); ++idxLambdaC) {
+      StHFTriplet const* lambdaC = static_cast<StHFTriplet*>(aLambdaC->At(idxLambdaC));
+
+      StPicoTrack const* proton = mPicoDst->track(lambdaC->particle1Idx());
+      StPicoTrack const* kaon   = mPicoDst->track(lambdaC->particle2Idx());
+      StPicoTrack const* pion   = mPicoDst->track(lambdaC->particle3Idx());
+
+      if (!isProton(proton) || !isKaon(kaon) || !isPion(pion))
+	continue;
+      
+      // JMT - recalculate topological cuts with updated secondary vertex
+      
+      if (!mHFCuts->isGoodSecondaryVertexTriplet(lambdaC)) 
+	continue;
+     
+      float isCorrectSign = (kaon->charge() != pion->charge() && pion->charge() == proton->charge()) ? 1. : -1.;
+
+      mNtupleSecondary->Fill(proton->gPt(), kaon->gPt(), pion->gPt(), isCorrectSign,
+			     lambdaC->m(), lambdaC->pt(), lambdaC->eta(), lambdaC->phi(), lambdaC->pointingAngle(),
+			     lambdaC->decayLength(), lambdaC->particle1Dca(), lambdaC->particle2Dca(), lambdaC->particle3Dca(),
+			     lambdaC->cosThetaStar());
+      //			     lambdaC->dcaDaughters12(), lambdaC->dcaDaughters23(), lambdaC->dcaDaughters31());
+      
+    } // for (unsigned int idxLambdaC = 0; idxLambdaC <  mPicoHFEvent->nHFSecondaryVertices(); ++idxLambdaC) {
+  } // else  if (mDecayChannel == StPicoHFLambdaCMaker::kPionKaonProton) {
+
+ return kStOK;
+}
   
-  
-  return (trk->pMom().perp() >= 0.2 && fabs(trk->nSigmaPion()) <2.5) ? true : false;
+// _________________________________________________________
+bool StPicoHFLambdaCMaker::isPion(StPicoTrack const * const trk) const {
+  // -- is good pion 
+  float tofBeta = 0;
+  return isPion(trk, tofBeta);
 }
 
-//-----------------------------------------------------------------------------
-bool StPicoHFLambdaCMaker::isKaon(StPicoTrack const * const trk, float const & bTofBeta) const {
-  // JMT add ETA cut
-  return (trk->pMom().perp() >= 0.2 && fabs(trk->nSigmaKaon()) <2.5) ? true : false;
+// _________________________________________________________
+bool StPicoHFLambdaCMaker::isPion(StPicoTrack const * const trk, float const & tofBeta = 0) const {
+  // -- is good pion 
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCPion(trk)); 
 }
 
-//-----------------------------------------------------------------------------
-bool StPicoHFLambdaCMaker::isProton(StPicoTrack const * const trk, float const & bTofBeta) const {
-  // JMT add ETA cut
-  return (trk->pMom().perp() >= 0.2 && fabs(trk->nSigmaProton()) <2.5) ? true : false;
+// _________________________________________________________
+bool StPicoHFLambdaCMaker::isKaon(StPicoTrack const * const trk) const {
+  // -- is good kaon 
+  float tofBeta = getTofBeta(trk);
+  return isKaon(trk, tofBeta);
+} 
+
+// _________________________________________________________
+bool StPicoHFLambdaCMaker::isKaon(StPicoTrack const * const trk, float const & tofBeta =0) const {
+  // -- is good kaon
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCKaon(trk) && mHFCuts->isTOFKaon(trk, tofBeta));
+} 
+
+// _________________________________________________________
+bool StPicoHFLambdaCMaker::isProton(StPicoTrack const * const trk) const {
+  // -- good proton
+  float tofBeta = getTofBeta(trk);
+  return isProton(trk, tofBeta);
+}
+
+// _________________________________________________________
+bool StPicoHFLambdaCMaker::isProton(StPicoTrack const * const trk, float const & tofBeta = 0) const {
+  // -- good proton
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCProton(trk) && mHFCuts->isTOFProton(trk, tofBeta));
 }
 
