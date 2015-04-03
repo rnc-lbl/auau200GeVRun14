@@ -11,7 +11,7 @@
 #include "SystemOfUnits.h"
 #include "../StPicoDstMaker/StPicoTrack.h"
 #include "../StPicoDstMaker/StPicoEvent.h"
-
+#include "StRoot/StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StHFPair.h"
 #include "StHFTriplet.h"
 
@@ -192,40 +192,47 @@ bool StHFCuts::isGoodTPCProton(StPicoTrack const * const trk) const {
 bool StHFCuts::isGoodTOFPion(StPicoTrack const *trk, float const & bTofBeta) const {
   // -- check for good pion in TOF - in a different pT range than for TPC
 
-  // -- JMT FIX ME WITH REAL TOF CHECK
-
+  // TOF calculations
+  float const ptot = trk->pMom().mag();
+  float const beta_pi = ptot/sqrt(ptot*ptot+M_PION_PLUS*M_PION_PLUS);
+  float const TofPi=1/bTofBeta - 1/beta_pi;
   return ( trk->pMom().perp() >= mPionPtTOFMin && trk->pMom().perp() < mPionPtTOFMax &&
-	   fabs(trk->nSigmaPion()) < mTOFNSigmaPionMax );
+	   fabs(TofPi) < mTOFNSigmaPionMax );
 }
 
 // _________________________________________________________
 bool StHFCuts::isGoodTOFKaon(StPicoTrack const *trk, float const & bTofBeta) const {
   // -- check for good kaon in TOF - in a different pT range than for TPC
 
-  // -- JMT FIX ME WITH REAL TOF CHECK
-
+  // -- TOF calculations
+  float const ptot = trk->pMom().mag();
+  float const beta_k = ptot/sqrt(ptot*ptot+M_KAON_PLUS*M_KAON_PLUS);
+  float const Tofk=1/bTofBeta - 1/beta_k;
   return ( trk->pMom().perp() >= mKaonPtTOFMin && trk->pMom().perp() < mKaonPtTOFMax &&
-	   fabs(trk->nSigmaKaon()) < mTOFNSigmaKaonMax );
+	   fabs(Tofk) < mTOFNSigmaKaonMax );
+
 }
 
 // _________________________________________________________
 bool StHFCuts::isGoodTOFProton(StPicoTrack const *trk, float const & bTofBeta) const {
   // -- check for good proton in TOF - in a different pT range than for TPC
 
-  // -- JMT FIX ME WITH REAL TOF CHECK
-
+  // -- TOF Calculations
+  float const ptot = trk->pMom().mag() ;
+  float const beta_p = ptot/sqrt(ptot*ptot+M_PROTON*M_PROTON);
+  float const Tofp=1/bTofBeta - 1/beta_p;
   return ( trk->pMom().perp() >= mProtonPtTOFMin && trk->pMom().perp() < mProtonPtTOFMax &&
-	   fabs(trk->nSigmaProton()) < mTOFNSigmaProtonMax );
+	   fabs(Tofp) < mTOFNSigmaProtonMax );
 }
 
 // _________________________________________________________
 bool StHFCuts::isClosePair(StHFPair const & pair) const {
   // -- check for a pair which is close in dca w/o mass constraint,
   //    using secondary vertex cuts
-
   return ( std::cos(pair.pointingAngle()) > mSecondaryPairCosThetaMin &&
 	   pair.decayLength() > mSecondaryPairDecayLengthMin && pair.decayLength() < mSecondaryPairDecayLengthMax &&
 	   pair.dcaDaughters() < mSecondaryPairDcaDaughtersMax);
+
 }
 
 // _________________________________________________________
