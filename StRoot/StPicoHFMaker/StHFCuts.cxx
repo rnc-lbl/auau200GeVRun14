@@ -11,7 +11,6 @@
 #include "SystemOfUnits.h"
 #include "../StPicoDstMaker/StPicoTrack.h"
 #include "../StPicoDstMaker/StPicoEvent.h"
-#include "StRoot/StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StHFPair.h"
 #include "StHFTriplet.h"
 
