@@ -38,7 +38,7 @@ class StHFPair : public TObject
 	   unsigned short p1Idx, unsigned short p2Idx,
 	   StThreeVectorF const & vtx, float bField);
 
-  StHFPair(StPicoTrack const * particle1, StHFPair * particle2, 
+  StHFPair(StPicoTrack const * particle1, StHFPair const * particle2, 
 	   float p1MassHypo, float p2MassHypo,
 	   unsigned short p1Idx, unsigned short p2Idx,
 	   StThreeVectorF const & vtx, float bField);
