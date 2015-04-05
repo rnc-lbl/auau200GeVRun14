@@ -71,6 +71,7 @@ int StPicoHFMyAnaMaker::MakeHF() {
     analyseCandidates();
   }
   else if (isMakerMode() == StPicoHFMaker::kAnalyse) {
+    createCandidates();
     analyseCandidates();
   }
 
