@@ -200,17 +200,17 @@ Int_t StPicoHFMaker::Make() {
   
 
   Int_t iReturn = kStOK;
-  
+
   if (setupEvent()) {
     UInt_t nTracks = mPicoDst->numberOfTracks();
-    
+
     // -- Fill vectors of particle types
     if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyse) {
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
 	StPicoTrack* trk = mPicoDst->track(iTrack);
 	
 	if (!trk || !mHFCuts->isGoodTrack(trk)) continue;
-	
+
 	float const beta = getTofBeta(trk);
 	if (isPion(trk, beta))   mIdxPicoPions.push_back(iTrack);   // isPion method to be implemented by daughter class
 	if (isKaon(trk, beta))   mIdxPicoKaons.push_back(iTrack);   // isKaon method to be implemented by daughter class
@@ -221,7 +221,7 @@ Int_t StPicoHFMaker::Make() {
 
     // -- call method of daughter class
     iReturn = MakeHF();
-    
+
   } // if (setupEvent()) {
   
   // -- save information about all events, good or bad
@@ -254,7 +254,7 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
 
       if (!mHFCuts->isGoodTertiaryVertexPair(candidateK0Short)) 
 	continue;
-      
+
       mPicoHFEvent->addHFTertiaryVertexPair(&candidateK0Short);
     }
   }
