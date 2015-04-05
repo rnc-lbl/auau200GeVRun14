@@ -106,7 +106,7 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
 }
 
 // _________________________________________________________
-StHFPair::StHFPair(StPicoTrack const * const particle1, StHFPair * particle2,
+StHFPair::StHFPair(StPicoTrack const * const particle1, StHFPair const * const particle2,
 		   float p1MassHypo, float p2MassHypo, unsigned short const p1Idx, unsigned short const p2Idx,
 		   StThreeVectorF const & vtx, float const bField) :
   mLorentzVector(StLorentzVectorF()),
