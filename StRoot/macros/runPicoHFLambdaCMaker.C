@@ -34,7 +34,7 @@ class StPicoDstMaker;
 
 StChain *chain;
 
-void runPicoHFLambdaCMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName") { 
+void runPicoHFLambdaCMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 1 /*kAnalyse*/) { 
   // -- Check STAR Library. Please set SL_version to the original star library used in the production 
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL15c";
@@ -56,11 +56,14 @@ void runPicoHFLambdaCMaker(const Char_t *inputFile="test.list", const Char_t *ou
   chain = new StChain();
 
   // ========================================================================================
-  unsigned int makerMode    = StPicoHFMaker::kAnalyse;
+  //makerMode    = StPicoHFMaker::kAnalyse;
   //  unsigned int decayChannel = StPicoHFLambdaCMaker::kPionKaonProton;
   unsigned int decayChannel = StPicoHFLambdaCMaker::kProtonK0short;
   // ========================================================================================
   
+  cout << "Maker Mode    " << makerMode << endl;
+  cout << "Decay Channel " << decayChannel << endl; 
+
   TString sInputFile(inputFile);
   TString sInputListHF("");  
 
@@ -76,6 +79,10 @@ void runPicoHFLambdaCMaker(const Char_t *inputFile="test.list", const Char_t *ou
       exit(1);
     }
 
+    cout << "inFile  " << sInputFile << endl;
+    cout << "outFile " << outputFile << endl;
+
+    //    exit(1);
     // JMT buildoutfileName
   }
   else if (makerMode == StPicoHFEventMaker::kRead) {
