@@ -41,11 +41,11 @@ namespace cuts
    extern float const maxMass;
 
    // histograms kaonPion pair cuts
-   extern float qaNHitsFit;
-   extern float qaNSigmaKaon;
-   extern float qaCosTheta;
-   extern float qaDcaDaughters;
-   extern float qaKDca;
-   extern float qaPDca;
+   extern float const qaNHitsFit;
+   extern float const qaNSigmaKaon;
+   extern float const qaCosTheta;
+   extern float const qaDcaDaughters;
+   extern float const qaKDca;
+   extern float const qaPDca;
 }
 #endif
