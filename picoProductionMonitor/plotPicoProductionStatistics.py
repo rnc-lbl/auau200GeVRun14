@@ -71,7 +71,7 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
     # projection fit
     xNum = mdates.date2num(x)
     p = np.polyfit(xNum,yy,1)
-    projectionDate = mdates.date2num(datetime.datetime.strptime('05/30/2015','%m/%d/%Y').date())
+    projectionDate = mdates.date2num(datetime.datetime.strptime('08/24/2015','%m/%d/%Y').date())
     xx = np.linspace(xNum.min(),projectionDate,300)
     dd = mdates.num2date(xx)
 
@@ -83,7 +83,7 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
     plt.plot(dd,p[0]*xx+p[1],'r-')
     plt.gca().xaxis_date()
     plt.gcf().autofmt_xdate()
-    plt.gca().set_ylim([50,600])
+    plt.gca().set_ylim([50,1600])
     plt.gca().yaxis.grid() 
     plt.gca().xaxis.grid() 
     plt.ylabel('Total nEvents (m)')
