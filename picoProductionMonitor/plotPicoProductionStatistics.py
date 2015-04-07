@@ -5,6 +5,7 @@ import sys
 import os
 import time
 import datetime
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
@@ -52,11 +53,12 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
     y = [v[1]/1.e6 for v in nEventsVsDay]
 
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-    plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+    # plt.gca().xaxis.set_major_locator(mdates.DayLocator(bymonthday=range(1,32,3)))
     plt.scatter(x,y)
     plt.gcf().autofmt_xdate()
     plt.gca().set_ylim([0,70])
     plt.gca().yaxis.grid() 
+    plt.gca().xaxis.grid() 
     plt.ylabel('nEvents (m)/Day')
     plt.savefig(gNumberOfEventsVsDayFileName)
     os.system('chmod a+rw '+gNumberOfEventsVsDayFileName)
@@ -66,15 +68,26 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
     for i in xrange(1,len(y)):
         yy.append(y[i]+yy[i-1])
 
+    # projection fit
+    xNum = mdates.date2num(x)
+    p = np.polyfit(xNum,yy,1)
+    projectionDate = mdates.date2num(datetime.datetime.strptime('05/30/2015','%m/%d/%Y').date())
+    xx = np.linspace(xNum.min(),projectionDate,300)
+    dd = mdates.num2date(xx)
+
+    # plt.plot(x,p[0]*x,p[1],'r-')
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-    plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+    # plt.gca().xaxis.set_major_locator(mdates.DayLocator(bymonthday=range(1,32,3)))
     plt.scatter(x,yy)
     plt.plot(x,yy)
-    plt.show()
+    plt.plot(dd,p[0]*xx+p[1],'r-')
+    plt.gca().xaxis_date()
     plt.gcf().autofmt_xdate()
-    plt.gca().set_ylim([50,300])
+    plt.gca().set_ylim([50,600])
     plt.gca().yaxis.grid() 
+    plt.gca().xaxis.grid() 
     plt.ylabel('Total nEvents (m)')
+    plt.show()
     plt.savefig(gTotalNumberOfEventsVsDayFileName)
     os.system('chmod a+rw '+gTotalNumberOfEventsVsDayFileName)
 
