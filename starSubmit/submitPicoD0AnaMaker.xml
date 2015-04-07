@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job fileListSyntax="paths" minFilesPerProcess="100" maxFilesPerProcess="150" simulateSubmission="false">
+<job fileListSyntax="paths" maxFilesPerProcess="150" simulateSubmission="false">
 
         <stdout discard="true" />
         <stderr URL="file:./err/$JOBID.err" />
