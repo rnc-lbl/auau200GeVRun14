@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job fileListSyntax="paths" minFilesPerProcess="5" maxFilesPerProcess="10" simulateSubmission="false">
-  <stdout URL="file:./log/$JOBID.out"/>
-  <stderr URL="file:./err/$JOBID.err" />
+<job fileListSyntax="paths" minFilesPerProcess="100" maxFilesPerProcess="150" simulateSubmission="false">
+  <stdout URL="file:&basePath;/jobs/log/$JOBID.out"/>
+  <stderr URL="file:&basePath;/jobs/err/$JOBID.err" />
 
   <input URL="filelist:&listOfFiles;" />
   
@@ -15,12 +15,12 @@
     starver SL15c
     
     setenv PRODPATH &basePath;/production/&prodId;
-    setenv LOGPATH  &basePath;/log/&prodId;
+    setenv LOGPATH  &basePath;/jobs/log/&prodId;
     
     mkdir -p ${PRODPATH} ${LOGPATH}
 
     if ("&mMode;" == "1") then
-        &basePath;/parseFileList.csh ${FILELIST} &basePath; &prodId; &mMode; &treeName; ${JOBID} &rootMacro;
+        &basePath;/jobs/starSubmit/parseFileList.csh ${FILELIST} &basePath; &prodId; &mMode; &treeName; ${JOBID} &rootMacro;
     else
         root4star -q -b -l StRoot/macros/&rootMacro;\(\"$FILELIST\",\"&prodId;_$JOBINDEX\",&mMode;\) &gt;&amp; ${JOBID}.log
         tar -zcvf ${JOBID}.log.tgz ${JOBID}.log
