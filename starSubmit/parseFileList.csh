@@ -19,7 +19,7 @@ foreach line ( `cat $fileList` )
 
     set outDirTree=${basePath}/production/${treeName}/${day}/${run}
     set outDirList=${basePath}/production/${prodId}/${day}/${run}
-    set logDir=${basePath}/log/${prodId}/${day}/${run}
+    set logDir=${basePath}/jobs/log/${prodId}/${day}/${run}
 
     mkdir -p $outDirTree $outDirList $logDir
 
