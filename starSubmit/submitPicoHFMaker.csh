@@ -14,17 +14,14 @@
 #
 # ###############################################
 
+# -- set root macro
+set rootMacro=runPicoHFMyAnaMaker.C
+
 # -- baseFolder of job
-set baseFolder=/project/projectdirs/star/rnc/jthaeder/analysis/200GeV/lambdaC
+set baseFolder=/path/to/your/directory
 
 # --input file 
 set input=${baseFolder}/test.list
-
-# -- production Id (kAnalyse / kRead)
-set productionId=`date +%F_%H-%M`
-
-# -- production Id (kWrite)
-set treeName=hfTree
 
 # -- set maker mode
 #    0 - kAnalyse, 
@@ -32,8 +29,11 @@ set treeName=hfTree
 #    2 - kRead
 set makerMode=0
 
-# -- set root macro
-set rootMacro=runPicoHFLambdaCMaker.C
+# -- production Id (kAnalyse / kRead)
+set productionId=`date +%F_%H-%M`
+
+# -- production Id (kWrite)
+set treeName=hfTree
 
 # ###############################################
 # -- DON'T CHANGE BELOW THAT LINE
