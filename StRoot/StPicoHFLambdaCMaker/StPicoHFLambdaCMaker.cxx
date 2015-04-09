@@ -38,19 +38,22 @@ StPicoHFLambdaCMaker::~StPicoHFLambdaCMaker() {
 // _________________________________________________________
 int StPicoHFLambdaCMaker::InitHF() {
 
-  mOutList->Add(new TNtuple("secondary", "secondary", "p1pt:p2pt:charges:m:pt:eta:phi:cosPntAngle:dLength:p1Dca:p2Dca:cosThetaStar:dcaDaugthers"));
-  mNtupleSecondary = static_cast<TNtuple*>(mOutList->Last());
+  mNtupleSecondary = new TNtuple("secondary", "secondary", "p1pt:p2pt:charges:m:pt:eta:phi:cosPntAngle:dLength:p1Dca:p2Dca:cosThetaStar:dcaDaugthers");
 
-  if (isDecayMode() == StPicoHFEvent::kTwoAndTwoParticleDecay) {
-    mOutList->Add(new TNtuple("tertiary", "tertiary", "p1pt:p2pt:charges:m:pt:eta:phi:cosPntAngle:dLength:p1Dca:p2Dca:cosThetaStar:dcaDaugthers"));
-    mNtupleTertiary = static_cast<TNtuple*>(mOutList->Last());
-  }
+  if (isDecayMode() == StPicoHFEvent::kTwoAndTwoParticleDecay)
+    mNtupleTertiary = new TNtuple("tertiary", "tertiary", "p1pt:p2pt:charges:m:pt:eta:phi:cosPntAngle:dLength:p1Dca:p2Dca:cosThetaStar:dcaDaugthers"); 
 
   return kStOK;
 }
 
 // _________________________________________________________
 int StPicoHFLambdaCMaker::FinishHF() {
+  
+  mNtupleSecondary->Write();
+  
+  if (isDecayMode() == StPicoHFEvent::kTwoAndTwoParticleDecay)
+    mNtupleTertiary->Write();
+   
   return kStOK;
 }
 
