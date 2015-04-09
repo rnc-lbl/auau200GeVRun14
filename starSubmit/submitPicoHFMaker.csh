@@ -52,7 +52,7 @@ mkdir -p ${baseFolder}/production
 pushd ${baseFolder}/jobs > /dev/null
 
 # -- prepare folder
-mkdir -p report err log list csh production
+mkdir -p report err log list csh
 
 # -- check for prerequisits and create links
 set folders=".sl64_gcc447 StRoot run14AuAu200GeVPrescales starSubmit"
@@ -96,6 +96,14 @@ else if ( ${makerMode} == 2 ) then
 	exit
     endif
 endif
+
+if ( -e LocalLibraries.zip ) then
+    rm LocalLibraries.zip
+endif 
+
+if ( -d LocalLibraries.package ) then
+    rm LocalLibraries.package
+endif 
 
 # -- submit 
 star-submit-template -template submitPicoHFMaker.xml -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},rootMacro=${rootMacro}
