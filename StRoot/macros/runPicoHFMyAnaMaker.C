@@ -40,7 +40,7 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   string SL_version = "SL15c";
   string env_SL = getenv ("STAR");
   if (env_SL.find(SL_version)==string::npos) {
-      cout<<"Environment Star Library does not match the requested library in runPicoHFLambdaCMaker.C. Exiting..."<<endl;
+      cout<<"Environment Star Library does not match the requested library in runPicoHFMyAnaMaker.C. Exiting..."<<endl;
       exit(1);
   }
 
