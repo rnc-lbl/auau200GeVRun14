@@ -34,7 +34,7 @@ class StPicoDstMaker;
 
 StChain *chain;
 
-void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName") { 
+void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 1 /*kAnalyse*/) { 
   // -- Check STAR Library. Please set SL_version to the original star library used in the production 
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL15c";
@@ -56,41 +56,48 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   chain = new StChain();
 
   // ========================================================================================
-  Int_t makerMode = StPicoHFMaker::kAnalyse;
+  //makerMode    = StPicoHFMaker::kAnalyse;
   // ========================================================================================
   
+  cout << "Maker Mode    " << makerMode << endl;
+  cout << "Decay Channel " << decayChannel << endl; 
+
   TString sInputFile(inputFile);
   TString sInputListHF("");  
 
   if (makerMode == StPicoHFMaker::kAnalyse) {
-    if (!sInputFile.Contains(".list") && !sInputFile.Contains(".root")) {
+    if (!sInputFile.Contains(".list") && !sInputFile.Contains("picoDst.root")) {
       cout << "No input list or picoDst root file provided! Exiting..." << endl;
       exit(1);
     }
   }
   else if (makerMode == StPicoHFMaker::kWrite) {
-    if (!sInputFile.Contains(".root")) {
+    if (!sInputFile.Contains("picoDst.root")) {
       cout << "No input picoDst root file provided! Exiting..." << endl;
       exit(1);
     }
-
-    // JMT buildoutfileName
   }
   else if (makerMode == StPicoHFMaker::kRead) {
    if (!sInputFile.Contains(".list")) {
       cout << "No input list provided! Exiting..." << endl;
       exit(1);
    }
-   
-   // JMT get input list for HF trees
-   // JMT buildoutfileName - use base path
+
+   // -- prepare filelist for picoDst from hfTrees
+   sInputListHF = sInputFile;
+   sInputFile = "tmpPico.list";
+   TString command = "sed 's|^.*hfTree|/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/physics/P15ic|g' "
+     + sInputListHF + " > " + sInputFile;
+   gSystem->Exec(command.Data());
+   command = "sed -i 's|picoHFtree|picoDst|g' " + sInputFile;
+   gSystem->Exec(command.Data());
   }
   else {
     cout << "Unknown makerMode! Exiting..." << endl;
     exit(1);
   }
   
-  StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, inputFile, "picoDstMaker");
+  StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, sInputFile, "picoDstMaker");
   StPicoHFMyAnaMaker* picoHFMyAnaMaker = new StPicoHFMyAnaMaker("picoHFMyAnaMaker", picoDstMaker, outputFile, sInputListHF);
   picoHFMyAnaMaker->setMakerMode(makerMode);
 
@@ -123,23 +130,22 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   // ========================================================================================
 
   chain->Init();
-  cout<<"chain->Init();"<<endl;
+  cout << "chain->Init();" << endl;
   int total = picoDstMaker->chain()->GetEntries();
   cout << " Total entries = " << total << endl;
   if(nEvents>total) nEvents = total;
 
-  for (Int_t i=0; i<nEvents; i++)
-    {
-      if(i%10000==0)
-	cout << "Working on eventNumber " << i << endl;
-      
-      chain->Clear();
-      int iret = chain->Make(i);
-      
-      if (iret) { cout << "Bad return code!" << iret << endl; break;}
-      
-      total++;
-    }
+  for (Int_t i=0; i<nEvents; i++) {
+    if(i%10000==0)
+      cout << "Working on eventNumber " << i << endl;
+    
+    chain->Clear();
+    int iret = chain->Make(i);
+    
+    if (iret) { cout << "Bad return code!" << iret << endl; break;}
+    
+    total++;
+  }
   
   cout << "****************************************** " << endl;
   cout << "Work done... now its time to close up shop!"<< endl;
@@ -150,5 +156,9 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   cout << "****************************************** " << endl;
   
   delete chain;
+
+  // -- clean up if in read mode
+  if (makerMode == StPicoHFMaker::kRead)
+    gSystem->Exec(Form("rm -f %s", sInputFile.Data()));
 }
 
