@@ -5,22 +5,23 @@
 #
 #  - script will create a folder ${baseFolder}/jobs
 #    all submission related files will end up there
-
+#
 #  - in ${baseFolder} the script expects (links or the actual folders)
 #      .sl64_gcc447
 #      StRoot                     ( from the git repo )
 #      run14AuAu200GeVPrescales   ( from the git repo )
 #      starSubmit                 ( from the git repo )
 #
+#   - the rootMacro is expected in StRoot/macros
+#
 # ###############################################
-
-# -- set root macro
-set rootMacro=runPicoHFMyAnaMaker.C
 
 # -- baseFolder of job
 set baseFolder=/path/to/your/directory
 
 # --input file 
+#    makerMode 0,1 : list must contain picoDst.root files
+#    makerMode 2   : list must contain picoHFtree.root files
 set input=${baseFolder}/test.list
 
 # -- set maker mode
@@ -29,15 +30,18 @@ set input=${baseFolder}/test.list
 #    2 - kRead
 set makerMode=0
 
+# -- set root macro
+set rootMacro=runPicoHFMyAnaMaker.C
+
+# ###############################################
+# -- DON'T CHANGE BELOW THAT LINE
+# ###############################################
+
 # -- production Id (kAnalyse / kRead)
 set productionId=`date +%F_%H-%M`
 
 # -- production Id (kWrite)
 set treeName=hfTree
-
-# ###############################################
-# -- DON'T CHANGE BELOW THAT LINE
-# ###############################################
 
 # -- job submission directory
 mkdir -p ${baseFolder}/jobs
@@ -77,6 +81,20 @@ if ( ! -e ${baseFolder}/starSubmit/submitPicoHFMaker.xml ) then
     exit
 else
     ln -sf ${baseFolder}/starSubmit/submitPicoHFMaker.xml 
+endif
+
+if ( ${makerMode} == 0 || ${makerMode} == 1 ) then
+    head -n 2 ${input} | grep ".picoDst.root" > /dev/null
+    if ( $? != 0 ) then
+	echo "Filelist does not contain picoDsts!"
+	exit
+    endif
+else if ( ${makerMode} == 2 ) then
+    head -n 2 ${input} | grep ".picoHFtree.root" > /dev/null
+    if ( $? != 0 ) then
+	echo "Filelist does not contain HFtrees!"
+	exit
+    endif
 endif
 
 # -- submit 
