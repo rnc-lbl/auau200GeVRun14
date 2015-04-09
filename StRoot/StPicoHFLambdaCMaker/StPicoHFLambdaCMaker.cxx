@@ -64,6 +64,7 @@ int StPicoHFLambdaCMaker::MakeHF() {
     createCandidates();
   }
   else if (isMakerMode() == StPicoHFMaker::kRead) {
+    // -- the reading back of the perviously written trees happens in the background
     analyseCandidates();
   }
   else if (isMakerMode() == StPicoHFMaker::kAnalyse) {
