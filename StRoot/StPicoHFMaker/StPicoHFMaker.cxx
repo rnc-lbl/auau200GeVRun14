@@ -105,6 +105,7 @@ Int_t StPicoHFMaker::Init() {
 
   // -- add list which holds all histograms  
   mOutList = new TList();
+  mOutList->SetName(GetName());
   mOutList->SetOwner(true);
 
   // -- create event stat histograms
@@ -198,7 +199,6 @@ Int_t StPicoHFMaker::Make() {
     }
   } // if (mMakerMode == StPicoHFMaker::kRead) {
   
-
   Int_t iReturn = kStOK;
 
   if (setupEvent()) {
