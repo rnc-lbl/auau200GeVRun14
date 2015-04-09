@@ -1,4 +1,12 @@
 #!/bin/csh
+#  
+#  Script to split up a fileList of picoDst.root files
+#  and process them in individual root4star sessions
+#  
+#  - Used in makerMode = 1 (kWrite), to always have a 
+#    corresponding picoHFtree.root file for each picoDst.root file
+#
+# ###############################################
 
 starver SL15c
 
