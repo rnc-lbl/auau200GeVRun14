@@ -102,7 +102,7 @@ inline float StHFTriplet::particle2Dca()  const { return mParticle2Dca;}
 inline float StHFTriplet::particle3Dca()  const { return mParticle3Dca;}
 inline unsigned short StHFTriplet::particle1Idx() const { return mParticle1Idx;}
 inline unsigned short StHFTriplet::particle2Idx() const { return mParticle2Idx;}
-inline unsigned short StHFTriplet::particle3Idx() const { return mParticle2Idx;}
+inline unsigned short StHFTriplet::particle3Idx() const { return mParticle3Idx;}
 inline float StHFTriplet::dcaDaughters12() const { return mDcaDaughters12;}
 inline float StHFTriplet::dcaDaughters23() const { return mDcaDaughters23;}
 inline float StHFTriplet::dcaDaughters31() const { return mDcaDaughters31;}
