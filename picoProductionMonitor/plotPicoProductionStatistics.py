@@ -48,7 +48,7 @@ def makeIndexFile(nMuDstEvents,nPicoEvents):
 
 def plotNumberOfEventsVsDay(nEventsVsDay):
 
-    nEventsVsDay = sorted(nEventsVsDay)
+    nEventsVsDay = sorted(nEventsVsDay, key=lambda x: datetime.datetime.strptime(x[0], '%m/%d/%Y'))
     x = [datetime.datetime.strptime(d[0],'%m/%d/%Y').date() for d in nEventsVsDay]
     y = [v[1]/1.e6 for v in nEventsVsDay]
 
@@ -75,9 +75,7 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
     xx = np.linspace(xNum.min(),projectionDate,300)
     dd = mdates.num2date(xx)
 
-    # plt.plot(x,p[0]*x,p[1],'r-')
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-    # plt.gca().xaxis.set_major_locator(mdates.DayLocator(bymonthday=range(1,32,3)))
     plt.scatter(x,yy)
     plt.plot(x,yy)
     plt.plot(dd,p[0]*xx+p[1],'r-')
