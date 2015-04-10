@@ -70,15 +70,18 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
 
     # projection fit
     xNum = mdates.date2num(x)
-    p = np.polyfit(xNum,yy,1)
+    fit = np.polyfit(xNum,yy,1)
     projectionDate = mdates.date2num(datetime.datetime.strptime('08/24/2015','%m/%d/%Y').date())
     xx = np.linspace(xNum.min(),projectionDate,300)
     dd = mdates.num2date(xx)
 
+    plotText = 'Average is %1.2fM events per day'%fit[0]
+    plotTextX = datetime.datetime.strptime('04/01/2015','%m/%d/%Y').date()
+
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
     plt.scatter(x,yy)
-    plt.plot(x,yy)
-    plt.plot(dd,p[0]*xx+p[1],'r-')
+    plt.plot(dd,fit[0]*xx+fit[1],'r-')
+    plt.text(plotTextX,1405,plotText,color='r',fontsize=16)
     plt.gca().xaxis_date()
     plt.gcf().autofmt_xdate()
     plt.gca().set_ylim([50,1600])
