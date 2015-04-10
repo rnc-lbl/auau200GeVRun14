@@ -34,7 +34,7 @@ class StPicoDstMaker;
 
 StChain *chain;
 
-void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 1 /*kAnalyse*/) { 
+void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 0 /*kAnalyse*/) { 
   // -- Check STAR Library. Please set SL_version to the original star library used in the production 
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL15c";
