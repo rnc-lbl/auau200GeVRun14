@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstdlib>
 
 #include "TH1F.h"
 
@@ -48,41 +49,49 @@ void StPicoPrescales::readList(unsigned int trg)
    //Open list
    ifstream runs(listFileName.c_str());
 
-   while (!runs.eof())
+   if(runs.is_open())
    {
-      string line;
-      int run;
-      float prescale;
+     while (!runs.eof())
+     {
+       string line;
+       int run;
+       float prescale;
 
-      getline(runs, line);
-      if (line == "\0" || line == "\n") continue;
+       getline(runs, line);
+       if (line == "\0" || line == "\n") continue;
 
-      size_t firstSpace = line.find(" ");
-      size_t lastSpace = line.rfind(" ");
+       size_t firstSpace = line.find(" ");
+       size_t lastSpace = line.rfind(" ");
 
-      istringstream runBuffer(line.substr(0, firstSpace));
-      istringstream prescaleBuffer(line.substr(lastSpace + 1));
+       istringstream runBuffer(line.substr(0, firstSpace));
+       istringstream prescaleBuffer(line.substr(lastSpace + 1));
 
-      runBuffer >> run;
-      prescaleBuffer >> prescale;
+       runBuffer >> run;
+       prescaleBuffer >> prescale;
 
-      map<unsigned int, vecPrescales>::iterator it = mTable.find(run);
+       map<unsigned int, vecPrescales>::iterator it = mTable.find(run);
 
-      if (it == mTable.end())
-      {
+       if (it == mTable.end())
+       {
          vecPrescales vec(mTriggersIds.size(), -1);
          vec[trg] = prescale;
          mTable.insert(pair<unsigned int, vecPrescales>(run, vec));
-      }
-      else
-      {
+       }
+       else
+       {
          if (it->second.at(trg) == -1) it->second.at(trg) = prescale;
          else
          {
-            cout << "Two prescale values for same run and same trigger." << endl;
-            cout << "Run= " << run << " Trigger= " << mTriggersIds[trg] << " StPicoPrescales= " << it->second.at(trg) << " " << prescale << endl;
+           cout << "Two prescale values for same run and same trigger." << endl;
+           cout << "Run= " << run << " Trigger= " << mTriggersIds[trg] << " StPicoPrescales= " << it->second.at(trg) << " " << prescale << endl;
          }
-      }
+       }
+     }
+   }
+   else
+   {
+     cout << "StPicoPrescales -- !!! Cannot find file !!! :" << listFileName << endl;
+     exit(EXIT_FAILURE);
    }
 
    runs.close();
