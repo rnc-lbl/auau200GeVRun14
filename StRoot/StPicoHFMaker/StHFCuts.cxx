@@ -108,7 +108,6 @@ bool StHFCuts::isGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts 
   // -- quick method without 
   if (!aEventCuts) {
     return ((picoEvent->triggerWord() & mTriggerWord) &&
-	    picoEvent->ranking() > 0 &&	
 	    fabs(picoEvent->primaryVertex().z()) < mVzMax &&
 	    fabs(picoEvent->primaryVertex().z() - picoEvent->vzVpd()) < mVzVpdVzMax);
   }
@@ -127,17 +126,12 @@ bool StHFCuts::isGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts 
   if (!(picoEvent->triggerWord() & mTriggerWord))
     aEventCuts[iCut] = 1;
 
-  // -- 2 - Vertex ranking 
-  ++iCut;
-  if (picoEvent->ranking() <= 0)	
-    aEventCuts[iCut] = 1;
-
-  // -- 3 - Vertex z outside cut window
+  // -- 2 - Vertex z outside cut window
   ++iCut;
   if (fabs(picoEvent->primaryVertex().z()) >= mVzMax)
     aEventCuts[iCut] = 1;
 
-  // -- 4 Vertex z - vertex_z(vpd) outside cut window
+  // -- 3 Vertex z - vertex_z(vpd) outside cut window
   ++iCut;
   if (fabs(picoEvent->primaryVertex().z() - picoEvent->vzVpd()) >= mVzVpdVzMax)
     aEventCuts[iCut] = 1;  
