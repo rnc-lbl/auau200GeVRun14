@@ -50,6 +50,7 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   loadSharedLibraries();
   
   gSystem->Load("StPicoDstMaker");
+  gSystem->Load("StPicoPrescales");
   gSystem->Load("StPicoHFMaker");
   gSystem->Load("StPicoHFMyAnaMaker");
 
