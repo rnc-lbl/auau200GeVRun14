@@ -12,8 +12,10 @@
 #include "StPicoDstMaker/StPicoEvent.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
+#include "StPicoPrescales/StPicoPrescales.h"
 
 #include "StHFCuts.h"
+#include "StHFHists.h"
 #include "StPicoHFEvent.h"
 #include "StPicoHFMaker.h"
 #include "StHFPair.h"
@@ -24,7 +26,7 @@ ClassImp(StPicoHFMaker)
 // _________________________________________________________
 StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
 				       char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
-  StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
+  StMaker(name), mPicoDst(NULL), mHFCuts(NULL),mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
   mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyse), 
   mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
   mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
@@ -110,6 +112,10 @@ Int_t StPicoHFMaker::Init() {
 
   // -- create event stat histograms
   initializeEventStats();
+
+  // -- initialize histogram class
+  mHFHists = new StHFHists(Form("hfHists_%s",GetName()));
+  mHFHists->init(mOutList);
 
   // -- call method of daughter class
   InitHF();
@@ -222,12 +228,19 @@ Int_t StPicoHFMaker::Make() {
     // -- call method of daughter class
     iReturn = MakeHF();
 
+    // -- fill basic event histograms - for good events
+    mHFHists->fillEventHists(*mPicoEvent, *mPicoHFEvent);
+
   } // if (setupEvent()) {
   
   // -- save information about all events, good or bad
   if (mMakerMode == StPicoHFMaker::kWrite)
     mTree->Fill();
   
+  // -- fill basic event histograms - for all events
+  //  mHFHists->FillEventHists(...);
+  
+
   // -- reset event to be in a defined state
   resetEvent();
   
