@@ -103,7 +103,7 @@ StHFTriplet::StHFTriplet(StPicoTrack const * const particle1, StPicoTrack const 
   mDcaDaughters31 = (p3AtDcaToP1 - p1AtDcaToP3).mag();
   
   // -- calculate decay vertex (secondary)
-  StThreeVectorF decayVtx = ( p1AtDcaToP2 + p2AtDcaToP1 + p2AtDcaToP3 + p3AtDcaToP2 + p3AtDcaToP1 - p1AtDcaToP3 ) / 6.0;
+  StThreeVectorF decayVtx = ( p1AtDcaToP2 + p2AtDcaToP1 + p2AtDcaToP3 + p3AtDcaToP2 + p3AtDcaToP1 + p1AtDcaToP3 ) / 6.0;
   mV0x = decayVtx.x();
   mV0y = decayVtx.y();
   mV0z = decayVtx.z(); 
