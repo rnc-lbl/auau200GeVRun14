@@ -24,7 +24,7 @@
  *
  *  - Set use mode of StPicoHFMaker class  via setMakerMode(...)
  *     use enum of StPicoHFMaker::eMakerMode 
- *      StPicoHFMaker::kAnalyse - don't write candidate trees, just fill histograms
+ *      StPicoHFMaker::kAnalyze - don't write candidate trees, just fill histograms
  *      StPicoHFMaker::kWrite   - write candidate trees
  *      StPicoHFMaker::kRead    - read candidate trees and fill histograms
  *
@@ -74,10 +74,10 @@ class StPicoHFMaker : public StMaker
     void setDecayMode(unsigned short us);
 
     // -- different modes to use the StPicoHFMaker class
-    //    - kAnalyse - don't write candidate trees, just fill histograms
+    //    - kAnalyze - don't write candidate trees, just fill histograms
     //    - kWrite   - write candidate trees
     //    - kRead    - read candidate trees and fill histograms
-    enum eMakerMode {kAnalyse, kWrite, kRead};
+    enum eMakerMode {kAnalyze, kWrite, kRead};
 
     // -- TO BE IMPLEMENTED BY DAUGHTER CLASS
     virtual bool  isPion(StPicoTrack const*, float const & bTofBeta) const   { return true; }
