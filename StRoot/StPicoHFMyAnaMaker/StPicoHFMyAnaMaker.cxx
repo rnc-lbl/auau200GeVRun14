@@ -61,18 +61,18 @@ int StPicoHFMyAnaMaker::MakeHF() {
   //    ADD YOUR PROCESSING CODE HERE
   //    ... it is usefull to use the methods below
   //     - createCandidates()
-  //     - analyseCandidates()
+  //     - analyzeCandidates()
 
   if (isMakerMode() == StPicoHFMaker::kWrite) {
     createCandidates();
   }
   else if (isMakerMode() == StPicoHFMaker::kRead) {
     // -- the reading back of the perviously written trees happens in the background
-    analyseCandidates();
+    analyzeCandidates();
   }
-  else if (isMakerMode() == StPicoHFMaker::kAnalyse) {
+  else if (isMakerMode() == StPicoHFMaker::kAnalyze) {
     createCandidates();
-    analyseCandidates();
+    analyzeCandidates();
   }
 
   return kStOK;
@@ -111,8 +111,8 @@ int StPicoHFMyAnaMaker::createCandidates() {
 }
 
 // _________________________________________________________
-int StPicoHFMyAnaMaker::analyseCandidates() {
-  // -- analyse pairs/triplet, which have been filled in arrays 
+int StPicoHFMyAnaMaker::analyzeCandidates() {
+  // -- analyze pairs/triplet, which have been filled in arrays 
   //    (in StPicoHFEvent) before ( via createCandidates() or via reading back from trees )
   //    fill histograms or nTuples ... etc
 
