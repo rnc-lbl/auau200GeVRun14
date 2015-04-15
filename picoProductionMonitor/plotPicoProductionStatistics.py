@@ -38,10 +38,15 @@ def main():
     makeIndexFile(totalMuDstEvents,totalPicoEvents)
 
 def makeIndexFile(nMuDstEvents,nPicoEvents):
+    now = time.strftime("%c")
+    timeZone = time.strftime("%Z")
+    
     os.system('rm -f index.md index.html')
     os.system('echo \#\#Total number of produced picoDst events = %i >> index.md'%nPicoEvents)
     os.system('echo ![]\(%s\) >> index.md'%gNumberOfEventsVsDayFileName)
     os.system('echo ![]\(%s\) >> index.md'%gTotalNumberOfEventsVsDayFileName)
+    os.system('echo \ \ >> index.md')
+    os.system('echo \ \ Last updated on %s %s >> index.md'%(now,timeZone))
     os.system('./markdown index.md > index.html')
     os.system('chmod a+rw index.md')
     os.system('chmod a+rw index.html')

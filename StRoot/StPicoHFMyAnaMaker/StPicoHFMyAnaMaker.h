@@ -27,7 +27,7 @@
  *
  *  - Set use mode of StPicoHFMaker class  via setMakerMode(...)
  *     use enum of StPicoHFMaker::eMakerMode
- *      StPicoHFMaker::kAnalyse - don't write candidate trees, just fill histograms
+ *      StPicoHFMaker::kAnalyze - don't write candidate trees, just fill histograms
  *      StPicoHFMaker::kWrite   - write candidate trees
  *      StPicoHFMaker::kRead    - read candidate trees and fill histograms
  *
@@ -87,7 +87,7 @@ class StPicoHFMyAnaMaker : public StPicoHFMaker
  private:
   
   int createCandidates();
-  int analyseCandidates();
+  int analyzeCandidates();
 
   // -- private members --------------------------
 
