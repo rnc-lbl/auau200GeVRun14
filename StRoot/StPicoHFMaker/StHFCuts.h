@@ -36,6 +36,8 @@ class StHFCuts : public TNamed
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
+  bool isGoodRun(StPicoEvent const *picoEvent) const;
+
   bool isGoodTrack(StPicoTrack const *trk) const;
   
   bool isTPCPion(StPicoTrack const *trk) const;
