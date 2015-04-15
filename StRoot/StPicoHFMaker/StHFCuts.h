@@ -14,7 +14,10 @@
  * **************************************************
  */
 
+#include <vector>
+
 #include "TNamed.h"
+#include "TString.h"
 
 class StPicoTrack;
 class StPicoEvent;
@@ -30,6 +33,8 @@ class StHFCuts : public TNamed
   StHFCuts(const Char_t *name);
   ~StHFCuts() {;}
   
+  void init();
+
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
   bool isGoodEvent(StPicoEvent const * const event, int *aEventCuts);
@@ -183,6 +188,10 @@ class StHFCuts : public TNamed
   StHFCuts& operator=(StHFCuts const &); 
 
   unsigned int mEventStatMax;
+  
+  // -- bad run list
+  TString          mBadRunListFileName;
+  std::vector<int> mVecBadRunList;
 
   // -- event cuts
   float mVzMax;

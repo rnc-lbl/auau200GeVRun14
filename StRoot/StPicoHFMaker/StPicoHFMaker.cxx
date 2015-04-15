@@ -54,7 +54,8 @@ Int_t StPicoHFMaker::Init() {
   // -- check for cut class
   if (!mHFCuts)
     mHFCuts = new StHFCuts;
-  
+  mHFCuts->init();
+
   // -- create HF event - using the proper decay mode to initialize
   mPicoHFEvent = new StPicoHFEvent(mDecayMode);
  
