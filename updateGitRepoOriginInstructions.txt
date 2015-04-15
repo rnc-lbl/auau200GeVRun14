@@ -1,0 +1,125 @@
+Hello, HF, 
+
+We have made some changes in the repository structure, please read the whole mail!
+
+1) = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+We have moved the code to a new git-organization,
+
+    https://github.com/rnc-lbl
+
+Which holds two repositories:
+
+* For the code (both StPicoD0AnaMaker and StPicoHFMaker)
+        https://github.com/rnc-lbl/auau200GeVRun14
+
+* For filelists (both picoDsts and D0 trees)
+        https://github.com/rnc-lbl/fileLists
+   - the fileList in the code repositories has been removed
+
+If you have a    git clone     of from Mustafas auau200GeVRun14 repository {
+
+        you need to update the “origin” via
+
+        ../auau200GeVRun14$ git remote set-url origin git@github.com:rnc-lbl/auau200GeVRun14.git
+
+        You can verify via:
+        ../auau200GeVRun14$ git remote show origin
+}
+else If you have a     git fork     of from Mustafas auau200GeVRun14 repository {
+
+        you need to update the “upstream” via
+
+        ../auau200GeVRun14$ git remote set-url upstream git@github.com:rnc-lbl/auau200GeVRun14.git
+
+        You can verify via:
+        ../auau200GeVRun14$ git remote show upstream
+}
+
+2) = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+Get the git repositories
+
+        cd /path/to/your/git-clones
+
+        git clone git@github.com:rnc-lbl/fileLists.git
+        git clone git@github.com:rnc-lbl/auau200GeVRun14.git
+
+In order to keep up with new fileLists and fixes and improvements of the code,
+regularly update BOTH repositories via git pull
+
+        cd /path/to/your/git-clones/auau200GeVRun14
+        git pull
+        cd /path/to/your/git-clones/fileLists
+        git pull
+
+3) = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+Pre produced D0 trees
+
+        - If you are analyzing the pre-produced D0 trees, we have created
+          now a tag with which the D0 trees have been written.
+          You get it via git checkout
+
+                cd /path/to/your/git-clones/auau200GeVRun14
+                git pull
+                git checkout tags/v1.0
+
+        - To list all tags
+                git tag -l
+
+        - All previous instructions are still valid
+
+4) = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+General HF analysis maker
+
+        - For analysis makers, inheriting from the base class StPicoHFMaker, we created an example maker
+                - StPicoHFMyAnaMaker
+          https://github.com/rnc-lbl/auau200GeVRun14/tree/master/StRoot/StPicoHFMyAnaMaker
+
+        - We also fixed some bugs in the base classes
+
+        - We added a submission script for pdsf
+                - (see readme: https://github.com/rnc-lbl/auau200GeVRun14/tree/master/starSubmit)
+
+        - Your work folder "/path/to/your/directory/“ should have soft links to
+                run14AuAu200GeVPrescales -> /path/to/your/git-clones/auau200GeVRun14/run14AuAu200GeVPrescales
+                starSubmit -> /path/to/your/git-clones/auau200GeVRun14/starSubmit
+                StRoot -> /path/to/your/git-clones/auau200GeVRun14/StRoot
+
+                        cd /path/to/your/directory/
+                        ln -s /path/to/your/git-clones/auau200GeVRun14/StRoot
+                        ln -s /path/to/your/git-clones/auau200GeVRun14/starSubmit
+                        ln -s /path/to/your/git-clones/auau200GeVRun14/run14AuAu200GeVPrescales
+
+                picoLists -> /path/to/your/git-clone/fileLists/Run14/AuAu/200GeV/picoLists
+
+                        ln -s  /path/to/your/git-clone/fileLists/Run14/AuAu/200GeV/picoLists
+
+                copy the submission script to the work folder
+
+                        cp  starSubmit/submitPicoHFMaker.csh .
+
+        - Add you analysis code in path/to/your/directory/auau200GeVRun14/StRoot/StPicoHFMyAnaMaker
+        - Add your cuts to the steering macro: /path/to/your/directory/auau200GeVRun14/StRoot/macros/runPicoHFMyAnaMaker.C
+        - compile in your work directory - using the right star software version
+
+                        cd /path/to/your/directory/
+                        starver SL15c
+                        cons
+
+        - Submit (after local testing) and making changes to the script
+
+                submitPicoHFMaker.csh
+
+5) = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+Let us know if you encounter an issue or bug/feature!
+ - via email
+ - or create an “issue” https://github.com/rnc-lbl/auau200GeVRun14/issues
+
+
+Cheers
+
+Jochen and Mustafa
