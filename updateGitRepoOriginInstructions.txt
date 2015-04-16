@@ -17,11 +17,21 @@ Which holds two repositories:
         https://github.com/rnc-lbl/fileLists
    - the fileList in the code repositories has been removed
 
+UPDATE :
+* Which URL should you use for git clone 
+  - If you only want to use our code and are not interested on 
+    developing work on the base classes, use 
+       <GIT URL> = https://github.com/rnc-lbl
+
+  - If you are (or would like to be) part of the devel team
+    (You want to push some code back to github), use 
+       <GIT URL> = git@github.com:rnc-lbl
+
 If you have a    git clone     of from Mustafas auau200GeVRun14 repository {
 
         you need to update the “origin” via
 
-        ../auau200GeVRun14$ git remote set-url origin git@github.com:rnc-lbl/auau200GeVRun14.git
+        ../auau200GeVRun14$ git remote set-url origin <GIT URL>/auau200GeVRun14.git
 
         You can verify via:
         ../auau200GeVRun14$ git remote show origin
@@ -30,7 +40,7 @@ else If you have a     git fork     of from Mustafas auau200GeVRun14 repository 
 
         you need to update the “upstream” via
 
-        ../auau200GeVRun14$ git remote set-url upstream git@github.com:rnc-lbl/auau200GeVRun14.git
+        ../auau200GeVRun14$ git remote set-url upstream <GIT URL>/auau200GeVRun14.git
 
         You can verify via:
         ../auau200GeVRun14$ git remote show upstream
@@ -42,8 +52,8 @@ Get the git repositories
 
         cd /path/to/your/git-clones
 
-        git clone git@github.com:rnc-lbl/fileLists.git
-        git clone git@github.com:rnc-lbl/auau200GeVRun14.git
+        git clone <GIT URL>/fileLists.git
+        git clone <GIT URL>/auau200GeVRun14.git
 
 In order to keep up with new fileLists and fixes and improvements of the code,
 regularly update BOTH repositories via git pull

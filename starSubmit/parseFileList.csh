@@ -17,6 +17,7 @@ set mMode=$4
 set treeName=$5
 set jobId=$6
 set rootMacro=$7
+set badRunListFileName=$8
 
 echo FILELIST $fileList
 
@@ -33,7 +34,7 @@ foreach line ( `cat $fileList` )
 
     set outName=`echo $fileBaseName | awk -F ".picoDst.root" '{ print $1 }'`
 
-    root4star -q -b -l StRoot/macros/${rootMacro}'("'${line}'","'${outName}'", '${mMode}')' > ${jobId}_${day}_${run}.log
+    root4star -q -b -l StRoot/macros/${rootMacro}'("'${line}'","'${outName}'", '${mMode}', "'${badRunListFileName}'")' > ${jobId}_${day}_${run}.log
 
     mv *.picoHFtree.root $outDirTree
     mv *.root  $outDirList
