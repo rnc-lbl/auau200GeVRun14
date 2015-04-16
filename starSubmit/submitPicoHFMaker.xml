@@ -20,9 +20,9 @@
     mkdir -p ${PRODPATH} ${LOGPATH}
 
     if ("&mMode;" == "1") then
-        &basePath;/jobs/starSubmit/parseFileList.csh ${FILELIST} &basePath; &prodId; &mMode; &treeName; ${JOBID} &rootMacro;
+        &basePath;/jobs/starSubmit/parseFileList.csh ${FILELIST} &basePath; &prodId; &mMode; &treeName; ${JOBID} &rootMacro; &badRunListFileName;
     else
-        root4star -q -b -l StRoot/macros/&rootMacro;\(\"$FILELIST\",\"&prodId;_$JOBINDEX\",&mMode;\) &gt;&amp; ${JOBID}.log
+        root4star -q -b -l StRoot/macros/&rootMacro;\(\"$FILELIST\",\"&prodId;_$JOBINDEX\",&mMode;,\"&badRunListFileName;\"\) &gt;&amp; ${JOBID}.log
         tar -zcvf ${JOBID}.log.tgz ${JOBID}.log
     endif
 
@@ -36,6 +36,7 @@
       <File>file:./StRoot/</File>
       <File>file:./run14AuAu200GeVPrescales/</File>
       <File>file:./.sl64_gcc447/</File>
+      <File>file:./&badRunListFileName;/</File>
     </Package>
   </SandBox>
 </job>
