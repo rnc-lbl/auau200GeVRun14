@@ -4,7 +4,7 @@
  * --------------------------------------------------
  *   
  *  - Different modes to use the  class
- *    - StPicoHFMaker::kAnalyse - don't write candidate trees, just fill histograms
+ *    - StPicoHFMaker::kAnalyze - don't write candidate trees, just fill histograms
  *        inputFile : fileList of PicoDst files or single picoDst file
  *        outputFile: baseName for outfile 
  *    - StPicoHFMaker::kWrite   - write candidate trees
@@ -34,7 +34,8 @@ class StPicoDstMaker;
 
 StChain *chain;
 
-void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 0 /*kAnalyse*/) { 
+void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 0 /*kAnalyze*/, 
+			 const Char_t * badRunListFileName = "picoList_bad_MB.list") { 
   // -- Check STAR Library. Please set SL_version to the original star library used in the production 
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL15c";
@@ -57,7 +58,7 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   chain = new StChain();
 
   // ========================================================================================
-  //makerMode    = StPicoHFMaker::kAnalyse;
+  //makerMode    = StPicoHFMaker::kAnalyze;
   // ========================================================================================
   
   cout << "Maker Mode    " << makerMode << endl;
@@ -66,7 +67,7 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   TString sInputFile(inputFile);
   TString sInputListHF("");  
 
-  if (makerMode == StPicoHFMaker::kAnalyse) {
+  if (makerMode == StPicoHFMaker::kAnalyze) {
     if (!sInputFile.Contains(".list") && !sInputFile.Contains("picoDst.root")) {
       cout << "No input list or picoDst root file provided! Exiting..." << endl;
       exit(1);
@@ -107,6 +108,9 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
 
   // ---------------------------------------------------
   // -- Set Base cuts for HF analysis
+
+  // -- File name of bad run list
+  hfCuts->setBadRunListFileName(badRunListFileName);
 
   // -- ADD USER CUTS HERE ----------------------------
 
