@@ -127,22 +127,13 @@ void StHFCuts::init() {
     }
   }
 
-  // -- loop over list and fill vector
-  while (!runs.eof()) {
-    std::string line;
-    std::getline(runs, line);
-    
-    if (line == "\0" || line == "\n") 
-      continue;
-    
-    int run = atoi(line.c_str());
-    
-    mVecBadRunList.push_back(run);
-  }
+  Int_t runId = 0;
+  while( runs >> runId )
+    mVecBadRunList.push_back(runId);
   
   runs.close();
 
-  // -- sort vector
+  // -- sort bad runs vector
   std::sort(mVecBadRunList.begin(), mVecBadRunList.end());
 }
 
@@ -202,20 +193,7 @@ bool StHFCuts::isGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts 
 bool StHFCuts::isGoodRun(StPicoEvent const * const picoEvent) const {
   // -- is good run (not in bad runlist)
 
-  int run = picoEvent->runId();
-  cout << "run " << run << endl;
-
-  if (std::binary_search(mVecBadRunList.begin(), mVecBadRunList.end(), run))
-    cout << "in bin " << endl;
-  else
-    cout << "out bin" << endl;
-
-  if (std::find(mVecBadRunList.begin(), mVecBadRunList.end(), run) != mVecBadRunList.end())
-    cout << "in" << endl;
-  else
-    cout << "out" << endl;
-
-  return true;
+  return (!(std::binary_search(mVecBadRunList.begin(), mVecBadRunList.end(), picoEvent->runId())));
 }
 
 // _________________________________________________________
