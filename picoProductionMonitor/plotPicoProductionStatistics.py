@@ -38,17 +38,22 @@ def main():
     makeIndexFile(totalMuDstEvents,totalPicoEvents)
 
 def makeIndexFile(nMuDstEvents,nPicoEvents):
+    now = time.strftime("%c")
+    timeZone = time.strftime("%Z")
+    
     os.system('rm -f index.md index.html')
     os.system('echo \#\#Total number of produced picoDst events = %i >> index.md'%nPicoEvents)
     os.system('echo ![]\(%s\) >> index.md'%gNumberOfEventsVsDayFileName)
     os.system('echo ![]\(%s\) >> index.md'%gTotalNumberOfEventsVsDayFileName)
+    os.system('echo \ \ >> index.md')
+    os.system('echo \ \ Last updated on %s %s >> index.md'%(now,timeZone))
     os.system('./markdown index.md > index.html')
     os.system('chmod a+rw index.md')
     os.system('chmod a+rw index.html')
 
 def plotNumberOfEventsVsDay(nEventsVsDay):
 
-    nEventsVsDay = sorted(nEventsVsDay)
+    nEventsVsDay = sorted(nEventsVsDay, key=lambda x: datetime.datetime.strptime(x[0], '%m/%d/%Y'))
     x = [datetime.datetime.strptime(d[0],'%m/%d/%Y').date() for d in nEventsVsDay]
     y = [v[1]/1.e6 for v in nEventsVsDay]
 
@@ -70,17 +75,18 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
 
     # projection fit
     xNum = mdates.date2num(x)
-    p = np.polyfit(xNum,yy,1)
+    fit = np.polyfit(xNum,yy,1)
     projectionDate = mdates.date2num(datetime.datetime.strptime('08/24/2015','%m/%d/%Y').date())
     xx = np.linspace(xNum.min(),projectionDate,300)
     dd = mdates.num2date(xx)
 
-    # plt.plot(x,p[0]*x,p[1],'r-')
+    plotText = 'Average is %1.2fM events per day'%fit[0]
+    plotTextX = datetime.datetime.strptime('04/01/2015','%m/%d/%Y').date()
+
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-    # plt.gca().xaxis.set_major_locator(mdates.DayLocator(bymonthday=range(1,32,3)))
     plt.scatter(x,yy)
-    plt.plot(x,yy)
-    plt.plot(dd,p[0]*xx+p[1],'r-')
+    plt.plot(dd,fit[0]*xx+fit[1],'r-')
+    plt.text(plotTextX,1405,plotText,color='r',fontsize=16)
     plt.gca().xaxis_date()
     plt.gcf().autofmt_xdate()
     plt.gca().set_ylim([50,1600])
