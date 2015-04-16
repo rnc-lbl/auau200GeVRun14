@@ -41,13 +41,15 @@ class StHFHists: public TNamed
   void init(TList *outList);
   void fillEventHists(StPicoEvent const &, StPicoHFEvent const &);
   //  void fillEventHists(StPicoEvent const &, StPicoHFEvent const &, unsigned int const nHftTracks);
- 
-  
+  void fillGoodEventHists(StPicoEvent const &, StPicoHFEvent const &);
+  void fillPairHists(StHFPair const *, bool fillMass);
+  void fillTripletHists(StHFTriplet const *, bool fillMass);
+
  private:
   
   TList *mEventList;
-  // TList *mPairList;
-  // TList *mTripletList;
+  TList *mPairList;
+  TList *mTripletList;
 
   // general event hists
   StPicoPrescales* mPrescales;
