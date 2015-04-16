@@ -92,9 +92,9 @@ else
 endif
 
 if  ( -e ${baseFolder}/${badRunListFileName} ) then
-    ln -sf  ${baseFolder}/${badRunListFileName}
+    cp  ${baseFolder}/${badRunListFileName} picoList_badRuns.list
 else if ( -e ${baseFolder}/picoLists/${badRunListFileName} ) then
-    ln -sf  ${baseFolder}/picoLists/${badRunListFileName}
+    cp  ${baseFolder}/picoLists/${badRunListFileName} picoList_badRuns.list
 else
     echo "${badRunListFileName} does not exist in ${baseFolder} nor ${baseFolder}/picoLists"
     exit
@@ -123,6 +123,6 @@ if ( -d LocalLibraries.package ) then
 endif 
 
 # -- submit 
-star-submit-template -template submitPicoHFMaker.xml -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},rootMacro=${rootMacro},badRunListFileName=${badRunListFileName}
+star-submit-template -template submitPicoHFMaker.xml -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},rootMacro=${rootMacro}
 
 popd > /dev/null
