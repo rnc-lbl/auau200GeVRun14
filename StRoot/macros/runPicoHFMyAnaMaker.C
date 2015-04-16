@@ -34,7 +34,8 @@ class StPicoDstMaker;
 
 StChain *chain;
 
-void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 0 /*kAnalyze*/) { 
+void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 0 /*kAnalyze*/, 
+			 const Char_t * badRunListFileName = "picoList_bad_MB.list") { 
   // -- Check STAR Library. Please set SL_version to the original star library used in the production 
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL15c";
@@ -106,6 +107,9 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
 
   // ---------------------------------------------------
   // -- Set Base cuts for HF analysis
+
+  // -- File name of bad run list
+  hfCuts->setBadRunListFileName(badRunListFileName);
 
   // -- ADD USER CUTS HERE ----------------------------
 
