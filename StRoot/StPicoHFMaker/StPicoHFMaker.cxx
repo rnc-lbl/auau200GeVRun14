@@ -26,8 +26,8 @@ ClassImp(StPicoHFMaker)
 // _________________________________________________________
 StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
 				       char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
-  StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
-  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), 
+  StMaker(name), mPicoDst(NULL), mHFCuts(NULL),mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
+  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyse), 
   mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
   mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
   mOutputFileTree(NULL), mOutputFileList(NULL) {
@@ -56,8 +56,7 @@ Int_t StPicoHFMaker::Init() {
   // -- check for cut class
   if (!mHFCuts)
     mHFCuts = new StHFCuts;
-  mHFCuts->init();
-
+  
   // -- create HF event - using the proper decay mode to initialize
   mPicoHFEvent = new StPicoHFEvent(mDecayMode);
  
@@ -116,7 +115,11 @@ Int_t StPicoHFMaker::Init() {
 
   // -- initialize histogram class
   mHFHists = new StHFHists(Form("hfHists_%s",GetName()));
-  mHFHists->init(mOutList);
+  mHFHists->init(mOutList,mDecayMode);
+
+  //
+
+
 
   // -- call method of daughter class
   InitHF();
@@ -212,7 +215,7 @@ Int_t StPicoHFMaker::Make() {
     UInt_t nTracks = mPicoDst->numberOfTracks();
 
     // -- Fill vectors of particle types
-    if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyze) {
+    if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyse) {
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
 	StPicoTrack* trk = mPicoDst->track(iTrack);
 	
@@ -224,13 +227,13 @@ Int_t StPicoHFMaker::Make() {
 	if (isProton(trk, beta)) mIdxPicoProtons.push_back(iTrack); // isProton method to be implemented by daughter class
       
       } // .. end tracks loop
-    } // if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyze) {
+    } // if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyse) {
 
     // -- call method of daughter class
     iReturn = MakeHF();
 
     // -- fill basic event histograms - for good events
-    mHFHists->fillEventHists(*mPicoEvent, *mPicoHFEvent);
+    mHFHists->fillGoodEventHists(*mPicoEvent, *mPicoHFEvent);
 
   } // if (setupEvent()) {
   
@@ -239,8 +242,7 @@ Int_t StPicoHFMaker::Make() {
     mTree->Fill();
   
   // -- fill basic event histograms - for all events
-  //  mHFHists->FillEventHists(...);
-  
+  mHFHists->fillEventHists(*mPicoEvent, *mPicoHFEvent);
 
   // -- reset event to be in a defined state
   resetEvent();
@@ -270,6 +272,9 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
 	continue;
 
       mPicoHFEvent->addHFTertiaryVertexPair(&candidateK0Short);
+
+      // -- fill tertiary pair histograms
+      mHFHists->fillTertiaryPairHists(&candidateK0Short, kTRUE);
     }
   }
 }
@@ -310,7 +315,7 @@ float StPicoHFMaker::getTofBeta(StPicoTrack const * const trk) const {
 void StPicoHFMaker::initializeEventStats() {
   // -- Initialize event statistics histograms
   
-  const char *aEventCutNames[]   = {"all", "good run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it{v}^{VPD}_{z}", "accepted", ""};
+  const char *aEventCutNames[]   = {"all", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it^{VPD}_{z}", "centrality", "accepted"};
 
   mOutList->Add(new TH1F("hEventStat0","Event cut statistics 0;Event Cuts;Events", mHFCuts->eventStatMax(), -0.5, mHFCuts->eventStatMax()-0.5));
   TH1F *hEventStat0 = static_cast<TH1F*>(mOutList->Last());
@@ -318,7 +323,7 @@ void StPicoHFMaker::initializeEventStats() {
   mOutList->Add(new TH1F("hEventStat1","Event cut statistics 1;Event Cuts;Events", mHFCuts->eventStatMax(), -0.5, mHFCuts->eventStatMax()-0.5));
   TH1F *hEventStat1 = static_cast<TH1F*>(mOutList->Last());
 
-  for (unsigned int ii = 0; ii < mHFCuts->eventStatMax(); ii++) {
+  for (unsigned int ii = 0; ii < mHFCuts->eventStatMax()-1; ii++) {
     hEventStat0->GetXaxis()->SetBinLabel(ii+1, aEventCutNames[ii]);
     hEventStat1->GetXaxis()->SetBinLabel(ii+1, aEventCutNames[ii]);
   }
