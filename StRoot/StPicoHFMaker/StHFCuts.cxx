@@ -122,7 +122,7 @@ void StHFCuts::init() {
   if (!runs.is_open()) {
     runs.open(Form("picoLists/%s", mBadRunListFileName.Data()));
     if (!runs.is_open()) {
-      cout << "StHFCuts::init -- To bad run list found :" << mBadRunListFileName << endl;
+      cout << "StHFCuts::init --Bad run list found :" << mBadRunListFileName << endl;
       exit(EXIT_FAILURE);
     }
   }
