@@ -10,6 +10,7 @@
  *            Michael Lomnitz (mrlomnitz@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *            Guannan Xie     (guannanxie@lbl.gov)
  *
  * **************************************************
  */
@@ -68,6 +69,8 @@ class StHFCuts : public TNamed
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- SETTER for CUTS
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+
+  void setBadRunListFileName(const char* fileName);
 
   void setCutVzMax(float f);
   void setCutVzVpdVzMax(float f);
@@ -272,6 +275,8 @@ class StHFCuts : public TNamed
 
   ClassDef(StHFCuts,1)
 };
+
+inline void StHFCuts::setBadRunListFileName(const char* fileName) { mBadRunListFileName = fileName; }
 
 inline void StHFCuts::setCutVzMax(float f)            { mVzMax            = f; }
 inline void StHFCuts::setCutVzVpdVzMax(float f)       { mVzVpdVzMax       = f; }
