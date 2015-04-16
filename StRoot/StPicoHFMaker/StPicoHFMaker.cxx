@@ -117,10 +117,6 @@ Int_t StPicoHFMaker::Init() {
   mHFHists = new StHFHists(Form("hfHists_%s",GetName()));
   mHFHists->init(mOutList,mDecayMode);
 
-  //
-
-
-
   // -- call method of daughter class
   InitHF();
 
