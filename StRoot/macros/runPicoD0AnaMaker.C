@@ -1,4 +1,4 @@
-void runPicoD0AnaMaker(TString d0list, TString outFileName)
+void runPicoD0AnaMaker(TString d0list, TString outFileName, TString badRunListFileName = "picoList_bad_MB.list")
 {
    //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
    string SL_version = "SL15c";
@@ -32,6 +32,10 @@ void runPicoD0AnaMaker(TString d0list, TString outFileName)
    picoD0AnaMaker->setHFCuts(d0Cuts);
 
    // -------------- USER variables -------------------------
+
+   // -- File name of bad run list
+   d0Cuts->setBadRunListFileName(badRunListFileName);
+
    // add your cuts here.
 
    // tracking
