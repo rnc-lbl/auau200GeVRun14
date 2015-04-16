@@ -1,5 +1,8 @@
 #include <limits>
 #include <cmath>
+#include <algorithm>
+#include <fstream>
+#include <string>
 
 #ifdef __ROOT__
 #include "StHFCuts.h"
@@ -20,7 +23,8 @@ ClassImp(StHFCuts)
 
 // _________________________________________________________
 StHFCuts::StHFCuts() 
-: TNamed("HFCutsBase", "HFCutsBase"), mEventStatMax(7),
+: TNamed("HFCutsBase", "HFCutsBase"), mEventStatMax(7),  
+  mBadRunListFileName("picoList_bad_MB.list"), 
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
   
@@ -62,7 +66,8 @@ StHFCuts::StHFCuts()
 
 // _________________________________________________________
 StHFCuts::StHFCuts(const Char_t *name) 
-  : TNamed(name, name), mEventStatMax(6),
+: TNamed(name, name), mEventStatMax(6),
+  mBadRunListFileName("picoList_bad_MB.list"), 
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
   
@@ -100,6 +105,36 @@ StHFCuts::StHFCuts(const Char_t *name)
   mSecondaryTripletCosThetaMin(std::numeric_limits<float>::min()), 
   mSecondaryTripletMassMin(std::numeric_limits<float>::min()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()) {
   // -- constructor
+}
+
+// _________________________________________________________
+void StHFCuts::init() {
+  // -- init cuts class
+
+  // -- Read in bad run list and fill vector
+  // -----------------------------------------
+
+  // -- open list
+  ifstream runs;
+
+  // -- open in working dir
+  runs.open(mBadRunListFileName.Data());
+  if (!runs.is_open()) {
+    runs.open(Form("picoLists/%s", mBadRunListFileName.Data()));
+    if (!runs.is_open()) {
+      cout << "StHFCuts::init -- To bad run list found :" << mBadRunListFileName << endl;
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  Int_t runId = 0;
+  while( runs >> runId )
+    mVecBadRunList.push_back(runId);
+  
+  runs.close();
+
+  // -- sort bad runs vector
+  std::sort(mVecBadRunList.begin(), mVecBadRunList.end());
 }
 
 // _________________________________________________________
@@ -158,10 +193,7 @@ bool StHFCuts::isGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts 
 bool StHFCuts::isGoodRun(StPicoEvent const * const picoEvent) const {
   // -- is good run (not in bad runlist)
 
-  // TO BE IMPLEMENTED
-  // ... PicoEvent->runId() 
-
-  return true;
+  return (!(std::binary_search(mVecBadRunList.begin(), mVecBadRunList.end(), picoEvent->runId())));
 }
 
 // _________________________________________________________

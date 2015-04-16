@@ -12,7 +12,12 @@
 #      run14AuAu200GeVPrescales   ( from the git repo )
 #      starSubmit                 ( from the git repo )
 #
+#      picoLists                  ( from the fileList git repo )
+#
 #   - the rootMacro is expected in StRoot/macros
+#
+#   - the bad run list is expected in ${baseFolder}
+#     or in ${baseFolder}/picoLists
 #
 # ###############################################
 
@@ -25,13 +30,16 @@ set baseFolder=/path/to/your/directory
 set input=${baseFolder}/test.list
 
 # -- set maker mode
-#    0 - kAnalyse, 
+#    0 - kAnalyze, 
 #    1 - kWrite
 #    2 - kRead
 set makerMode=0
 
 # -- set root macro
 set rootMacro=runPicoHFMyAnaMaker.C
+
+# -- set filename for bad run list
+set badRunListFileName="picoList_bad_MB.list"
 
 # ###############################################
 # -- DON'T CHANGE BELOW THAT LINE
@@ -83,6 +91,15 @@ else
     ln -sf ${baseFolder}/starSubmit/submitPicoHFMaker.xml 
 endif
 
+if  ( -e ${baseFolder}/${badRunListFileName} ) then
+    ln -sf  ${baseFolder}/${badRunListFileName}
+else if ( -e ${baseFolder}/picoLists/${badRunListFileName} ) then
+    ln -sf  ${baseFolder}/picoLists/${badRunListFileName}
+else
+    echo "${badRunListFileName} does not exist in ${baseFolder} nor ${baseFolder}/picoLists"
+    exit
+endif
+
 if ( ${makerMode} == 0 || ${makerMode} == 1 ) then
     head -n 2 ${input} | grep ".picoDst.root" > /dev/null
     if ( $? != 0 ) then
@@ -102,10 +119,10 @@ if ( -e LocalLibraries.zip ) then
 endif 
 
 if ( -d LocalLibraries.package ) then
-    rm LocalLibraries.package
+    rm -rf LocalLibraries.package
 endif 
 
 # -- submit 
-star-submit-template -template submitPicoHFMaker.xml -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},rootMacro=${rootMacro}
+star-submit-template -template submitPicoHFMaker.xml -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},rootMacro=${rootMacro},badRunListFileName=${badRunListFileName}
 
 popd > /dev/null
