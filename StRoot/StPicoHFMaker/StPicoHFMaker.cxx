@@ -55,7 +55,8 @@ Int_t StPicoHFMaker::Init() {
   // -- check for cut class
   if (!mHFCuts)
     mHFCuts = new StHFCuts;
-  
+  mHFCuts->init();  
+
   // -- create HF event - using the proper decay mode to initialize
   mPicoHFEvent = new StPicoHFEvent(mDecayMode);
  
@@ -87,7 +88,7 @@ Int_t StPicoHFMaker::Init() {
   mOutputFileList->SetCompressionLevel(1);
 
   if (mMakerMode == StPicoHFMaker::kWrite) {
-    mOutputFileTree = new TFile(Form("%s.picoHFtree.root", mOuputFileBaseName.Data()), "RECREATE");
+    mOutputFileTree = new TFile(Form("%s.picoHFtree.root", mOuputFileBaseName.Data()), "RECREATE";
     mOutputFileTree->SetCompressionLevel(1);
     mOutputFileTree->cd();
 
@@ -310,7 +311,7 @@ float StPicoHFMaker::getTofBeta(StPicoTrack const * const trk) const {
 void StPicoHFMaker::initializeEventStats() {
   // -- Initialize event statistics histograms
   
-  const char *aEventCutNames[]   = {"all", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it^{VPD}_{z}", "centrality", "accepted"};
+  const char *aEventCutNames[]   = {"all", "good run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it^{VPD}_{z}", "centrality", "accepted", ''};
 
   mOutList->Add(new TH1F("hEventStat0","Event cut statistics 0;Event Cuts;Events", mHFCuts->eventStatMax(), -0.5, mHFCuts->eventStatMax()-0.5));
   TH1F *hEventStat0 = static_cast<TH1F*>(mOutList->Last());
@@ -318,7 +319,7 @@ void StPicoHFMaker::initializeEventStats() {
   mOutList->Add(new TH1F("hEventStat1","Event cut statistics 1;Event Cuts;Events", mHFCuts->eventStatMax(), -0.5, mHFCuts->eventStatMax()-0.5));
   TH1F *hEventStat1 = static_cast<TH1F*>(mOutList->Last());
 
-  for (unsigned int ii = 0; ii < mHFCuts->eventStatMax()-1; ii++) {
+  for (unsigned int ii = 0; ii < mHFCuts->eventStatMax(); ii++) {
     hEventStat0->GetXaxis()->SetBinLabel(ii+1, aEventCutNames[ii]);
     hEventStat1->GetXaxis()->SetBinLabel(ii+1, aEventCutNames[ii]);
   }
