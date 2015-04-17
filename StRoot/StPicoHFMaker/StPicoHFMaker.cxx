@@ -26,7 +26,7 @@ ClassImp(StPicoHFMaker)
 // _________________________________________________________
 StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
 				       char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
-  StMaker(name), mPicoDst(NULL), mHFCuts(NULL),mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
+  StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
   mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), 
   mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
   mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
@@ -55,7 +55,7 @@ Int_t StPicoHFMaker::Init() {
   // -- check for cut class
   if (!mHFCuts)
     mHFCuts = new StHFCuts;
-  mHFCuts->init();  
+  mHFCuts->init();
 
   // -- create HF event - using the proper decay mode to initialize
   mPicoHFEvent = new StPicoHFEvent(mDecayMode);
@@ -88,7 +88,7 @@ Int_t StPicoHFMaker::Init() {
   mOutputFileList->SetCompressionLevel(1);
 
   if (mMakerMode == StPicoHFMaker::kWrite) {
-    mOutputFileTree = new TFile(Form("%s.picoHFtree.root", mOuputFileBaseName.Data()), "RECREATE";
+    mOutputFileTree = new TFile(Form("%s.picoHFtree.root", mOuputFileBaseName.Data()), "RECREATE");
     mOutputFileTree->SetCompressionLevel(1);
     mOutputFileTree->cd();
 
@@ -311,7 +311,7 @@ float StPicoHFMaker::getTofBeta(StPicoTrack const * const trk) const {
 void StPicoHFMaker::initializeEventStats() {
   // -- Initialize event statistics histograms
   
-  const char *aEventCutNames[]   = {"all", "good run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it^{VPD}_{z}", "centrality", "accepted", ''};
+  const char *aEventCutNames[]   = {"all", "good run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it{v}^{VPD}_{z}", "accepted", ""};
 
   mOutList->Add(new TH1F("hEventStat0","Event cut statistics 0;Event Cuts;Events", mHFCuts->eventStatMax(), -0.5, mHFCuts->eventStatMax()-0.5));
   TH1F *hEventStat0 = static_cast<TH1F*>(mOutList->Last());
