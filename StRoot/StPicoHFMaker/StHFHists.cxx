@@ -44,7 +44,8 @@ void StHFHists::init (TList * outList, unsigned int mode){
   const char * prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
   mPrescales = new StPicoPrescales(prescalesFilesDirectoryName); // fix dir name
   mNRuns = mPrescales->numberOfRuns();
-  
+   
+
   // -- event list
   outList->Add(new TList);
   mEventList = static_cast<TList*>(outList->Last());
@@ -57,6 +58,7 @@ void StHFHists::init (TList * outList, unsigned int mode){
   mEventList->Add(new TH1F("mh1TotalHFSecondaryVerticesInRun","totalHFSecondaryVerticesInRun;runIndex;totalHFSecondaryVerticesInRun",mNRuns+1,0,mNRuns+1));
   mEventList->Add(new TH1F("mh1TotalHFTertiaryVerticesInRun","totalHFTertiaryVerticesInRun;runIndex;totalHFTertiaryVerticesInRun",mNRuns+1,0,mNRuns+1));
   mEventList->Add(new TH2F("mh2NHFSecondaryVsNHFTertiary","nHFSecondaryVsnHFTertiary;nHFTertiary;nHFSecondary",300,0,300,300,0,300));
+ 
 
   if (mode == StPicoHFEvent::kTwoParticleDecay || mode == StPicoHFEvent::kTwoAndTwoParticleDecay) {
     // -- secondaryPair histogram list
@@ -71,7 +73,8 @@ void StHFHists::init (TList * outList, unsigned int mode){
     mSecondaryPairList->Add(new TH2F("mh2SecondaryPairDcaDaughtersVsPt","secondaryPairDcaDaughtersVsPt;p_{T}(secondaryPair)(GeV/c));dcaDaughters(cm)",120,0,12,200,0,0.02));
     mSecondaryPairList->Add(new TH2F("mh2SecondaryPairDecayLenghtVsPt","secondaryPairDecayLenghtVsPt;p_{T}(secondaryPair)(GeV/c));secondaryPairDecayLenght(cm)",120,0,12,500,0,0.2));
   }
- 
+  
+
   if (mode == StPicoHFEvent::kTwoAndTwoParticleDecay) {
     // -- tertiaryPair% histogram list
     outList->Add(new TList);
@@ -104,6 +107,7 @@ void StHFHists::init (TList * outList, unsigned int mode){
   }
 }
 
+
 //-----------------------------------------------------------------------
 // fill general histograms for all events
 //void StHFHists::fillEventHists(StPicoEvent const& picoEvent,StPicoHFEvent const & picoHFEvent,unsigned int const nHftTracks)
@@ -117,7 +121,6 @@ void StHFHists::fillEventHists(StPicoEvent const& picoEvent,StPicoHFEvent const 
   (static_cast<TH1F*>(mEventList->FindObject("mh1TotalHFTertiaryVerticesInRun")))->Fill(runIndex,picoHFEvent.nHFTertiaryVertices());
   (static_cast<TH2F*>(mEventList->FindObject("mh2NHFSecondaryVsNHFTertiary")))->Fill(picoHFEvent.nHFTertiaryVertices(),picoHFEvent.nHFSecondaryVertices());
 }
-
 
 // fill general histograms for good events
 void StHFHists::fillGoodEventHists(StPicoEvent const& picoEvent,StPicoHFEvent const & picoHFEvent)
@@ -134,9 +137,8 @@ void StHFHists::fillSecondaryPairHists(StHFPair const* const t, bool const fillM
   (static_cast<TH2F*>(mSecondaryPairList->FindObject("mh2SecondaryPairCosThetaStarVsPt")))->Fill(t->pt(),t->cosThetaStar());
   (static_cast<TH2F*>(mSecondaryPairList->FindObject("mh2SecondaryPairDcaDaughtersVsPt")))->Fill(t->pt(),t->dcaDaughters());
   (static_cast<TH2F*>(mSecondaryPairList->FindObject("mh2SecondaryPairDecayLenghtVsPt")))->Fill(t->pt(),t->decayLength());
-  //vertex position histos?
+//vertex position histos?
 }
-
 
 // fill histograms for pair candidates
 void StHFHists::fillTertiaryPairHists(StHFPair const* const t, bool const fillMass)
@@ -146,9 +148,8 @@ void StHFHists::fillTertiaryPairHists(StHFPair const* const t, bool const fillMa
   (static_cast<TH2F*>(mTertiaryPairList->FindObject("mh2TertiaryPairCosThetaStarVsPt")))->Fill(t->pt(),t->cosThetaStar());
   (static_cast<TH2F*>(mTertiaryPairList->FindObject("mh2TertiaryPairDcaDaughtersVsPt")))->Fill(t->pt(),t->dcaDaughters());
   (static_cast<TH2F*>(mTertiaryPairList->FindObject("mh2TertiaryPairDecayLenghtVsPt")))->Fill(t->pt(),t->decayLength());
-  //vertex position histos?
+//vertex position histos?
 }
-
 
 // fill histograms for triplet candidates
 void StHFHists::fillTripletHists(StHFTriplet const* const t, bool const fillMass)

@@ -34,7 +34,6 @@ StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker,
   // -- constructor
 }
 
-
 // _________________________________________________________
 StPicoHFMaker::~StPicoHFMaker() {
    // -- destructor 

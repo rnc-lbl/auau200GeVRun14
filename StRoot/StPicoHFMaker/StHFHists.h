@@ -38,17 +38,19 @@ class StHFHists: public TNamed
 
   virtual ~StHFHists();
 
-  void init(TList *outList);
+  void init(TList *outList, unsigned int mode);
   void fillEventHists(StPicoEvent const &, StPicoHFEvent const &);
   //  void fillEventHists(StPicoEvent const &, StPicoHFEvent const &, unsigned int const nHftTracks);
   void fillGoodEventHists(StPicoEvent const &, StPicoHFEvent const &);
-  void fillPairHists(StHFPair const *, bool fillMass);
+  void fillSecondaryPairHists(StHFPair const *, bool fillMass);
+  void fillTertiaryPairHists(StHFPair const *, bool fillMass);
   void fillTripletHists(StHFTriplet const *, bool fillMass);
 
  private:
   
   TList *mEventList;
-  TList *mPairList;
+  TList *mSecondaryPairList;
+  TList *mTertiaryPairList;
   TList *mTripletList;
 
   // general event hists
