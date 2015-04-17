@@ -207,8 +207,7 @@ bool StHFCuts::isGoodTrack(StPicoTrack const * const trk) const {
 bool StHFCuts::isTPCPion(StPicoTrack const * const trk) const {
   // -- check for good pion in TPC
 
-  return ( trk->pMom().perp() >= mPionPtMin && trk->pMom().perp() < mPionPtMax &&
-	   trk->pMom().pseudoRapidity() >= mPionEtaMin && trk->pMom().pseudoRapidity() < mPionEtaMax &&
+  return ( trk->gPt() >= mPionPtMin && trk->gPt() < mPionPtMax &&
 	   fabs(trk->nSigmaPion()) < mTPCNSigmaPionMax );
 }
 
@@ -216,8 +215,7 @@ bool StHFCuts::isTPCPion(StPicoTrack const * const trk) const {
 bool StHFCuts::isTPCKaon(StPicoTrack const * const trk) const {
   // -- check for good kaon in TPC
 
-  return ( trk->pMom().perp() >= mKaonPtMin && trk->pMom().perp() < mKaonPtMax &&
-	   trk->pMom().pseudoRapidity() >= mKaonEtaMin && trk->pMom().pseudoRapidity() < mKaonEtaMax &&
+  return ( trk->gPt() >= mKaonPtMin && trk->gPt() < mKaonPtMax &&
 	   fabs(trk->nSigmaKaon()) < mTPCNSigmaKaonMax );
 }
 
@@ -225,8 +223,7 @@ bool StHFCuts::isTPCKaon(StPicoTrack const * const trk) const {
 bool StHFCuts::isTPCProton(StPicoTrack const * const trk) const {
   // -- check for good proton in TPC
 
-  return ( trk->pMom().perp() >= mProtonPtMin && trk->pMom().perp() < mProtonPtMax &&
-	   trk->pMom().pseudoRapidity() >= mProtonEtaMin && trk->pMom().pseudoRapidity() < mProtonEtaMax &&
+  return ( trk->gPt() >= mProtonPtMin && trk->gPt() < mProtonPtMax &&
 	   fabs(trk->nSigmaProton()) < mTPCNSigmaProtonMax );
 }
 
