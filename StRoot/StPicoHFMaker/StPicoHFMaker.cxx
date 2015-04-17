@@ -27,7 +27,7 @@ ClassImp(StPicoHFMaker)
 StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
 				       char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
   StMaker(name), mPicoDst(NULL), mHFCuts(NULL),mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
-  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyse), 
+  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), 
   mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
   mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
   mOutputFileTree(NULL), mOutputFileList(NULL) {
@@ -210,7 +210,7 @@ Int_t StPicoHFMaker::Make() {
     UInt_t nTracks = mPicoDst->numberOfTracks();
 
     // -- Fill vectors of particle types
-    if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyse) {
+    if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyze) {
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
 	StPicoTrack* trk = mPicoDst->track(iTrack);
 	
@@ -222,7 +222,7 @@ Int_t StPicoHFMaker::Make() {
 	if (isProton(trk, beta)) mIdxPicoProtons.push_back(iTrack); // isProton method to be implemented by daughter class
       
       } // .. end tracks loop
-    } // if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyse) {
+    } // if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyze) {
 
     // -- call method of daughter class
     iReturn = MakeHF();
