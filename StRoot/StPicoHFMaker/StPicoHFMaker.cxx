@@ -12,8 +12,10 @@
 #include "StPicoDstMaker/StPicoEvent.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
+#include "StPicoPrescales/StPicoPrescales.h"
 
 #include "StHFCuts.h"
+#include "StHFHists.h"
 #include "StPicoHFEvent.h"
 #include "StPicoHFMaker.h"
 #include "StHFPair.h"
@@ -24,14 +26,13 @@ ClassImp(StPicoHFMaker)
 // _________________________________________________________
 StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
 				       char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
-  StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
+  StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
   mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), 
   mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
   mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
   mOutputFileTree(NULL), mOutputFileList(NULL) {
   // -- constructor
 }
-
 
 // _________________________________________________________
 StPicoHFMaker::~StPicoHFMaker() {
@@ -111,6 +112,10 @@ Int_t StPicoHFMaker::Init() {
 
   // -- create event stat histograms
   initializeEventStats();
+
+  // -- initialize histogram class
+  mHFHists = new StHFHists(Form("hfHists_%s",GetName()));
+  mHFHists->init(mOutList,mDecayMode);
 
   // -- call method of daughter class
   InitHF();
@@ -223,12 +228,18 @@ Int_t StPicoHFMaker::Make() {
     // -- call method of daughter class
     iReturn = MakeHF();
 
+    // -- fill basic event histograms - for good events
+    mHFHists->fillGoodEventHists(*mPicoEvent, *mPicoHFEvent);
+
   } // if (setupEvent()) {
   
   // -- save information about all events, good or bad
   if (mMakerMode == StPicoHFMaker::kWrite)
     mTree->Fill();
   
+  // -- fill basic event histograms - for all events
+  mHFHists->fillEventHists(*mPicoEvent, *mPicoHFEvent);
+
   // -- reset event to be in a defined state
   resetEvent();
   
@@ -257,6 +268,9 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
 	continue;
 
       mPicoHFEvent->addHFTertiaryVertexPair(&candidateK0Short);
+
+      // -- fill tertiary pair histograms
+      mHFHists->fillTertiaryPairHists(&candidateK0Short, kTRUE);
     }
   }
 }
