@@ -31,19 +31,16 @@ StHFCuts::StHFCuts()
   mTPCNSigmaPionMax(3.),
   mTOFDeltaOneOverBetaPionMax(0.04), 
   mPionPtMin(std::numeric_limits<float>::min()),  mPionPtMax(std::numeric_limits<float>::max()), 
-  mPionEtaMin(std::numeric_limits<float>::min()), mPionEtaMax(std::numeric_limits<float>::max()), 
   mPionPtTOFMin(std::numeric_limits<float>::min()), mPionPtTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaKaonMax(3.), 
   mTOFDeltaOneOverBetaKaonMax(0.04), 
   mKaonPtMin(std::numeric_limits<float>::min()),  mKaonPtMax(std::numeric_limits<float>::max()), 
-  mKaonEtaMin(std::numeric_limits<float>::min()), mKaonEtaMax(std::numeric_limits<float>::max()), 
   mKaonPtTOFMin(std::numeric_limits<float>::min()), mKaonPtTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaProtonMax(3.), 
   mTOFDeltaOneOverBetaProtonMax(0.04), 
   mProtonPtMin(std::numeric_limits<float>::min()),  mProtonPtMax(std::numeric_limits<float>::max()), 
-  mProtonEtaMin(std::numeric_limits<float>::min()), mProtonEtaMax(std::numeric_limits<float>::max()), 
   mProtonPtTOFMin(std::numeric_limits<float>::min()), mProtonPtTOFMax(std::numeric_limits<float>::max()), 
 
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
@@ -74,19 +71,16 @@ StHFCuts::StHFCuts(const Char_t *name)
   mTPCNSigmaPionMax(3.), 
   mTOFDeltaOneOverBetaPionMax(0.04), 
   mPionPtMin(std::numeric_limits<float>::min()),  mPionPtMax(std::numeric_limits<float>::max()), 
-  mPionEtaMin(std::numeric_limits<float>::min()), mPionEtaMax(std::numeric_limits<float>::max()), 
   mPionPtTOFMin(std::numeric_limits<float>::min()), mPionPtTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaKaonMax(3.), 
   mTOFDeltaOneOverBetaKaonMax(0.04), 
   mKaonPtMin(std::numeric_limits<float>::min()),  mKaonPtMax(std::numeric_limits<float>::max()), 
-  mKaonEtaMin(std::numeric_limits<float>::min()), mKaonEtaMax(std::numeric_limits<float>::max()), 
   mKaonPtTOFMin(std::numeric_limits<float>::min()), mKaonPtTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaProtonMax(3.), 
   mTOFDeltaOneOverBetaProtonMax(0.04), 
   mProtonPtMin(std::numeric_limits<float>::min()),  mProtonPtMax(std::numeric_limits<float>::max()), 
-  mProtonEtaMin(std::numeric_limits<float>::min()), mProtonEtaMax(std::numeric_limits<float>::max()), 
   mProtonPtTOFMin(std::numeric_limits<float>::min()), mProtonPtTOFMax(std::numeric_limits<float>::max()), 
 
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
