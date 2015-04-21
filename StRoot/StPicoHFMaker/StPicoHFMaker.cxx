@@ -249,7 +249,6 @@ Int_t StPicoHFMaker::Make() {
 // _________________________________________________________
 void StPicoHFMaker::createTertiaryK0Shorts() {
   // -- Create candidate for tertiary K0shorts
-  //    only store pairs with opposite charge
 
   for (unsigned short idxPion1 = 0; idxPion1 < mIdxPicoPions.size(); ++idxPion1) {
     StPicoTrack const * pion1 = mPicoDst->track(mIdxPicoPions[idxPion1]);
