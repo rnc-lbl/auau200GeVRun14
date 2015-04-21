@@ -36,16 +36,16 @@
  *
  * **************************************************
  *
- *  Initial Authors:                                                                                                                       
- *            Xin Dong        (xdong@lbl.gov)                                                                                              
- *            Mustafa Mustafa (mmustafa@lbl.gov)                                                                                           
- *          **Jochen Thaeder  (jmthader@lbl.gov)                                                                                           
- *                                                                                                                                         
- *  Contributing Authors                                                                                                                   
- *            Michael Lomnitz (mrlomnitz@lbl.gov)                                                                                          
+ *  Initial Authors:
+ *            Xin Dong        (xdong@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *          **Jochen Thaeder  (jmthader@lbl.gov)
+ *
+ *  Contributing Authors
+ *            Michael Lomnitz (mrlomnitz@lbl.gov)
  *            Giacomo Contin  (gcontin@lbl.gov)
  *
- *  ** Code Maintainer                                                                                                                     
+ *  ** Code Maintainer
  *
  * **************************************************
  */
