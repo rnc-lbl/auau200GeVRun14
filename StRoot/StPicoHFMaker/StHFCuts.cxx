@@ -35,16 +35,19 @@ StHFCuts::StHFCuts()
   mTOFDeltaOneOverBetaPionMax(0.04), 
   mPionPtMin(std::numeric_limits<float>::min()),  mPionPtMax(std::numeric_limits<float>::max()), 
   mPionPtTOFMin(std::numeric_limits<float>::min()), mPionPtTOFMax(std::numeric_limits<float>::max()), 
+  mPionPtHybridTOFMin(std::numeric_limits<float>::min()), mPionPtHybridTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaKaonMax(3.), 
   mTOFDeltaOneOverBetaKaonMax(0.04), 
   mKaonPtMin(std::numeric_limits<float>::min()),  mKaonPtMax(std::numeric_limits<float>::max()), 
   mKaonPtTOFMin(std::numeric_limits<float>::min()), mKaonPtTOFMax(std::numeric_limits<float>::max()), 
+  mKaonPtHybridTOFMin(std::numeric_limits<float>::min()), mKaonPtHybridTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaProtonMax(3.), 
   mTOFDeltaOneOverBetaProtonMax(0.04), 
   mProtonPtMin(std::numeric_limits<float>::min()),  mProtonPtMax(std::numeric_limits<float>::max()), 
   mProtonPtTOFMin(std::numeric_limits<float>::min()), mProtonPtTOFMax(std::numeric_limits<float>::max()), 
+  mProtonPtHybridTOFMin(std::numeric_limits<float>::min()), mProtonPtHybridTOFMax(std::numeric_limits<float>::max()), 
 
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
   mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
@@ -75,16 +78,19 @@ StHFCuts::StHFCuts(const Char_t *name)
   mTOFDeltaOneOverBetaPionMax(0.04), 
   mPionPtMin(std::numeric_limits<float>::min()),  mPionPtMax(std::numeric_limits<float>::max()), 
   mPionPtTOFMin(std::numeric_limits<float>::min()), mPionPtTOFMax(std::numeric_limits<float>::max()), 
+  mPionPtHybridTOFMin(std::numeric_limits<float>::min()), mPionPtHybridTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaKaonMax(3.), 
   mTOFDeltaOneOverBetaKaonMax(0.04), 
   mKaonPtMin(std::numeric_limits<float>::min()),  mKaonPtMax(std::numeric_limits<float>::max()), 
   mKaonPtTOFMin(std::numeric_limits<float>::min()), mKaonPtTOFMax(std::numeric_limits<float>::max()), 
+  mKaonPtHybridTOFMin(std::numeric_limits<float>::min()), mKaonPtHybridTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaProtonMax(3.), 
   mTOFDeltaOneOverBetaProtonMax(0.04), 
   mProtonPtMin(std::numeric_limits<float>::min()),  mProtonPtMax(std::numeric_limits<float>::max()), 
   mProtonPtTOFMin(std::numeric_limits<float>::min()), mProtonPtTOFMax(std::numeric_limits<float>::max()), 
+  mProtonPtHybridTOFMin(std::numeric_limits<float>::min()), mProtonPtHybridTOFMax(std::numeric_limits<float>::max()), 
 
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
   mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
@@ -401,7 +407,7 @@ const float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
         StPhysicalHelixD helix = trk->helix();
         float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
         float tof = tofPid->btof();
-        beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : beta = std::numeric_limits<float>::quiet_NaN();
+        beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
       }
     }
   }
