@@ -106,7 +106,7 @@ Int_t StPicoD0AnaMaker::Make()
    // -------------- USER ANALYSIS -------------------------
    
    // check if good event (including bad run)
-   if(!mHFCuts->isGoodEvent(const_cast<const StPicoEvent*>(picoDst->event()), NULL)) 
+   if(!mHFCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL)) 
      return kStOk;
 
    TClonesArray const * aKaonPion = mPicoD0Event->kaonPionArray();
