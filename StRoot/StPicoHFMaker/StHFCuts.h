@@ -102,24 +102,18 @@ class StHFCuts : public TNamed
 
   void setCutTPCNSigmaPion(float f);
   void setCutPionPt(float min, float max);
-  void setCutPionEta(float min, float max);
-
   void setCutTOFNSigmaPion(float f);
   void setCutTOFDeltaOneOverBetaPion(float f);
   void setCutPionPtTOF(float min, float max);
 
   void setCutTPCNSigmaKaon(float f);
   void setCutKaonPt(float min, float max);
-  void setCutKaonEta(float min, float max);
-
   void setCutTOFNSigmaKaon(float f);
   void setCutTOFDeltaOneOverBetaKaon(float f);
   void setCutKaonPtTOF(float min, float max);
 
   void setCutTPCNSigmaProton(float f);
   void setCutProtonPt(float min, float max);
-  void setCutProtonEta(float min, float max);
-
   void setCutTOFNSigmaProton(float f);
   void setCutTOFDeltaOneOverBetaProton(float f);
   void setCutProtonPtTOF(float min, float max);
@@ -157,8 +151,6 @@ class StHFCuts : public TNamed
   const float     cutTOFNSigmaPion()            const;
   const float&    cutPionPtMin()                const;
   const float&    cutPionPtMax()                const;
-  const float&    cutPionEtaMin()               const;
-  const float&    cutPionEtaMax()               const;
   const float&    cutPionPtTOFMin()             const;
   const float&    cutPionPtTOFMax()             const;
 
@@ -167,8 +159,6 @@ class StHFCuts : public TNamed
   const float     cutTOFNSigmaKaon()            const;
   const float&    cutKaonPtMin()                const;
   const float&    cutKaonPtMax()                const;
-  const float&    cutKaonEtaMin()               const;
-  const float&    cutKaonEtaMax()               const;
   const float&    cutKaonPtTOFMin()             const;
   const float&    cutKaonPtTOFMax()             const;
 
@@ -177,8 +167,6 @@ class StHFCuts : public TNamed
   const float     cutTOFNSigmaProton()          const;
   const float&    cutProtonPtMin()              const;
   const float&    cutProtonPtMax()              const;
-  const float&    cutProtonEtaMin()             const;
-  const float&    cutProtonEtaMax()             const;
   const float&    cutProtonPtTOFMin()           const;
   const float&    cutProtonPtTOFMax()           const;
 
@@ -207,8 +195,8 @@ class StHFCuts : public TNamed
   const float&    cutSecondaryTripletMassMin()            const;
   const float&    cutSecondaryTripletMassMax()            const;
 
-
-  float getTofBeta(StPicoTrack const*) const;
+  // -- caluclate beta of track
+  const float getTofBeta(StPicoTrack const*) const;
 
  private:
   
@@ -245,8 +233,6 @@ class StHFCuts : public TNamed
   float mTOFDeltaOneOverBetaPionMax;
   float mPionPtMin;
   float mPionPtMax;
-  float mPionEtaMin;
-  float mPionEtaMax;
   float mPionPtTOFMin;
   float mPionPtTOFMax;
 
@@ -255,8 +241,6 @@ class StHFCuts : public TNamed
   float mTOFDeltaOneOverBetaKaonMax;
   float mKaonPtMin;
   float mKaonPtMax;
-  float mKaonEtaMin;
-  float mKaonEtaMax;
   float mKaonPtTOFMin;
   float mKaonPtTOFMax;
 
@@ -265,8 +249,6 @@ class StHFCuts : public TNamed
   float mTOFDeltaOneOverBetaProtonMax;
   float mProtonPtMin;
   float mProtonPtMax;
-  float mProtonEtaMin;
-  float mProtonEtaMax;
   float mProtonPtTOFMin;
   float mProtonPtTOFMax;
   
@@ -319,19 +301,16 @@ inline void StHFCuts::setCutTPCNSigmaPion(float f)             { mTPCNSigmaPionM
 inline void StHFCuts::setCutTOFNSigmaPion(float f)             { mTOFDeltaOneOverBetaPionMax = f*mTOFResolution;}
 inline void StHFCuts::setCutTOFDeltaOneOverBetaPion(float f)   { mTOFDeltaOneOverBetaPionMax = f;}
 inline void StHFCuts::setCutPionPt(float min, float max)       { mPionPtMin  = min; mPionPtMax  = max; }
-inline void StHFCuts::setCutPionEta(float min, float max)      { mPionEtaMin = min; mPionEtaMax = max; }
 inline void StHFCuts::setCutPionPtTOF(float min, float max)    { mPionPtTOFMin = min; mPionPtTOFMax = max; }
 inline void StHFCuts::setCutTPCNSigmaKaon(float f)             { mTPCNSigmaKaonMax = f; }
 inline void StHFCuts::setCutTOFNSigmaKaon(float f)             { mTOFDeltaOneOverBetaKaonMax = f*mTOFResolution;}
 inline void StHFCuts::setCutTOFDeltaOneOverBetaKaon(float f)   { mTOFDeltaOneOverBetaKaonMax = f;}
 inline void StHFCuts::setCutKaonPt(float min, float max)       { mKaonPtMin  = min; mKaonPtMax  = max; }
-inline void StHFCuts::setCutKaonEta(float min, float max)      { mKaonEtaMin = min; mKaonEtaMax = max; }
 inline void StHFCuts::setCutKaonPtTOF(float min, float max)    { mKaonPtTOFMin = min; mKaonPtTOFMax = max; }
 inline void StHFCuts::setCutTPCNSigmaProton(float f)           { mTPCNSigmaProtonMax = f; }
 inline void StHFCuts::setCutTOFNSigmaProton(float f)           { mTOFDeltaOneOverBetaProtonMax = f*mTOFResolution;}
 inline void StHFCuts::setCutTOFDeltaOneOverBetaProton(float f) { mTOFDeltaOneOverBetaProtonMax = f;}
 inline void StHFCuts::setCutProtonPt(float min, float max)     { mProtonPtMin  = min; mProtonPtMax  = max; }
-inline void StHFCuts::setCutProtonEta(float min, float max)    { mProtonEtaMin = min; mProtonEtaMax = max; }
 inline void StHFCuts::setCutProtonPtTOF(float min, float max)  { mProtonPtTOFMin = min; mProtonPtTOFMax = max; }
 
 inline void StHFCuts::setCutSecondaryPair(float dcaDaughtersMax, float decayLengthMin, float decayLengthMax, 
@@ -371,8 +350,6 @@ inline const float&    StHFCuts::cutTOFDeltaOneOverBetaPion()  const { return mT
 inline const float     StHFCuts::cutTOFNSigmaPion()            const { return mTOFDeltaOneOverBetaPionMax/mTOFResolution; }
 inline const float&    StHFCuts::cutPionPtMin()                const { return mPionPtMin; }
 inline const float&    StHFCuts::cutPionPtMax()                const { return mPionPtMax; }
-inline const float&    StHFCuts::cutPionEtaMin()               const { return mPionEtaMin; }
-inline const float&    StHFCuts::cutPionEtaMax()               const { return mPionEtaMax; }
 inline const float&    StHFCuts::cutPionPtTOFMin()             const { return mPionPtTOFMin; }
 inline const float&    StHFCuts::cutPionPtTOFMax()             const { return mPionPtTOFMax; }
 
@@ -381,8 +358,6 @@ inline const float&    StHFCuts::cutTOFDeltaOneOverBetaKaon()  const { return mT
 inline const float     StHFCuts::cutTOFNSigmaKaon()            const { return mTOFDeltaOneOverBetaKaonMax/mTOFResolution; }
 inline const float&    StHFCuts::cutKaonPtMin()                const { return mKaonPtMin; }
 inline const float&    StHFCuts::cutKaonPtMax()                const { return mKaonPtMax; }
-inline const float&    StHFCuts::cutKaonEtaMin()               const { return mKaonEtaMin; }
-inline const float&    StHFCuts::cutKaonEtaMax()               const { return mKaonEtaMax; }
 inline const float&    StHFCuts::cutKaonPtTOFMin()             const { return mKaonPtTOFMin; }
 inline const float&    StHFCuts::cutKaonPtTOFMax()             const { return mKaonPtTOFMax; }
 
@@ -391,8 +366,6 @@ inline const float&    StHFCuts::cutTOFDeltaOneOverBetaProton()const { return mT
 inline const float     StHFCuts::cutTOFNSigmaProton()          const { return mTOFDeltaOneOverBetaProtonMax/mTOFResolution; }
 inline const float&    StHFCuts::cutProtonPtMin()              const { return mProtonPtMin; }
 inline const float&    StHFCuts::cutProtonPtMax()              const { return mProtonPtMax; }
-inline const float&    StHFCuts::cutProtonEtaMin()             const { return mProtonEtaMin; }
-inline const float&    StHFCuts::cutProtonEtaMax()             const { return mProtonEtaMax; }
 inline const float&    StHFCuts::cutProtonPtTOFMin()           const { return mProtonPtTOFMin; }
 inline const float&    StHFCuts::cutProtonPtTOFMax()           const { return mProtonPtTOFMax; }
 
