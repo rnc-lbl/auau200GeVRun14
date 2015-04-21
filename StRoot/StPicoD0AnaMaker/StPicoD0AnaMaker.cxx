@@ -54,6 +54,7 @@ Int_t StPicoD0AnaMaker::Init()
 
    if (!mHFCuts)
     mHFCuts = new StHFCuts;   
+   mHFCuts->init();
 
    // -------------- USER VARIABLES -------------------------
    
@@ -103,6 +104,11 @@ Int_t StPicoD0AnaMaker::Make()
    }
 
    // -------------- USER ANALYSIS -------------------------
+   
+   // check if good event (including bad run)
+   if(!mHFCuts->isGoodEvent(const_cast<const StPicoEvent*>(picoDst->event()), NULL)) 
+     return kStOk;
+
    TClonesArray const * aKaonPion = mPicoD0Event->kaonPionArray();
 
    for (int idx = 0; idx < aKaonPion->GetEntries(); ++idx)
