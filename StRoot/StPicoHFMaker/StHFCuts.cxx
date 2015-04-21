@@ -12,9 +12,12 @@
 #include "StPhysicalHelixD.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
+#include "StBTofUtil/tofPathLength.hh"
 
+#include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoEvent.h"
+#include "StPicoDstMaker/StPicoBTofPidTraits.h"
 
 #include "StHFPair.h"
 #include "StHFTriplet.h"
@@ -23,7 +26,7 @@ ClassImp(StHFCuts)
 
 // _________________________________________________________
 StHFCuts::StHFCuts() 
-: TNamed("HFCutsBase", "HFCutsBase"), mEventStatMax(7), mTOFResolution(0.013),
+: TNamed("HFCutsBase", "HFCutsBase"), mPicoDst(NULL), mEventStatMax(7), mTOFResolution(0.013),
   mBadRunListFileName("picoList_bad_MB.list"), 
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
@@ -63,7 +66,7 @@ StHFCuts::StHFCuts()
 
 // _________________________________________________________
 StHFCuts::StHFCuts(const Char_t *name) 
-: TNamed(name, name), mEventStatMax(7), mTOFResolution(0.013),
+: TNamed(name, name), mPicoDst(NULL), mEventStatMax(7), mTOFResolution(0.013),
   mBadRunListFileName("picoList_bad_MB.list"), 
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
@@ -132,9 +135,17 @@ void StHFCuts::init() {
 }
 
 // _________________________________________________________
-bool StHFCuts::isGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts = NULL) {
+bool StHFCuts::isGoodEvent(StPicoDst const * const picoDst, int *aEventCuts = NULL) {
+  // -- method to check if good event
+  //    sets also mPicoDst and mPrimVtx
+  
+  // -- set current mPicoDst 
+  mPicoDst = picoDst;
 
-  // -- get actual primary vertex
+  // -- get picoDst event
+  StPicoEvent* picoEvent = mPicoDst->event();
+
+  // -- set current primary vertex
   mPrimVtx = picoEvent->primaryVertex();
 
   // -- quick method without providing stats
@@ -373,7 +384,7 @@ bool StHFCuts::isGoodSecondaryVertexTriplet(StHFTriplet const & triplet) const {
 }
 
 // _________________________________________________________
-float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
+const float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
   // -- provide beta of TOF for pico track
 
   float beta = std::numeric_limits<float>::quiet_NaN();
@@ -381,14 +392,14 @@ float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
   int index2tof = trk->bTofPidTraitsIndex();
   if(index2tof >= 0) {
 
-    StPicoBTofPidTraits *tofPid = mPicoDstMaker->picoDst()->btofPidTraits(index2tof);
+    StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(index2tof);
     if(tofPid) {
       beta = tofPid->btofBeta();
       
       if (beta < 1e-4) {
         StThreeVectorF const btofHitPos = tofPid->btofHitPos();
         StPhysicalHelixD helix = trk->helix();
-        float pathLength = tofPathLength(mPrimVtx, &btofHitPos, helix.curvature());
+        float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
         float tof = tofPid->btof();
         beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : beta = std::numeric_limits<float>::quiet_NaN();
       }

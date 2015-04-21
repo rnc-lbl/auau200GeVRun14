@@ -28,6 +28,7 @@
 
 class StPicoTrack;
 class StPicoEvent;
+class StPicoDst;
 
 class StHFPair;
 class StHFTriplet;
@@ -44,7 +45,7 @@ class StHFCuts : public TNamed
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
-  bool isGoodEvent(StPicoEvent const * const event, int *aEventCuts);
+  bool isGoodEvent(StPicoDst const * const picoDst, int *aEventCuts);
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
@@ -203,7 +204,8 @@ class StHFCuts : public TNamed
   StHFCuts(StHFCuts const &);       
   StHFCuts& operator=(StHFCuts const &); 
 
-  StThreeVectorF mPrimVtx;      // primary vertex of current event
+  StThreeVectorF    mPrimVtx;   // primary vertex of current event
+  const StPicoDst*  mPicoDst;   //! ptr to picoDst
 
   unsigned int mEventStatMax;   // number of event cuts
   
