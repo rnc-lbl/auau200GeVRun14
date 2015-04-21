@@ -92,8 +92,6 @@ class StPicoHFMaker : public StMaker
     unsigned int isDecayMode();
     unsigned int isMakerMode();
 
-    float getTofBeta(StPicoTrack const*) const;
-
     // -- protected members ------------------------
 
     StPicoDst      *mPicoDst;

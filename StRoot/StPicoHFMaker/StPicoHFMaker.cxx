@@ -25,7 +25,7 @@ ClassImp(StPicoHFMaker)
 
 // _________________________________________________________
 StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
-				       char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
+			     char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
   StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
   mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), 
   mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
@@ -293,18 +293,6 @@ bool StPicoHFMaker::setupEvent() {
   fillEventStats(aEventStat);
 
   return bResult;
-}
-
-// _________________________________________________________
-float StPicoHFMaker::getTofBeta(StPicoTrack const * const trk) const {
-  // -- provide beta of TOF for pico track
-
-  if (Int_t const index2tof = trk->bTofPidTraitsIndex() >= 0) {
-    if (StPicoBTofPidTraits const* tofPid = mPicoDst->btofPidTraits(index2tof))
-      return tofPid->btofBeta();
-  }
-  
-  return  0.;
 }
 
 // _________________________________________________________
