@@ -285,7 +285,7 @@ bool StPicoHFMaker::setupEvent() {
   
   int aEventStat[mHFCuts->eventStatMax()];
   
-  bool bResult = mHFCuts->isGoodEvent(mPicoEvent, aEventStat);
+  bool bResult = mHFCuts->isGoodEvent(mPicoDst, aEventStat);
 
   // -- fill event statistics histograms
   fillEventStats(aEventStat);
