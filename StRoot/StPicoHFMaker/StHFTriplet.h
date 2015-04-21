@@ -9,10 +9,14 @@
  *                  StPicoTrack const * particle3, ...
  *
  * **************************************************
- *  Authors:  Xin Dong        (xdong@lbl.gov)
- *            Michael Lomnitz (mrlomnitz@lbl.gov)
+ *
+ *  Initial Authors:                                                                                                                       
+ *            Xin Dong        (xdong@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
- *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *            Jochen Thaeder  (jmthader@lbl.gov)
+ *          **Michael Lomnitz (mrlomnitz@lbl.gov)
+ *
+ *  ** Code Maintainer    
  *
  * **************************************************
  */
