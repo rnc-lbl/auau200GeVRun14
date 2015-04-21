@@ -217,10 +217,9 @@ Int_t StPicoHFMaker::Make() {
 	
 	if (!trk || !mHFCuts->isGoodTrack(trk)) continue;
 
-	float const beta = getTofBeta(trk);
-	if (isPion(trk, beta))   mIdxPicoPions.push_back(iTrack);   // isPion method to be implemented by daughter class
-	if (isKaon(trk, beta))   mIdxPicoKaons.push_back(iTrack);   // isKaon method to be implemented by daughter class
-	if (isProton(trk, beta)) mIdxPicoProtons.push_back(iTrack); // isProton method to be implemented by daughter class
+	if (isPion(trk))   mIdxPicoPions.push_back(iTrack);   // isPion method to be implemented by daughter class
+	if (isKaon(trk))   mIdxPicoKaons.push_back(iTrack);   // isKaon method to be implemented by daughter class
+	if (isProton(trk)) mIdxPicoProtons.push_back(iTrack); // isProton method to be implemented by daughter class
       
       } // .. end tracks loop
     } // if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyze) {
