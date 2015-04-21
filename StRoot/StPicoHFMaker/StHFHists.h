@@ -2,13 +2,17 @@
 #define StHFHists__h
 
 /* **************************************************
- *  A class to create and save D0 production QA
+ *  A class to create and save production QA
  *  histograms.
  *
- *  Authors:  Xin Dong        (xdong@lbl.gov)
- *            Michael Lomnitz (mrlomnitz@lbl.gov)
+ * **************************************************
+ *
+ *  Initial Authors:
+ *            Xin Dong        (xdong@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
- *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *          **Giacomo Contin  (gcontin@lbl.gov)
+ *
+ *  ** Code Maintainer
  *
  * **************************************************
  */
