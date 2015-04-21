@@ -23,25 +23,25 @@ ClassImp(StHFCuts)
 
 // _________________________________________________________
 StHFCuts::StHFCuts() 
-: TNamed("HFCutsBase", "HFCutsBase"), mEventStatMax(7),  
+: TNamed("HFCutsBase", "HFCutsBase"), mEventStatMax(7), mTOFResolution(0.013),
   mBadRunListFileName("picoList_bad_MB.list"), 
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
   
-  mTPCNSigmaPionMax(3.), 
-  mTOFNSigmaPionMax(3.), 
+  mTPCNSigmaPionMax(3.),
+  mTOFDeltaOneOverBetaPionMax(0.04), 
   mPionPtMin(std::numeric_limits<float>::min()),  mPionPtMax(std::numeric_limits<float>::max()), 
   mPionEtaMin(std::numeric_limits<float>::min()), mPionEtaMax(std::numeric_limits<float>::max()), 
   mPionPtTOFMin(std::numeric_limits<float>::min()), mPionPtTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaKaonMax(3.), 
-  mTOFNSigmaKaonMax(3.), 
+  mTOFDeltaOneOverBetaKaonMax(0.04), 
   mKaonPtMin(std::numeric_limits<float>::min()),  mKaonPtMax(std::numeric_limits<float>::max()), 
   mKaonEtaMin(std::numeric_limits<float>::min()), mKaonEtaMax(std::numeric_limits<float>::max()), 
   mKaonPtTOFMin(std::numeric_limits<float>::min()), mKaonPtTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaProtonMax(3.), 
-  mTOFNSigmaProtonMax(3.), 
+  mTOFDeltaOneOverBetaProtonMax(0.04), 
   mProtonPtMin(std::numeric_limits<float>::min()),  mProtonPtMax(std::numeric_limits<float>::max()), 
   mProtonEtaMin(std::numeric_limits<float>::min()), mProtonEtaMax(std::numeric_limits<float>::max()), 
   mProtonPtTOFMin(std::numeric_limits<float>::min()), mProtonPtTOFMax(std::numeric_limits<float>::max()), 
@@ -66,25 +66,25 @@ StHFCuts::StHFCuts()
 
 // _________________________________________________________
 StHFCuts::StHFCuts(const Char_t *name) 
-: TNamed(name, name), mEventStatMax(6),
+: TNamed(name, name), mEventStatMax(7), mTOFResolution(0.013),
   mBadRunListFileName("picoList_bad_MB.list"), 
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
   
   mTPCNSigmaPionMax(3.), 
-  mTOFNSigmaPionMax(3.), 
+  mTOFDeltaOneOverBetaPionMax(0.04), 
   mPionPtMin(std::numeric_limits<float>::min()),  mPionPtMax(std::numeric_limits<float>::max()), 
   mPionEtaMin(std::numeric_limits<float>::min()), mPionEtaMax(std::numeric_limits<float>::max()), 
   mPionPtTOFMin(std::numeric_limits<float>::min()), mPionPtTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaKaonMax(3.), 
-  mTOFNSigmaKaonMax(3.), 
+  mTOFDeltaOneOverBetaKaonMax(0.04), 
   mKaonPtMin(std::numeric_limits<float>::min()),  mKaonPtMax(std::numeric_limits<float>::max()), 
   mKaonEtaMin(std::numeric_limits<float>::min()), mKaonEtaMax(std::numeric_limits<float>::max()), 
   mKaonPtTOFMin(std::numeric_limits<float>::min()), mKaonPtTOFMax(std::numeric_limits<float>::max()), 
 
   mTPCNSigmaProtonMax(3.), 
-  mTOFNSigmaProtonMax(3.), 
+  mTOFDeltaOneOverBetaProtonMax(0.04), 
   mProtonPtMin(std::numeric_limits<float>::min()),  mProtonPtMax(std::numeric_limits<float>::max()), 
   mProtonEtaMin(std::numeric_limits<float>::min()), mProtonEtaMax(std::numeric_limits<float>::max()), 
   mProtonPtTOFMin(std::numeric_limits<float>::min()), mProtonPtTOFMax(std::numeric_limits<float>::max()), 
@@ -139,6 +139,9 @@ void StHFCuts::init() {
 
 // _________________________________________________________
 bool StHFCuts::isGoodEvent(StPicoEvent const * const picoEvent, int *aEventCuts = NULL) {
+
+  // -- get actual primary vertex
+  mPrimVtx = picoEvent->primaryVertex();
 
   // -- quick method without providing stats
   if (!aEventCuts) {
@@ -203,6 +206,8 @@ bool StHFCuts::isGoodTrack(StPicoTrack const * const trk) const {
 	  trk->nHitsFit() >= mNHitsFitMax);
 }
 
+// =======================================================================
+
 // _________________________________________________________
 bool StHFCuts::isTPCPion(StPicoTrack const * const trk) const {
   // -- check for good pion in TPC
@@ -227,42 +232,109 @@ bool StHFCuts::isTPCProton(StPicoTrack const * const trk) const {
 	   fabs(trk->nSigmaProton()) < mTPCNSigmaProtonMax );
 }
 
+// =======================================================================
+
 // _________________________________________________________
-bool StHFCuts::isTOFPion(StPicoTrack const *trk, float const & bTofBeta) const {
+bool StHFCuts::isTOFPion(StPicoTrack const *trk) const {
+  // -- check for good pion in TOF - in a different pT range than for TPC
+  //    if no TOF information on track return false;
+
+  float tofBeta = getTofBeta(trk);
+  return isTOFPion(trk, tofBeta);
+}
+
+// _________________________________________________________
+bool StHFCuts::isHybridTOFPion(StPicoTrack const *trk) const {
+  // -- check for good pion in TOF - in a different pT range than for TPC
+  //    if no TOF information on track return true;
+
+  float tofBeta = getTofBeta(trk);
+  return (tofBeta > 0) ? isTOFPion(trk, tofBeta) : true;
+}
+
+// _________________________________________________________
+bool StHFCuts::isTOFPion(StPicoTrack const *trk, float const & tofBeta) const {
   // -- check for good pion in TOF - in a different pT range than for TPC
 
-  // TOF calculations
-  float const ptot = trk->pMom().mag();
-  float const beta_pi = ptot/sqrt(ptot*ptot+M_PION_PLUS*M_PION_PLUS);
-  float const TofPi=1/bTofBeta - 1/beta_pi;
-  return ( trk->pMom().perp() >= mPionPtTOFMin && trk->pMom().perp() < mPionPtTOFMax &&
-	   fabs(TofPi) < mTOFNSigmaPionMax );
+  if (tofBeta <= 0) 
+    return false;
+
+  double ptot = trk->dcaGeometry().momentum().mag();
+  float  beta = ptot/sqrt(ptot*ptot+M_PION_PLUS*M_PION_PLUS);
+  bool isParticle = (fabs(1/tofBeta - 1/beta) < mTOFDeltaOneOverBetaPionMax) ? true : false;
+    
+  return (trk->gPt() >= mPionPtTOFMin && trk->gPt() < mPionPtTOFMax && isParticle);
+}
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+// _________________________________________________________
+bool StHFCuts::isTOFKaon(StPicoTrack const *trk) const {
+  // -- check for good kaon in TOF - in a different pT range than for TPC
+  //    if no TOF information on track return false;
+
+  float tofBeta = getTofBeta(trk);
+  return isTOFKaon(trk, tofBeta);
 }
 
 // _________________________________________________________
-bool StHFCuts::isTOFKaon(StPicoTrack const *trk, float const & bTofBeta) const {
+bool StHFCuts::isHybridTOFKaon(StPicoTrack const *trk) const {
+  // -- check for good kaon in TOF - in a different pT range than for TPC
+  //    if no TOF information on track return true;
+
+  float tofBeta = getTofBeta(trk);
+  return (tofBeta > 0) ? isTOFKaon(trk, tofBeta) : true;
+}
+
+// _________________________________________________________
+bool StHFCuts::isTOFKaon(StPicoTrack const *trk, float const & tofBeta) const {
   // -- check for good kaon in TOF - in a different pT range than for TPC
 
-  // -- TOF calculations
-  float const ptot = trk->pMom().mag();
-  float const beta_k = ptot/sqrt(ptot*ptot+M_KAON_PLUS*M_KAON_PLUS);
-  float const Tofk=1/bTofBeta - 1/beta_k;
-  return ( trk->pMom().perp() >= mKaonPtTOFMin && trk->pMom().perp() < mKaonPtTOFMax &&
-	   fabs(Tofk) < mTOFNSigmaKaonMax );
+  if (tofBeta <= 0) 
+    return false;
 
+  double ptot = trk->dcaGeometry().momentum().mag();
+  float  beta = ptot/sqrt(ptot*ptot+M_KAON_PLUS*M_KAON_PLUS);
+  bool isParticle = (fabs(1/tofBeta - 1/beta) < mTOFDeltaOneOverBetaKaonMax) ? true : false;
+ 
+  return (trk->gPt() >= mKaonPtTOFMin && trk->gPt() < mKaonPtTOFMax && isParticle);
+}
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+// _________________________________________________________
+bool StHFCuts::isTOFProton(StPicoTrack const *trk) const {
+  // -- check for good proton in TOF - in a different pT range than for TPC
+  //    if no TOF information on track return false;
+
+  float tofBeta = getTofBeta(trk);
+  return isTOFProton(trk, tofBeta);
 }
 
 // _________________________________________________________
-bool StHFCuts::isTOFProton(StPicoTrack const *trk, float const & bTofBeta) const {
+bool StHFCuts::isHybridTOFProton(StPicoTrack const *trk) const {
+  // -- check for good proton in TOF - in a different pT range than for TPC
+  //    if no TOF information on track return true;
+
+  float tofBeta = getTofBeta(trk);
+  return (tofBeta > 0) ? isTOFProton(trk, tofBeta) : true;
+}
+
+// _________________________________________________________
+bool StHFCuts::isTOFProton(StPicoTrack const *trk, float const & tofBeta) const {
   // -- check for good proton in TOF - in a different pT range than for TPC
 
-  // -- TOF Calculations
-  float const ptot = trk->pMom().mag() ;
-  float const beta_p = ptot/sqrt(ptot*ptot+M_PROTON*M_PROTON);
-  float const Tofp=1/bTofBeta - 1/beta_p;
-  return ( trk->pMom().perp() >= mProtonPtTOFMin && trk->pMom().perp() < mProtonPtTOFMax &&
-	   fabs(Tofp) < mTOFNSigmaProtonMax );
+  if (tofBeta <= 0) 
+    return false;
+
+  double ptot = trk->dcaGeometry().momentum().mag();
+  float  beta = ptot/sqrt(ptot*ptot+M_PROTON*M_PROTON);
+  bool isParticle = (fabs(1/tofBeta - 1/beta) < mTOFDeltaOneOverBetaProtonMax) ? true : false;
+ 
+  return (trk->gPt() >= mProtonPtTOFMin && trk->gPt() < mProtonPtTOFMax && isParticle);
 }
+
+// =======================================================================
 
 // _________________________________________________________
 bool StHFCuts::isClosePair(StHFPair const & pair) const {
@@ -304,6 +376,32 @@ bool StHFCuts::isGoodSecondaryVertexTriplet(StHFTriplet const & triplet) const {
 	   triplet.dcaDaughters12() < mSecondaryTripletDcaDaughters12Max &&
 	   triplet.dcaDaughters23() < mSecondaryTripletDcaDaughters23Max &&
 	   triplet.dcaDaughters31() < mSecondaryTripletDcaDaughters31Max);
+}
+
+// _________________________________________________________
+float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
+  // -- provide beta of TOF for pico track
+
+  float beta = std::numeric_limits<float>::quiet_NaN();
+  
+  int index2tof = trk->bTofPidTraitsIndex();
+  if(index2tof >= 0) {
+
+    StPicoBTofPidTraits *tofPid = mPicoDstMaker->picoDst()->btofPidTraits(index2tof);
+    if(tofPid) {
+      beta = tofPid->btofBeta();
+      
+      if (beta < 1e-4) {
+        StThreeVectorF const btofHitPos = tofPid->btofHitPos();
+        StPhysicalHelixD helix = trk->helix();
+        float pathLength = tofPathLength(mPrimVtx, &btofHitPos, helix.curvature());
+        float tof = tofPid->btof();
+        beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : beta = std::numeric_limits<float>::quiet_NaN();
+      }
+    }
+  }
+  
+  return beta;
 }
 
 #endif // __ROOT__
