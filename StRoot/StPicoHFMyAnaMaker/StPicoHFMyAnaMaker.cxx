@@ -46,8 +46,8 @@ int StPicoHFMyAnaMaker::InitHF() {
 }
 
 // _________________________________________________________
-int StPicoHFMyAnaMaker::ClearHF() {
-  return kStOK;
+void StPicoHFMyAnaMaker::ClearHF(Option_t *opt="") {
+  return;
 }
 
 // _________________________________________________________
@@ -139,20 +139,20 @@ int StPicoHFMyAnaMaker::analyzeCandidates() {
 }
 
 // _________________________________________________________
-bool StPicoHFMyAnaMaker::isPion(StPicoTrack const * const trk, float const & tofBeta = 0) const {
-  // -- good proton
+bool StPicoHFMyAnaMaker::isPion(StPicoTrack const * const trk) const {
+  // -- good pion
   return true;
 }
 
 // _________________________________________________________
-bool StPicoHFMyAnaMaker::isKaon(StPicoTrack const * const trk, float const & tofBeta = 0) const {
+bool StPicoHFMyAnaMaker::isKaon(StPicoTrack const * const trk) const {
   // -- good kaon
   return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCKaon(trk));
 } 
 
 // _________________________________________________________
-bool StPicoHFMyAnaMaker::isProton(StPicoTrack const * const trk, float const & tofBeta = 0) const {
+bool StPicoHFMyAnaMaker::isProton(StPicoTrack const * const trk) const {
   // -- good proton
-  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCProton(trk));
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCProton(trk) && mHFCuts->isTOFProton(trk));
 }
 
