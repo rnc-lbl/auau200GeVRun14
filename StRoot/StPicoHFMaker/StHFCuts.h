@@ -128,6 +128,8 @@ class StHFCuts : public TNamed
   void setCutRequireHFT(bool b);
   void setCutNHitsFitnHitsMax(float f);
 
+  void setCutPrimaryDCAtoVtxMax(float f);
+
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
   void setCutPtRange(float min, float max, int pidFlag);
@@ -213,7 +215,7 @@ class StHFCuts : public TNamed
   float        mTOFResolution;  // TOF resolution = 0.013
 
   // -- bad run list
-  TString          mBadRunListFileName;
+  TString mBadRunListFileName;
   std::vector<int> mVecBadRunList;
 
   // -- event cuts
@@ -225,6 +227,8 @@ class StHFCuts : public TNamed
   int   mNHitsFitMax;
   bool  mRequireHFT;
   float mNHitsFitnHitsMax; // applied in StPicoDstMaker for Run14 data, no need to reapply here
+
+  float mPrimaryDCAtoVtxMax;         // used for primary selection for TOF Beta recalculation
 
   // -- acceptance - per particle type [eHFPID]
   float mPtRange[3][2];
@@ -276,14 +280,15 @@ class StHFCuts : public TNamed
 
 inline void StHFCuts::setBadRunListFileName(const char* fileName) { mBadRunListFileName = fileName; }
 
-inline void StHFCuts::setCutVzMax(float f)            { mVzMax            = f; }
-inline void StHFCuts::setCutVzVpdVzMax(float f)       { mVzVpdVzMax       = f; }
-inline void StHFCuts::setCutTriggerWord(UShort_t us)  { mTriggerWord      = us; }
+inline void StHFCuts::setCutVzMax(float f)              { mVzMax            = f; }
+inline void StHFCuts::setCutVzVpdVzMax(float f)         { mVzVpdVzMax       = f; }
+inline void StHFCuts::setCutTriggerWord(UShort_t us)    { mTriggerWord      = us; }
 
-inline void StHFCuts::setCutNHitsFitMax(int i)        { mNHitsFitMax      = i; }
-inline void StHFCuts::setCutRequireHFT(bool b)        { mRequireHFT       = b; }
-inline void StHFCuts::setCutNHitsFitnHitsMax(float f) { mNHitsFitnHitsMax = f; }
+inline void StHFCuts::setCutNHitsFitMax(int i)          { mNHitsFitMax      = i; }
+inline void StHFCuts::setCutRequireHFT(bool b)          { mRequireHFT       = b; }
+inline void StHFCuts::setCutNHitsFitnHitsMax(float f)   { mNHitsFitnHitsMax = f; }
 
+inline void StHFCuts::setCutPrimaryDCAtoVtxMax(float f) { mPrimaryDCAtoVtxMax = f; }
 
 inline void StHFCuts::setCutPtRange(float min, float max, int pidFlag)            { mPtRange[pidFlag][0] = min; 
                                                                                     mPtRange[pidFlag][1] = max; }

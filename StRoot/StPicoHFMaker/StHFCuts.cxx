@@ -28,7 +28,7 @@ StHFCuts::StHFCuts()
 : TNamed("HFCutsBase", "HFCutsBase"), mPicoDst(NULL), mEventStatMax(7), mTOFResolution(0.013),
   mBadRunListFileName("picoList_bad_MB.list"), 
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
-  mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
+  mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0),
   
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
   mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
@@ -71,7 +71,7 @@ StHFCuts::StHFCuts(const Char_t *name)
 : TNamed(name, name), mPicoDst(NULL), mEventStatMax(7), mTOFResolution(0.013),
   mBadRunListFileName("picoList_bad_MB.list"), 
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
-  mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52),
+  mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0),
   
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
   mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
@@ -335,9 +335,16 @@ const float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
   //    use for 
   //      - primary hadrons 
   //      - secondarys from charm decays (as an approximation)
-  
+  //    -> apply DCA cut for primaries
+
   float beta = std::numeric_limits<float>::quiet_NaN();
+
+  StPhysicalHelixD helix = trk->helix();
   
+  // -- dca cut to primary vertex to make sure only primaries or secondary HF decays are used
+  if ((helix.origin() - mPrimVtx).mag() < mPrimaryDCAtoVtxMax)
+    return beta;
+    
   int index2tof = trk->bTofPidTraitsIndex();
   if(index2tof >= 0) {
 
@@ -347,7 +354,6 @@ const float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
       
       if (beta < 1e-4) {
         StThreeVectorF const btofHitPos = tofPid->btofHitPos();
-        StPhysicalHelixD helix = trk->helix();
         float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
         float tof = tofPid->btof();
         beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
