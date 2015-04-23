@@ -230,8 +230,17 @@ bool StHFCuts::isGoodTrack(StPicoTrack const * const trk) const {
 bool StHFCuts::isTPCHadron(StPicoTrack const * const trk, int pidFlag) const {
   // -- check for good hadron in TPC
 
+  float nSigma = std::numeric_limits<float>::quiet_NaN();
+
+  if (pidFlag == kPion)
+    fabs(trk->nSigmaPion());
+  else if (pidFlag == kKaon)
+    fabs(trk->nSigmaKaon());
+  if (pidFlag == kProton)
+    fabs(trk->nSigmaProton());
+
   return ( trk->gPt() >= mPtRange[pidFlag][0] && trk->gPt() < mPtRange[pidFlag][1] &&
-	   fabs(trk->nSigmaPion()) < mTPCNSigmaMax[pidFlag] );
+	   nSigma < mTPCNSigmaMax[pidFlag] );
 }
 
 // _________________________________________________________
@@ -337,9 +346,8 @@ bool StHFCuts::isGoodSecondaryVertexTriplet(StHFTriplet const & triplet) const {
 
 // =======================================================================
 
-
 // _________________________________________________________
-const float StHFCuts::getTofBetaBase(StPicoTrack const * const trk) const {
+float StHFCuts::getTofBetaBase(StPicoTrack const * const trk) const {
   // -- provide beta of TOF for pico track
   //    use for 
   //      - primary hadrons 
@@ -368,7 +376,7 @@ const float StHFCuts::getTofBetaBase(StPicoTrack const * const trk) const {
 }
 
 // _________________________________________________________
-const float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
+float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
   // -- provide beta of TOF for pico track
   //    use for 
   //      - primary hadrons 
@@ -380,8 +388,8 @@ const float StHFCuts::getTofBeta(StPicoTrack const * const trk) const {
 }
 
 // _________________________________________________________
-const float StHFCuts::getTofBeta(StPicoTrack const * const trk, 
-				 StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx) const {
+float StHFCuts::getTofBeta(StPicoTrack const * const trk, 
+			   StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx) const {
   // -- provide correced beta of TOF for pico track
   //    use for 
   //      - secondarys 
@@ -415,9 +423,9 @@ const float StHFCuts::getTofBeta(StPicoTrack const * const trk,
 }
 
 // _________________________________________________________
-const float StHFCuts::getTofBeta(StPicoTrack const * const trk, 
-				 StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx, 
-				 StLorentzVectorF const & tertiaryMother, StThreeVectorF const & tertiaryVtx) const {
+float StHFCuts::getTofBeta(StPicoTrack const * const trk, 
+			   StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx, 
+			   StLorentzVectorF const & tertiaryMother, StThreeVectorF const & tertiaryVtx) const {
   // -- provide correced beta of TOF for pico track
   //    use for 
   //      - tertiaries 
