@@ -27,7 +27,9 @@
 
 #include "TObject.h"
 #include "TClonesArray.h"
+
 #include "StLorentzVectorF.hh"
+#include "StThreeVectorF.hh"
 
 class StPicoTrack;
 
@@ -51,6 +53,7 @@ class StHFPair : public TObject
   
 
   StLorentzVectorF const & lorentzVector() const;
+  StThreeVectorF const & decayVertex() const;
   float m()    const;
   float pt()   const;
   float eta()  const;
@@ -78,6 +81,7 @@ class StHFPair : public TObject
   StHFPair(StHFPair const &);
   StHFPair& operator=(StHFPair const &);
   StLorentzVectorF mLorentzVector; 
+  StThreeVectorF   mDecayVertex; 
 
   float mPointingAngle;
   float mDecayLength;
@@ -90,11 +94,7 @@ class StHFPair : public TObject
   float mDcaDaughters;
   float mCosThetaStar;
 
-  float mV0x; // reconstructed vertex pos
-  float mV0y;
-  float mV0z;
-  
-  ClassDef(StHFPair,1)
+  ClassDef(StHFPair,2)
 };
 inline StLorentzVectorF const & StHFPair::lorentzVector() const { return mLorentzVector;}
 inline float StHFPair::m()    const { return mLorentzVector.m();}
@@ -112,8 +112,9 @@ inline unsigned short StHFPair::particle1Idx() const { return mParticle1Idx;}
 inline unsigned short StHFPair::particle2Idx() const { return mParticle2Idx;}
 inline float StHFPair::dcaDaughters() const { return mDcaDaughters;}
 inline float StHFPair::cosThetaStar() const { return mCosThetaStar;}
-inline float StHFPair::v0x() const { return mV0x;}
-inline float StHFPair::v0y() const { return mV0y;}
-inline float StHFPair::v0z() const { return mV0z;}
+inline StThreeVectorF const & StHFPair::decayVertex() const { return mDecayVertex;}
+inline float StHFPair::v0x() const { return mDecayVertex.x();}
+inline float StHFPair::v0y() const { return mDecayVertex.y();}
+inline float StHFPair::v0z() const { return mDecayVertex.z();}
 #endif
 
