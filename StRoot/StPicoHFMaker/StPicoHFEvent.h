@@ -10,11 +10,11 @@
  *   - StPicoHFEvent::kTwoAndTwoParticleDecay ->  two particle decay at secondary vertex (A -> B + C)
  *                                                and two particle decay at tertiary vertex (C -> D + E)
  *
- *  Initial Authors:                                                                                                                       
- *            Xin Dong        (xdong@lbl.gov)                                                                                              
- *            Mustafa Mustafa (mmustafa@lbl.gov)                                                                                           
- *          **Jochen Thaeder  (jmthader@lbl.gov)                                                                                           
- *                                                                                                                                         
+ *  Initial Authors:
+ *            Xin Dong        (xdong@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *          **Jochen Thaeder  (jmthader@lbl.gov)
+ *
  *  ** Code Maintainer 
  *
  * **************************************************
