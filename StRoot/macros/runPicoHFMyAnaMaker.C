@@ -23,19 +23,33 @@
  * **************************************************
  */
 
-#include <TSystem>
+#include "TROOT.h"
+#include "TSystem.h"
 #include "TChain.h"
 
-#include "../StPicoHFMaker/StHFCuts.h"
 
-class StMaker;
+# ifndef __CINT__
+
+#include "StMaker.h"
+#include "StChain.h"
+
+#include "StMuDSTMaker/COMMON/macros/loadSharedLibraries.C"
+
+#include "StPicoDstMaker/StPicoDstMaker.h"
+#include "StPicoHFMaker/StPicoHFEvent.h"
+#include "StPicoHFMaker/StHFCuts.h"
+
+#include "StPicoHFMyAnaMaker/StPicoHFMyAnaMaker.h"
+
+#else
 class StChain;
-class StPicoDstMaker;
+#endif
+
 
 StChain *chain;
 
 void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 0 /*kAnalyze*/, 
-			 const Char_t * badRunListFileName = "picoList_bad_MB.list") { 
+			 const Char_t *badRunListFileName = "picoList_bad_MB.list") { 
   // -- Check STAR Library. Please set SL_version to the original star library used in the production 
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL15c";
@@ -49,7 +63,8 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
 	
   gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
   loadSharedLibraries();
-  
+
+  gSystem->Load("StBTofUtil");
   gSystem->Load("StPicoDstMaker");
   gSystem->Load("StPicoPrescales");
   gSystem->Load("StPicoHFMaker");
@@ -62,7 +77,6 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   // ========================================================================================
   
   cout << "Maker Mode    " << makerMode << endl;
-  cout << "Decay Channel " << decayChannel << endl; 
 
   TString sInputFile(inputFile);
   TString sInputListHF("");  
