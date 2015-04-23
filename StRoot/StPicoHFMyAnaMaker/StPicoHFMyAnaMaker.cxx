@@ -4,7 +4,6 @@
 
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
-#include "phys_constants.h"
 
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
@@ -98,9 +97,11 @@ int StPicoHFMyAnaMaker::createCandidates() {
 	if (mIdxPicoKaons[idxKaon] == mIdxPicoPions[idxPion]) 
 	  continue;
       
-	StHFPair pair(kaon, pion, M_KAON_PLUS, M_PION_PLUS, mIdxPicoKaons[idxKaon], mIdxPicoPions[idxPion], mPrimVtx, mBField);
+	StHFPair pair(kaon, pion,
+		      mHFCuts->getHypotheticalMass(StHFCuts::kKaon), mHFCuts->getHypotheticalMass(StHFCuts::kPion),
+		      mIdxPicoKaons[idxKaon], mIdxPicoPions[idxPion], mPrimVtx, mBField);
 	if (!mHFCuts->isGoodSecondaryVertexPair(pair)) 
-	    continue;
+	  continue;
 	mPicoHFEvent->addHFSecondaryVertexPair(&pair);
 	
       } // for (unsigned short idxPion = 0; idxPion < mIdxPicoPions.size(); ++idxPion) {

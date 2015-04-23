@@ -4,7 +4,6 @@
 #include "TFile.h"
 #include "TChain.h"
 
-#include "phys_constants.h"
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
 #include "StPicoDstMaker/StPicoDst.h"
@@ -258,7 +257,8 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
       if (mIdxPicoPions[idxPion1] == mIdxPicoPions[idxPion2]) 
 	continue;
 
-      StHFPair candidateK0Short(pion1, pion2, M_PION_PLUS, M_PION_MINUS, 
+      StHFPair candidateK0Short(pion1, pion2, 
+				mHFCuts->getHypotheticalMass(StHFCuts::kPion), mHFCuts->getHypotheticalMass(StHFCuts::kPion),
 				mIdxPicoPions[idxPion1], mIdxPicoPions[idxPion2], 
 				mPrimVtx, mBField);
 
