@@ -3,8 +3,6 @@
 
 #include "StHFTriplet.h"
 
-#include "StLorentzVectorF.hh"
-#include "StThreeVectorF.hh"
 #include "StPhysicalHelixD.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
@@ -13,7 +11,7 @@
 ClassImp(StHFTriplet)
 
 // _________________________________________________________
-StHFTriplet::StHFTriplet(): mLorentzVector(StLorentzVectorF()),
+StHFTriplet::StHFTriplet(): mLorentzVector(StLorentzVectorF()), mDecayVertex(StThreeVectorF()),
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()), 
   mParticle3Dca(std::numeric_limits<float>::quiet_NaN()),
@@ -26,20 +24,19 @@ StHFTriplet::StHFTriplet(): mLorentzVector(StLorentzVectorF()),
 
 // _________________________________________________________
 StHFTriplet::StHFTriplet(StHFTriplet const * t) : 
-  mLorentzVector(t->mLorentzVector),
+  mLorentzVector(t->mLorentzVector), mDecayVertex(t->mDecayVertex),
   mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength), 
   mParticle1Dca(t->mParticle1Dca), mParticle2Dca(t->mParticle2Dca), mParticle3Dca(t->mParticle3Dca),
   mParticle1Idx(t->mParticle1Idx), mParticle2Idx(t->mParticle2Idx), mParticle3Idx(t->mParticle3Idx),
   mDcaDaughters12(t->mDcaDaughters12),  mDcaDaughters23(t->mDcaDaughters23), mDcaDaughters31(t->mDcaDaughters31), 
-  mCosThetaStar(t->mCosThetaStar)
-{
+  mCosThetaStar(t->mCosThetaStar){
 }
 //------------------------------------
 StHFTriplet::StHFTriplet(StPicoTrack const * const particle1, StPicoTrack const * const particle2, StPicoTrack const * const particle3,
 			 float p1MassHypo, float p2MassHypo, float p3MassHypo,
 			 unsigned short const p1Idx, unsigned short const p2Idx, unsigned short const p3Idx,
 			 StThreeVectorF const & vtx, float const bField)  : 
-  mLorentzVector(StLorentzVectorF()),
+  mLorentzVector(StLorentzVectorF()), mDecayVertex(StThreeVectorF()),
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()), 
   mParticle3Dca(std::numeric_limits<float>::quiet_NaN()),
@@ -103,19 +100,16 @@ StHFTriplet::StHFTriplet(StPicoTrack const * const particle1, StPicoTrack const 
   mDcaDaughters31 = (p3AtDcaToP1 - p1AtDcaToP3).mag();
   
   // -- calculate decay vertex (secondary)
-  StThreeVectorF decayVtx = ( p1AtDcaToP2 + p2AtDcaToP1 + p2AtDcaToP3 + p3AtDcaToP2 + p3AtDcaToP1 + p1AtDcaToP3 ) / 6.0;
-  mV0x = decayVtx.x();
-  mV0y = decayVtx.y();
-  mV0z = decayVtx.z(); 
+  StThreeVectorF mDecayVertex = ( p1AtDcaToP2 + p2AtDcaToP1 + p2AtDcaToP3 + p3AtDcaToP2 + p3AtDcaToP1 + p1AtDcaToP3 ) / 6.0;
   
   // -- constructing mother daughter four momentum. Need helix (not straight line) for each daughter
-  double const p1AtV0 = p1Helix.pathLength( decayVtx );
+  double const p1AtV0 = p1Helix.pathLength( mDecayVertex );
   StThreeVectorF const p1MomAtDca = p1Helix.momentumAt(p1AtV0 ,  bField * kilogauss);
 
-  double const p2AtV0 = p2Helix.pathLength( decayVtx );
+  double const p2AtV0 = p2Helix.pathLength( mDecayVertex );
   StThreeVectorF const p2MomAtDca = p2Helix.momentumAt(p2AtV0 ,  bField * kilogauss);
   
-  double const p3AtV0 = p3Helix.pathLength( decayVtx );
+  double const p3AtV0 = p3Helix.pathLength( mDecayVertex );
   StThreeVectorF const p3MomAtDca = p3Helix.momentumAt(p3AtV0 ,  bField * kilogauss);
   
   StLorentzVectorF const p1FourMom(p1MomAtDca, p1MomAtDca.massHypothesis(p1MassHypo));
@@ -131,7 +125,7 @@ StHFTriplet::StHFTriplet(StPicoTrack const * const particle1, StPicoTrack const 
   mCosThetaStar = std::cos(p1FourMomStar.vect().angle(mLorentzVector.vect()));
   
   // -- calculate pointing angle and decay length
-  StThreeVectorF const vtxToV0 = decayVtx - vtx;
+  StThreeVectorF const vtxToV0 = mDecayVertex - vtx;
   mPointingAngle = vtxToV0.angle(mLorentzVector.vect());
   mDecayLength = vtxToV0.mag();
   

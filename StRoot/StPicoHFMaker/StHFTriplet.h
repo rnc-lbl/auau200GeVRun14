@@ -23,7 +23,9 @@
 
 #include "TObject.h"
 #include "TClonesArray.h"
+
 #include "StLorentzVectorF.hh"
+#include "StThreeVectorF.hh"
 
 class StPicoTrack;
 class StPicoEvent;
@@ -39,7 +41,8 @@ class StHFTriplet : public TObject
 	     StThreeVectorF const & vtx, float bField);
   ~StHFTriplet() {;}
 
-  StLorentzVectorF const & lorentzVector() const { return mLorentzVector;}
+  StLorentzVectorF const & lorentzVector() const;
+  StThreeVectorF const & decayVertex() const;
   float m()    const;
   float pt()   const;
   float eta()  const;
@@ -67,6 +70,7 @@ class StHFTriplet : public TObject
   StHFTriplet(StHFTriplet const &);
   StHFTriplet& operator=(StHFTriplet const &);
   StLorentzVectorF mLorentzVector; 
+  StThreeVectorF   mDecayVertex; 
 
   float mPointingAngle;
   float mDecayLength;
@@ -84,14 +88,10 @@ class StHFTriplet : public TObject
   float mDcaDaughters31;
 
   float mCosThetaStar; 
-
-  float mV0x; // reconstructed vertex pos
-  float mV0y;
-  float mV0z;
   
-  ClassDef(StHFTriplet,1)
+  ClassDef(StHFTriplet,2)
 };
-
+inline StLorentzVectorF const & StHFTriplet::lorentzVector() const { return mLorentzVector;}
 inline float StHFTriplet::m()    const { return mLorentzVector.m();}
 inline float StHFTriplet::pt()   const { return mLorentzVector.perp();}
 inline float StHFTriplet::eta()  const { return mLorentzVector.pseudoRapidity();}
@@ -111,7 +111,8 @@ inline float StHFTriplet::dcaDaughters12() const { return mDcaDaughters12;}
 inline float StHFTriplet::dcaDaughters23() const { return mDcaDaughters23;}
 inline float StHFTriplet::dcaDaughters31() const { return mDcaDaughters31;}
 inline float StHFTriplet::cosThetaStar()   const { return mCosThetaStar;}
-inline float StHFTriplet::v0x() const { return mV0x;}
-inline float StHFTriplet::v0y() const { return mV0y;}
-inline float StHFTriplet::v0z() const { return mV0z;}
+inline StThreeVectorF const & StHFTriplet::decayVertex() const { return mDecayVertex;}
+inline float StHFTriplet::v0x() const { return mDecayVertex.x();}
+inline float StHFTriplet::v0y() const { return mDecayVertex.y();}
+inline float StHFTriplet::v0z() const { return mDecayVertex.z();}
 #endif
