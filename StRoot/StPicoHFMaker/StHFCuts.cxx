@@ -399,7 +399,7 @@ float StHFCuts::getTofBeta(StPicoTrack const * const trk,
   if (beta <= 0) 
     return beta;
 
-  // -- no check for variables needed ( already applied in getTofBeta( )  )
+  // -- no check for variables needed ( already applied in getTofBetaBase( )  )
   StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(trk->bTofPidTraitsIndex());
 
   StThreeVectorD tofHit = tofPid->btofHitPos();
