@@ -200,20 +200,20 @@ class StHFCuts : public TNamed
   const float&    cutSecondaryTripletMassMin()            const;
   const float&    cutSecondaryTripletMassMax()            const;
 
-  // -- caluclate beta of track -- basic caluculation
-  const float getTofBetaBase(StPicoTrack const* const trk) const;
+  // -- calculate beta of track -- basic calculation
+  float getTofBetaBase(StPicoTrack const* const trk) const;
 
-  // -- caluclate beta of track -- for primary particles
-  const float getTofBeta(StPicoTrack const* const trk) const;
+  // -- calculate beta of track -- for primary particles
+  float getTofBeta(StPicoTrack const* const trk) const;
 
-  // -- caluclate corrected beta of track -- for secondary particles
-  const float getTofBeta(StPicoTrack const * const trk, 
-			 StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx) const; 
+  // -- calculate corrected beta of track -- for secondary particles
+  float getTofBeta(StPicoTrack const * const trk, 
+		   StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx) const; 
   
-  // -- caluclate corrected beta of track -- for tertiary particles
-  const float getTofBeta(StPicoTrack const * const trk, 
-			 StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx, 
-			 StLorentzVectorF const & tertiaryMother,  StThreeVectorF const & tertiaryVtx) const;
+  // -- calculate corrected beta of track -- for tertiary particles
+  float getTofBeta(StPicoTrack const * const trk, 
+		   StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx, 
+		   StLorentzVectorF const & tertiaryMother,  StThreeVectorF const & tertiaryVtx) const;
   
   const float& getHypotheticalMass(int pidFlag)           const;
 
