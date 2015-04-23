@@ -24,6 +24,7 @@
 #include "TNamed.h"
 #include "TString.h"
 #include "StLorentzVectorF.hh" 
+#include "StBTofUtil/StV0TofCorrection.h"
 
 class StPicoTrack;
 class StPicoEvent;
@@ -38,7 +39,7 @@ class StHFCuts : public TNamed
   
   StHFCuts();
   StHFCuts(const Char_t *name);
-  ~StHFCuts() {;}
+  ~StHFCuts();
   
   void init();
 
@@ -199,13 +200,29 @@ class StHFCuts : public TNamed
   const float&    cutSecondaryTripletMassMin()            const;
   const float&    cutSecondaryTripletMassMax()            const;
 
-  // -- caluclate beta of track
-  const float getTofBeta(StPicoTrack const*) const;
+  // -- caluclate beta of track -- basic caluculation
+  const float getTofBetaBase(StPicoTrack const* const trk) const;
+
+  // -- caluclate beta of track -- for primary particles
+  const float getTofBeta(StPicoTrack const* const trk) const;
+
+  // -- caluclate corrected beta of track -- for secondary particles
+  const float getTofBeta(StPicoTrack const * const trk, 
+			 StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx) const; 
+  
+  // -- caluclate corrected beta of track -- for tertiary particles
+  const float getTofBeta(StPicoTrack const * const trk, 
+			 StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx, 
+			 StLorentzVectorF const & tertiaryMother,  StThreeVectorF const & tertiaryVtx) const;
+  
+  const float& getHypotheticalMass(int pidFlag)           const;
 
  private:
   
   StHFCuts(StHFCuts const &);       
   StHFCuts& operator=(StHFCuts const &); 
+
+  StV0TofCorrection* mTOFCorr;  // TOF correction
 
   StThreeVectorF    mPrimVtx;   // primary vertex of current event
   const StPicoDst*  mPicoDst;   //! ptr to picoDst
@@ -365,6 +382,7 @@ inline const float&    StHFCuts::cutSecondaryTripletCosThetaMin()        const {
 inline const float&    StHFCuts::cutSecondaryTripletMassMin()            const { return mSecondaryTripletMassMin; }
 inline const float&    StHFCuts::cutSecondaryTripletMassMax()            const { return mSecondaryTripletMassMax; }
 
+inline const float&    StHFCuts::getHypotheticalMass(int pidFlag)        const { return mHypotheticalMass[pidFlag]; }
 
 // -- check for good hadrons in TPC - in ptRange
 inline bool StHFCuts::isTPCPion(StPicoTrack const * const trk)   const {return isTPCHadron(trk, StHFCuts::kPion); }
