@@ -35,10 +35,17 @@
  *     isProton
  *
  * **************************************************
- *  Authors:  Xin Dong        (xdong@lbl.gov)
+ *
+ *  Initial Authors:
+ *            Xin Dong        (xdong@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *          **Jochen Thaeder  (jmthader@lbl.gov)
+ *
+ *  Contributing Authors
  *            Michael Lomnitz (mrlomnitz@lbl.gov)
- *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *            Giacomo Contin  (gcontin@lbl.gov)
+ *
+ *  ** Code Maintainer
  *
  * **************************************************
  */
@@ -55,6 +62,7 @@ class StPicoHFEvent;
 class StHFPair;
 class StHFTriplet;
 class StHFCuts;
+class StHFHists;
 
 class StPicoHFMaker : public StMaker 
 {
@@ -80,9 +88,9 @@ class StPicoHFMaker : public StMaker
     enum eMakerMode {kAnalyze, kWrite, kRead};
 
     // -- TO BE IMPLEMENTED BY DAUGHTER CLASS
-    virtual bool  isPion(StPicoTrack const*, float const & bTofBeta) const   { return true; }
-    virtual bool  isKaon(StPicoTrack const*, float const & bTofBeta) const   { return true; }
-    virtual bool  isProton(StPicoTrack const*, float const & bTofBeta) const { return true; }
+    virtual bool  isPion(StPicoTrack const*)   const { return true; }
+    virtual bool  isKaon(StPicoTrack const*)   const { return true; }
+    virtual bool  isProton(StPicoTrack const*) const { return true; }
 
   protected:
 
@@ -91,13 +99,12 @@ class StPicoHFMaker : public StMaker
     unsigned int isDecayMode();
     unsigned int isMakerMode();
 
-    float getTofBeta(StPicoTrack const*) const;
-
     // -- protected members ------------------------
 
     StPicoDst      *mPicoDst;
 
     StHFCuts       *mHFCuts;
+    StHFHists      *mHFHists;
 
     StPicoHFEvent  *mPicoHFEvent;
 
