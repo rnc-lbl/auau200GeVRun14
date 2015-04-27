@@ -44,10 +44,13 @@
  *       isProton
  *
  *  --------------------------------------------------
- *  Authors:  Xin Dong (xdong@lbl.gov)
- *            Michael Lomnitz (mlomitz@lbl.gov)
+ *  
+ *  Initial Authors:  
+ *            Xin Dong        (xdong@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
- *            Jochen Thaeder (jmthader@lbl.gov)   
+ *          **Jochen Thaeder  (jmthader@lbl.gov) 
+ * 
+ *  ** Code Maintainer
  *
  * **************************************************
  */
@@ -71,7 +74,7 @@ class StPicoHFMyAnaMaker : public StPicoHFMaker
   
   virtual Int_t InitHF();
   virtual Int_t MakeHF();
-  virtual Int_t ClearHF();
+  virtual void  ClearHF(Option_t *opt);
   virtual Int_t FinishHF();
   
   // -- ADOPT DECAY CHANNELS, if wished ------------------- 
@@ -80,12 +83,11 @@ class StPicoHFMyAnaMaker : public StPicoHFMaker
   enum eDecayChannel {kChannel1, kChannel2, kChannel3};
 
  protected:
-  virtual bool isPion(StPicoTrack const*, float const & bTofBeta) const;
-  virtual bool isKaon(StPicoTrack const*, float const & bTofBeta) const;
-  virtual bool isProton(StPicoTrack const*, float const & bTofBeta) const;
+  virtual bool isPion(StPicoTrack const*) const;
+  virtual bool isKaon(StPicoTrack const*) const;
+  virtual bool isProton(StPicoTrack const*) const;
   
  private:
-  
   int createCandidates();
   int analyzeCandidates();
 

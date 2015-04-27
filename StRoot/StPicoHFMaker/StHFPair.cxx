@@ -3,8 +3,6 @@
 
 #include "StHFPair.h"
 
-#include "StLorentzVectorF.hh"
-#include "StThreeVectorF.hh"
 #include "StPhysicalHelixD.hh"
 #include "SystemOfUnits.h"
 #include "StPicoDstMaker/StPicoTrack.h"
@@ -12,33 +10,30 @@
 ClassImp(StHFPair)
 
 // _________________________________________________________
-StHFPair::StHFPair(): mLorentzVector(StLorentzVectorF()),
+StHFPair::StHFPair(): mLorentzVector(StLorentzVectorF()), mDecayVertex(StThreeVectorF()),
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Idx(std::numeric_limits<unsigned short>::max()), mParticle2Idx(std::numeric_limits<unsigned short>::max()),
-  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN()),
-  mV0x(std::numeric_limits<float>::max()), mV0y(std::numeric_limits<float>::max()),  mV0z(std::numeric_limits<float>::max()) {
+  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN()) {
 }
 
 // _________________________________________________________
-StHFPair::StHFPair(StHFPair const * t) : mLorentzVector(t->mLorentzVector),
+StHFPair::StHFPair(StHFPair const * t) : mLorentzVector(t->mLorentzVector), mDecayVertex(t->mDecayVertex),
    mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength),
    mParticle1Dca(t->mParticle1Dca), mParticle2Dca(t->mParticle2Dca),
    mParticle1Idx(t->mParticle1Idx), mParticle2Idx(t->mParticle2Idx),
-   mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar),
-   mV0x(t->mV0x), mV0y(t->mV0y), mV0z(t->mV0z) {
+   mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar) {
 }
 
 // _________________________________________________________
 StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * const particle2,
 		   float p1MassHypo, float p2MassHypo, unsigned short const p1Idx, unsigned short const p2Idx,
 		   StThreeVectorF const & vtx, float const bField) : 
-  mLorentzVector(StLorentzVectorF()),
+  mLorentzVector(StLorentzVectorF()), mDecayVertex(StThreeVectorF()),
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Idx(p1Idx), mParticle2Idx(p2Idx),
-  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN()),
-  mV0x(std::numeric_limits<float>::max()), mV0y(std::numeric_limits<float>::max()),  mV0z(std::numeric_limits<float>::max()) {
+  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN()) {
   // -- Create pair out of 2 tracks
   //     prefixes code:
   //      p1 means particle 1
@@ -86,15 +81,12 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
   mCosThetaStar = std::cos(p1FourMomStar.vect().angle(mLorentzVector.vect()));
 
   // -- calculate decay vertex (secondary or tertiary) 
-  StThreeVectorF const decayVtx = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 ;
-  mV0x = decayVtx.x();
-  mV0y = decayVtx.y();
-  mV0z = decayVtx.z(); 
-
+  mDecayVertex = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 ;
+ 
   // -- calculate pointing angle and decay length with respect to primary vertex 
   //    if decay vertex is a tertiary vertex
   //    -> only rough estimate -> needs to be updated after secondary vertex is found
-  StThreeVectorF const vtxToV0 = decayVtx - vtx;
+  StThreeVectorF const vtxToV0 = mDecayVertex - vtx;
   mPointingAngle = vtxToV0.angle(mLorentzVector.vect());
   mDecayLength = vtxToV0.mag();
 
@@ -109,7 +101,7 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
 StHFPair::StHFPair(StPicoTrack const * const particle1, StHFPair const * const particle2,
 		   float p1MassHypo, float p2MassHypo, unsigned short const p1Idx, unsigned short const p2Idx,
 		   StThreeVectorF const & vtx, float const bField) :
-  mLorentzVector(StLorentzVectorF()),
+  mLorentzVector(StLorentzVectorF()), mDecayVertex(StThreeVectorF()),
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Idx(p1Idx), mParticle2Idx(p2Idx),
@@ -166,13 +158,10 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFPair const * const p
   mCosThetaStar = std::cos(p1FourMomStar.vect().angle(mLorentzVector.vect()));
 
   // -- calculate decay vertex (secondary) 
-  StThreeVectorF const decayVtx = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 ;
-  mV0x = decayVtx.x();
-  mV0y = decayVtx.y();
-  mV0z = decayVtx.z();
+  mDecayVertex = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 ;
 
   // -- calculate pointing angle and decay length with respect to primary vertex
-  StThreeVectorF const vtxToV0 = decayVtx - vtx;
+  StThreeVectorF const vtxToV0 = mDecayVertex - vtx;
   mPointingAngle = vtxToV0.angle(mLorentzVector.vect());
   mDecayLength = vtxToV0.mag();
    
@@ -183,16 +172,14 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFPair const * const p
 // _________________________________________________________
 float StHFPair::pointingAngle(StThreeVectorF const & vtx2) const{
   // -- Overloaded function recalculates pointing angle given secondary vertex
-  StThreeVectorF const tertiary(mV0x,mV0y,mV0z);  
-  StThreeVectorF const vtx2ToTertiary(tertiary - vtx2);
+  StThreeVectorF const vtx2ToTertiary(mDecayVertex - vtx2);
   float const nPointingAngle = vtx2ToTertiary.angle(mLorentzVector.vect());
   return nPointingAngle;
 }
 // _________________________________________________________
 float StHFPair::decayLength(StThreeVectorF const & vtx2) const{
   // -- Overloaded function recalculates decayLength given secondary vertex
-  StThreeVectorF const tertiary(mV0x,mV0y,mV0z);  
-  StThreeVectorF const vtx2ToTertiary(tertiary - vtx2); 
+  StThreeVectorF const vtx2ToTertiary(mDecayVertex - vtx2); 
   float const nDecayLength = vtx2ToTertiary.mag();  
   return nDecayLength;
 }

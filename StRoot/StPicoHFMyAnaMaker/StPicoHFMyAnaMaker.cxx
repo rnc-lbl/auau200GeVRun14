@@ -4,7 +4,6 @@
 
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
-#include "phys_constants.h"
 
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
@@ -46,8 +45,8 @@ int StPicoHFMyAnaMaker::InitHF() {
 }
 
 // _________________________________________________________
-int StPicoHFMyAnaMaker::ClearHF() {
-  return kStOK;
+void StPicoHFMyAnaMaker::ClearHF(Option_t *opt="") {
+  return;
 }
 
 // _________________________________________________________
@@ -98,9 +97,11 @@ int StPicoHFMyAnaMaker::createCandidates() {
 	if (mIdxPicoKaons[idxKaon] == mIdxPicoPions[idxPion]) 
 	  continue;
       
-	StHFPair pair(kaon, pion, M_KAON_PLUS, M_PION_PLUS, mIdxPicoKaons[idxKaon], mIdxPicoPions[idxPion], mPrimVtx, mBField);
+	StHFPair pair(kaon, pion,
+		      mHFCuts->getHypotheticalMass(StHFCuts::kKaon), mHFCuts->getHypotheticalMass(StHFCuts::kPion),
+		      mIdxPicoKaons[idxKaon], mIdxPicoPions[idxPion], mPrimVtx, mBField);
 	if (!mHFCuts->isGoodSecondaryVertexPair(pair)) 
-	    continue;
+	  continue;
 	mPicoHFEvent->addHFSecondaryVertexPair(&pair);
 	
       } // for (unsigned short idxPion = 0; idxPion < mIdxPicoPions.size(); ++idxPion) {
@@ -139,20 +140,20 @@ int StPicoHFMyAnaMaker::analyzeCandidates() {
 }
 
 // _________________________________________________________
-bool StPicoHFMyAnaMaker::isPion(StPicoTrack const * const trk, float const & tofBeta = 0) const {
-  // -- good proton
+bool StPicoHFMyAnaMaker::isPion(StPicoTrack const * const trk) const {
+  // -- good pion
   return true;
 }
 
 // _________________________________________________________
-bool StPicoHFMyAnaMaker::isKaon(StPicoTrack const * const trk, float const & tofBeta = 0) const {
+bool StPicoHFMyAnaMaker::isKaon(StPicoTrack const * const trk) const {
   // -- good kaon
   return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCKaon(trk));
 } 
 
 // _________________________________________________________
-bool StPicoHFMyAnaMaker::isProton(StPicoTrack const * const trk, float const & tofBeta = 0) const {
+bool StPicoHFMyAnaMaker::isProton(StPicoTrack const * const trk) const {
   // -- good proton
-  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCProton(trk));
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCProton(trk) && mHFCuts->isTOFProton(trk));
 }
 
