@@ -233,11 +233,11 @@ bool StHFCuts::isTPCHadron(StPicoTrack const * const trk, int pidFlag) const {
   float nSigma = std::numeric_limits<float>::quiet_NaN();
 
   if (pidFlag == kPion)
-    fabs(trk->nSigmaPion());
+    nSigma = fabs(trk->nSigmaPion());
   else if (pidFlag == kKaon)
-    fabs(trk->nSigmaKaon());
-  if (pidFlag == kProton)
-    fabs(trk->nSigmaProton());
+    nSigma = fabs(trk->nSigmaKaon());
+  else if (pidFlag == kProton)
+    nSigma = fabs(trk->nSigmaProton());
 
   return ( trk->gPt() >= mPtRange[pidFlag][0] && trk->gPt() < mPtRange[pidFlag][1] &&
 	   nSigma < mTPCNSigmaMax[pidFlag] );
