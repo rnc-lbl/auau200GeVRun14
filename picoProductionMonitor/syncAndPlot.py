@@ -6,7 +6,7 @@ import subprocess
 
 # gWaitTime = 60*120 # 120 minutes before trying to submit again
 gRcf = '@rftpexp.rhic.bnl.gov'
-gLogsLocationAtRcf = '/star/institutions/lbl_prod/Run14_AuAu200GeV/production/CheckLog'
+gLogsLocationAtRcf = '/star/institutions/lbl_prod/Run14_AuAu200GeV/production2/CheckLog'
 gLogsLocationAtPdsf = '.'
 gDirectoryName = './CheckLog'
 
