@@ -41,8 +41,11 @@ TFile* result;
 TF1* fKaonMomResolution = 0;
 TF1* fPionMomResolution = 0;
 TF1* fWeightFunction = 0;
+
+string outFileName = "Dpm.root";
 std::pair<int,int> const decayChannels(673,736);
-float const accp_eta = 1;
+std::pair<float,float> const momentumRange(0,10);
+float const acceptanceEta = 1.0;
 
 //============== main  program ==================
 void pythia_decay(int npart = 100)
@@ -175,8 +178,8 @@ void fill(int const kf, TLorentzVector* b, double const weight, TClonesArray& da
 
 void getKinematics(TLorentzVector& b,double const mass)
 {
-   float const pt = gRandom->Uniform(0, 10);
-   float const eta = gRandom->Uniform(-accp_eta, accp_eta);
+   float const pt = gRandom->Uniform(momentumRange.first,momentumRange.second);
+   float const eta = gRandom->Uniform(-acceptanceEta,acceptanceEta);
    float const phi = TMath::TwoPi() * gRandom->Rndm();
 
    b.SetXYZM(pt * cos(phi),pt * sin(phi),pt * sinh(eta), mass);
@@ -194,8 +197,9 @@ TLorentzVector smearMom(TLorentzVector const& b,TF1 const * const fMomResolution
 //___________
 void bookObjects()
 {
-   result = new TFile("out.root", "recreate");
+   result = new TFile(outFileName.c_str(), "recreate");
    result->cd();
+
    nt = new TNtuple("nt", "", "pid:w:m:pt:eta:y:phi:" // MC D+
                               "rM:rPt:rEta:rY:rPhi:" // Rc D+
                               "kM:kPt:kEta:kY:kPhi:" // MC Kaon
