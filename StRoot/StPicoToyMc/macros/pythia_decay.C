@@ -1,7 +1,9 @@
 /* *********************************************************************   
  *  ROOT macro - Toy Monte Carlo Simulation of Particle Decay Kinematics   
+ *  Example for D+/D- --> Kpipi
  *   
  *  Authors:  Mustafa Mustafa (mmustafa@lbl.gov)   
+ *            Michael Lomnitz (mrlomnitz@lbl.gov)
  *   
  * *********************************************************************
 */
