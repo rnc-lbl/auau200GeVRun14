@@ -183,7 +183,7 @@ void getKinematics(TLorentzVector& b,double const mass)
 TLorentzVector smearMom(TLorentzVector const& b,TF1 const * const fMomResolution)
 {
   float const pt = b.Perp();
-  float const sPt = gRandom->Gaus(pt,1.5*pt*fMomResolution->Eval(pt));
+  float const sPt = gRandom->Gaus(pt,pt*fMomResolution->Eval(pt));
 
   TLorentzVector sMom;
   sMom.SetXYZM(sPt*cos(b.Phi()),sPt*sin(b.Phi()),sPt*sinh(b.PseudoRapidity()),b.M());
