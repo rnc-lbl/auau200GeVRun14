@@ -42,7 +42,7 @@ std::pair<int,int> const decayChannels(673,736);
 float const accp_eta = 1;
 
 //============== main  program ==================
-void pythia(int npart = 100)
+void pythia_decay(int npart = 100)
 {
    gRandom->SetSeed();
    bookObjects();
@@ -122,7 +122,6 @@ void fill(int const kf, TLorentzVector* b, double const weight, TClonesArray& da
    TLorentzVector p1RMom = smearMom(p1Mom,fPionMomResolution);
    TLorentzVector p2RMom = smearMom(p2Mom,fPionMomResolution);
    TLorentzVector rMom = kRMom + p1RMom + p2RMom;
-   TLorentzVector rMom = kRMom + p1RMom;
 
    // save
    float arr[100];
