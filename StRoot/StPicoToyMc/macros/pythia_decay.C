@@ -29,10 +29,8 @@ void Decay_Fill(int const kf, int const mdme, TLorentzVector* b, float const phi
 //.. get kinematics ....
 void get_kinematics(double& pt, double& eta, double& phi, double& px, double& py, double& pz);
 TLorentzVector smearMom(TLorentzVector const& b,TF1 const * const fMomResolution);
-
-
-void BookObjects();
-void Write();
+void bookObjects();
+void write();
 
 TPythia6Decayer* pydecay;
 TNtuple* nt;
@@ -45,7 +43,7 @@ float const accp_eta = 1;
 void pythia(int npart = 100)
 {
    gRandom->SetSeed();
-   BookObjects();
+   bookObjects();
 
    pydecay = TPythia6Decayer::Instance();
    pydecay->Init();
@@ -188,7 +186,7 @@ TLorentzVector smearMom(TLorentzVector const& b,TF1 const * const fMomResolution
   return sMom;
 }
 //___________
-void BookObjects()
+void bookObjects()
 {
    result = new TFile("out.root", "recreate");
    result->cd();
@@ -207,7 +205,7 @@ void BookObjects()
    f.Close();
 }
 //___________
-void Write()
+void write()
 {
    result->cd();
    nt->Write();
