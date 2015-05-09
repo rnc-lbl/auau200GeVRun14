@@ -110,8 +110,8 @@ void Decay_Fill(int const kf, int const mdme, TLorentzVector* const b, float con
    // smear and get total momentum
    TLorentzVector kRMom = smearMom(kMom,fKaonMomResolution);
    TLorentzVector p1RMom = smearMom(p1Mom,fPionMomResolution);
-   // TLorentzVector p2RMom = smearMom(p2Mom,fPionMomResolution);
-   // TLorentzVector rMom = kRMom + p1RMom + p2RMom;
+   TLorentzVector p2RMom = smearMom(p2Mom,fPionMomResolution);
+   TLorentzVector rMom = kRMom + p1RMom + p2RMom;
    TLorentzVector rMom = kRMom + p1RMom;
 
    // save
