@@ -24,9 +24,9 @@
 
 using namespace std;
 
-//.. decay the particles and fill the histogram ....
-void Decay_Fill(int const kf, int const mdme, TLorentzVector* b, float const phi, double const weight, TClonesArray& ptl);
-//.. get kinematics ....
+void setDecayChannels(int const mdme);
+void decay(int const kf, TLorentzVector* b, TClonesArray& daughters);
+void fill(int const kf, TLorentzVector* b, double const weight, TClonesArray& daughters);
 void get_kinematics(double& pt, double& eta, double& phi, double& px, double& py, double& pz);
 TLorentzVector smearMom(TLorentzVector const& b,TF1 const * const fMomResolution);
 void bookObjects();
@@ -38,7 +38,9 @@ TFile* result;
 TF1* fKaonMomResolution = 0;
 TF1* fPionMomResolution = 0;
 
+std::pair<int,int> const decayChannels(673,736);
 float const accp_eta = 1;
+
 //============== main  program ==================
 void pythia(int npart = 100)
 {
@@ -56,9 +58,8 @@ void pythia(int npart = 100)
 
    double pt = -999, eta = -999, phi = -999, px = -999, py = -999, pz = -999;
 
-   for (int idc = 673; idc < 736; idc++) TPythia6::Instance()->SetMDME(idc, 1, 0); // turn all D+ decay channels off
-   TPythia6::Instance()->SetMDME(719, 1, 1); // turn  on : D+ -->K-pi+pi-
 
+   setDecayChannels(719); // D+/D- --> Kpipi
    for (int ipart = 0; ipart < npart; ipart++)
    {
       if (!(ipart % 100000))
@@ -69,26 +70,37 @@ void pythia(int npart = 100)
       double E_d0 = sqrt(px * px + py * py + pz * pz + M_D_PLUS * M_D_PLUS);
       b_d->SetPxPyPzE(px, py, pz, E_d0);
 
-      Decay_Fill(411, 719, b_d, phi, 1, ptl);
-      Decay_Fill(-411, 719, b_d, phi, 1, ptl);
+      decay(411,b_d,ptl);
+      fill(411, b_d, 1, ptl);
+      decay(-411,b_d,ptl);
+      fill(-411, b_d, 1, ptl);
    }
 
-   Write();
+   write();
 }
-//.. decay the particles and fill the histogram
-void Decay_Fill(int const kf, int const mdme, TLorentzVector* const b, float const phi, double const weight, TClonesArray& ptl)
+
+void setDecayChannels(int const mdme)
+{
+   for (int idc = decayChannels.first; idc < decayChannels.second+1; idc++) TPythia6::Instance()->SetMDME(idc, 1, 0);
+   TPythia6::Instance()->SetMDME(mdme, 1, 1);
+}
+
+void decay(int const kf, TLorentzVector* const b, TClonesArray& daughters)
 {
    pydecay->Decay(kf, b);
-   pydecay->ImportParticles(&ptl);
+   pydecay->ImportParticles(&daughters);
+}
 
+void fill(int const kf, TLorentzVector* b, double const weight, TClonesArray& daughters)
+{
    TLorentzVector kMom;
    TLorentzVector p1Mom;
    TLorentzVector p2Mom;
 
-   int nTrk = ptl.GetEntriesFast();
+   int nTrk = daughters.GetEntriesFast();
    for (int iTrk = 0; iTrk < nTrk; ++iTrk)
    {
-      TParticle* ptl0 = (TParticle*)ptl.At(iTrk);
+      TParticle* ptl0 = (TParticle*)daughters.At(iTrk);
 
       switch(abs(ptl0->GetPdgCode()))
       {
@@ -103,7 +115,7 @@ void Decay_Fill(int const kf, int const mdme, TLorentzVector* const b, float con
           break;
       }
    }
-   ptl.Clear();
+   daughters.Clear();
 
    // smear and get total momentum
    TLorentzVector kRMom = smearMom(kMom,fKaonMomResolution);
@@ -120,7 +132,7 @@ void Decay_Fill(int const kf, int const mdme, TLorentzVector* const b, float con
    arr[iArr++] = b->Perp();
    arr[iArr++] = b->PseudoRapidity();
    arr[iArr++] = b->Rapidity();
-   arr[iArr++] = phi;
+   arr[iArr++] = b->Phi();
 
    arr[iArr++] = rMom.M();
    arr[iArr++] = rMom.Perp();
