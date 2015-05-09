@@ -35,9 +35,10 @@ void write();
 TPythia6Decayer* pydecay;
 TNtuple* nt;
 TFile* result;
+
 TF1* fKaonMomResolution = 0;
 TF1* fPionMomResolution = 0;
-
+TF1* fWeightFunction = 0;
 std::pair<int,int> const decayChannels(673,736);
 float const accp_eta = 1;
 
@@ -62,9 +63,9 @@ void pythia_decay(int npart = 100)
       getKinematics(*b_d,M_D_PLUS);
 
       decay(411,b_d,ptl);
-      fill(411, b_d, 1, ptl);
+      fill(411, b_d, fWeightFunction->Eval(b_d->Perp()), ptl);
       decay(-411,b_d,ptl);
-      fill(-411, b_d, 1, ptl);
+      fill(-411, b_d, fWeightFunction->Eval(b_d->Perp()), ptl);
    }
 
    write();
@@ -118,6 +119,7 @@ void fill(int const kf, TLorentzVector* b, double const weight, TClonesArray& da
    float arr[100];
    int iArr = 0;
    arr[iArr++] = kf;
+   arr[iArr++] = weight;
    arr[iArr++] = b->M();
    arr[iArr++] = b->Perp();
    arr[iArr++] = b->PseudoRapidity();
@@ -192,7 +194,7 @@ void bookObjects()
 {
    result = new TFile("out.root", "recreate");
    result->cd();
-   nt = new TNtuple("nt", "", "pid:m:pt:eta:y:phi:" // MC D+
+   nt = new TNtuple("nt", "", "pid:w:m:pt:eta:y:phi:" // MC D+
                               "rM:rPt:rEta:rY:rPhi:" // Rc D+
                               "kM:kPt:kEta:kY:kPhi:" // MC Kaon
                               "kRM:kRPt:kREta:kRY:kRPhi:" // Rc Kaon
@@ -205,6 +207,10 @@ void bookObjects()
    fPionMomResolution = (TF1*)f.Get("fPion")->Clone("fPionMomResolution");
    fKaonMomResolution = (TF1*)f.Get("fKaon")->Clone("fKaonMomResolution");
    f.Close();
+
+   TFile fPP("pp200_spectra.root");
+   fWeightFunction = (TF1*)fPP.Get("run12/f1Levy")->Clone("fWeightFunction");
+   fPP.Close();
 }
 //___________
 void write()
