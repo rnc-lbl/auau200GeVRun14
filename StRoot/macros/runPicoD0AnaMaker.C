@@ -12,6 +12,7 @@ void runPicoD0AnaMaker(TString d0list, TString outFileName, TString badRunListFi
    gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
    loadSharedLibraries();
 
+   gSystem->Load("StBTofUtil");
    gSystem->Load("StPicoDstMaker");
    gSystem->Load("StPicoPrescales");
    gSystem->Load("StPicoD0EventMaker");
