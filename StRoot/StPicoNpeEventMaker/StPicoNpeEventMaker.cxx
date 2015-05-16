@@ -115,7 +115,16 @@ Int_t StPicoNpeEventMaker::Make()
         
         mPicoNpeEvent->nElectrons(idxPicoTaggedEs.size());
         mPicoNpeEvent->nPartners(idxPicoPartnerEs.size());
-        
+
+        // Both loops start from 0 for electrons pairs.
+        // The reason is that we want to double count those pairs for which
+        // both tracks end up as tagged electrons tracks in the inclusicve
+        // electrons. If you have doubts think about the master equation:
+        // NPE = Inclusive - Photonic/eff
+        // where Inclusive and Photonic are both single tracks counting
+        // -- Mustafa
+
+        float const bField = mPicoEvent->bField();
         for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
         {
 
