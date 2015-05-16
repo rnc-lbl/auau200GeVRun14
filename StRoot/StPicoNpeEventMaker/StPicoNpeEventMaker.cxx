@@ -96,15 +96,15 @@ Int_t StPicoNpeEventMaker::Make()
 
         for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
         {
-            StPicoTrack* trk = picoDst->track(iTrack);
-            
+            StPicoTrack const* trk = picoDst->track(iTrack);
+
             if (!trk || !isGoodTrack(trk)) continue;
             ++nHftTracks;
 
             if (isElectron(trk))
             {
                 idxPicoTaggedEs.push_back(iTrack);
-                StElectronTrack electronTrack((StPicoTrack const *)trk, iTrack);
+                StElectronTrack electronTrack(trk, iTrack);
                 mPicoNpeEvent->addElectron(&electronTrack);
             }
 
