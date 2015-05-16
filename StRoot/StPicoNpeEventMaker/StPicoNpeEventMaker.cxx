@@ -196,12 +196,11 @@ bool StPicoNpeEventMaker::isPartnerElectron(StPicoTrack const * const trk) const
 bool StPicoNpeEventMaker::isGoodElectronPair(StElectronPair const & epair, float pt) const
 {
     return
-    ((epair.pairMass() < cuts::pairMass && pt < cuts::pairHighPt) || (epair.pairMass() < cuts::pairMassHigh && pt > cuts::pairHighPt)) &&
+    (epair.pairMass() < cuts::pairMass || (epair.pairMass() < cuts::pairMassHigh && pt > cuts::pairHighPt)) &&
     epair.pairDca() < cuts::pairDca &&
     fabs(epair.positionX()) < cuts::positionX &&
     fabs(epair.positionY()) < cuts::positionY &&
-    fabs(epair.positionZ()) < cuts::positionZ
-    ;
+    fabs(epair.positionZ()) < cuts::positionZ;
 }
 //-----------------------------------------------------------------------------
 bool  StPicoNpeEventMaker::isGoodQaElectronPair(StElectronPair  const& epair, StPicoTrack const& electron, StPicoTrack const& partner) const
