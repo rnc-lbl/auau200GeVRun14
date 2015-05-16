@@ -24,8 +24,8 @@ class StElectronPair : public TObject
 public:
     StElectronPair();
     StElectronPair(StElectronPair const *);
-    StElectronPair(StPicoTrack const * Electron, StPicoTrack const * Partner,unsigned short electronIdx,unsigned short partnerIdx,
-                   StThreeVectorF const & vtx, float bField);
+    StElectronPair(StPicoTrack const * Electron, StPicoTrack const * Partner,
+                   unsigned short electronIdx,unsigned short partnerIdx, float bField);
     ~StElectronPair() {}// please keep this non-virtual and NEVER inherit from this class
     
     unsigned short   electronIdx() const;	// tagged electron idx

@@ -2,7 +2,6 @@
 #include <cmath>
 
 #ifdef __ROOT__
-#include "StElectronPair.h"
 
 #include "StLorentzVectorF.hh"
 #include "StThreeVectorF.hh"
@@ -11,11 +10,14 @@
 #include "SystemOfUnits.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 
+#include "StElectronPair.h"
+
 ClassImp(StElectronPair)
 
 
 StElectronPair::StElectronPair():
-mElectronIdx(std::numeric_limits<unsigned short>::quiet_NaN()), mPartnerIdx(std::numeric_limits<unsigned short>::quiet_NaN()),
+mElectronIdx(std::numeric_limits<unsigned short>::quiet_NaN()), 
+mPartnerIdx(std::numeric_limits<unsigned short>::quiet_NaN()),
 mMass(std::numeric_limits<unsigned short>::quiet_NaN()),
 mPairDca(std::numeric_limits<float>::quiet_NaN()),
 mPositionX(std::numeric_limits<short>::quiet_NaN()),
@@ -35,8 +37,7 @@ mPositionZ(t->mPositionZ)
 }
 //------------------------------------
 StElectronPair::StElectronPair(StPicoTrack const * const electron, StPicoTrack const * const partner,
-                               unsigned short const electronIdx, unsigned short const partnerIdx,
-                               StThreeVectorF const & vtx, float const bField) :
+                               unsigned short const electronIdx, unsigned short const partnerIdx, float const bField) :
 mElectronIdx(electronIdx), mPartnerIdx(partnerIdx),
 mMass(std::numeric_limits<unsigned short>::quiet_NaN()),
 mPairDca(std::numeric_limits<float>::quiet_NaN()),

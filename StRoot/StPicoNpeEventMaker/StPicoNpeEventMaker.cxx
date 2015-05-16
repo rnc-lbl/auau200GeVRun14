@@ -110,7 +110,6 @@ Int_t StPicoNpeEventMaker::Make()
         } // .. end tracks loop
 
         float const bField = mPicoEvent->bField();
-        StThreeVectorF const pVtx = mPicoEvent->primaryVertex();
         
         mPicoNpeEvent->nElectrons(idxPicoTaggedEs.size());
         mPicoNpeEvent->nPartners(idxPicoPartnerEs.size());
@@ -128,7 +127,7 @@ Int_t StPicoNpeEventMaker::Make()
                 
                 StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
                 
-                StElectronPair electronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], pVtx, bField);
+                StElectronPair electronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
                 
                 
                 if (!isGoodElectronPair(electronPair, electron->gPt())) continue;
