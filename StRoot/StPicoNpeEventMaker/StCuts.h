@@ -1,11 +1,12 @@
-#ifndef CUTS_H
-#define CUTS_H
-
+#ifndef NPE_EVENT_CUTS_H
+#define NPE_EVENT_CUTS_H
 /* **************************************************
  *  Cuts namespace.
  *
- *  Authors:  Kunsu OH        (kunsuoh@gmail.com)
- *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *  Authors:  **Kunsu OH        (kunsuoh@gmail.com)
+ *              Mustafa Mustafa (mmustafa@lbl.gov)
+ *
+ *  **Code Maintainer
  *
  * **************************************************
  */
@@ -15,36 +16,39 @@
 
 namespace cuts
 {
-    extern std::string const prescalesFilesDirectoryName;
+    // path to lists of triggers prescales
+    // lists are obtained from http://www.star.bnl.gov/protected/common/common2014/trigger2014/plots_au200gev/
+    std::string const prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
+
     //event
-    extern float const vz;
-    extern float const vzVpdVz;
+    float const vz = 6.0;// cm.
+    float const vzVpdVz = 3.0; // 3 cm.
     
     //tracking
-    extern int const nHitsFit;
-    extern bool const requireHFT;
+    int const nHitsFit = 15;
     
     // electrons
-    extern float const pt;
-    extern float const nSigmaElectron;
-
+    bool const requireHFT = true;
+    float const pt = .2;
+    float const nSigmaElectron = 3.;
+    
     // partner
-    extern float const nSigmaPartnerElectron;
+    float const nSigmaPartnerElectron = 3.;
     
     // tree electron pair cuts
-    extern float const pairMass;
-    extern float const pairMassHigh;
-    extern float const pairHighPt;
-    extern float const pairDca;
-    extern float const positionX;
-    extern float const positionY;
-    extern float const positionZ;
+    float const pairMass = 0.2;
+    float const pairMassHigh = 0.4;
+    float const pairHighPt = 2.;
+    float const pairDca = 1;
+    float const positionX = 200.;
+    float const positionY = 200.;
+    float const positionZ = 200.;
     
     // histograms electron pair cuts
-    extern float const qaNHitsFit;
-    extern float const qaNSigmaElectronMax;
-    extern float const qaNSigmaElectronMin;
-    extern float const qaPairDca;
-    extern float const qaPairMass;
+    float const qaNHitsFit = 20;
+    float const qaNSigmaElectronMax = 3.0;
+    float const qaNSigmaElectronMin = -1.0;
+    float const qaPairDca = 0.1;
+    float const qaPairMass = 0.1;
 }
 #endif

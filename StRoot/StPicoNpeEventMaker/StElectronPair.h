@@ -7,15 +7,14 @@
  *  lorentz vector and topological decay parameters
  *  and storing them.
  *
- *  Authors:  Kunsu OH        (kunsuoh@gmail.com)
+ *  Authors:  **Kunsu OH        (kunsuoh@gmail.com)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *
+ *  **Code Maintainer
  * **************************************************
  */
 
 #include "TObject.h"
-#include "TClonesArray.h"
-#include "StLorentzVectorF.hh"
 
 class StPicoTrack;
 class StPicoEvent;
@@ -25,8 +24,8 @@ class StElectronPair : public TObject
 public:
     StElectronPair();
     StElectronPair(StElectronPair const *);
-    StElectronPair(StPicoTrack const * Electron, StPicoTrack const * Partner,unsigned short electronIdx,unsigned short partnerIdx,
-                   StThreeVectorF const & vtx, float bField);
+    StElectronPair(StPicoTrack const * Electron, StPicoTrack const * Partner,
+                   unsigned short electronIdx,unsigned short partnerIdx, float bField);
     ~StElectronPair() {}// please keep this non-virtual and NEVER inherit from this class
     
     unsigned short   electronIdx() const;	// tagged electron idx
@@ -54,13 +53,13 @@ private:
     
     ClassDef(StElectronPair,1)
 };
-inline unsigned short   StElectronPair::electronIdx() const     { return mElectronIdx;                      }
-inline unsigned short   StElectronPair::partnerIdx() const      { return mPartnerIdx;                       }
-inline float StElectronPair::pairMass()    const                       { return (float)mMass/1000.;                }
-inline float StElectronPair::pairDca() const                    { return (float)mPairDca;                   }
-inline float StElectronPair::positionX() const                  { return (float)mPositionX/100.0;           }
-inline float StElectronPair::positionY() const                  { return (float)mPositionY/100.0;           }
-inline float StElectronPair::positionZ() const                  { return (float)mPositionZ/100.0;           }
+inline unsigned short   StElectronPair::electronIdx() const     { return mElectronIdx;                        }
+inline unsigned short   StElectronPair::partnerIdx() const      { return mPartnerIdx;                         }
+inline float StElectronPair::pairMass()    const                { return static_cast<float>(mMass/1000.);     }
+inline float StElectronPair::pairDca() const                    { return mPairDca;                            }
+inline float StElectronPair::positionX() const                  { return static_cast<float>(mPositionX/100.0);}
+inline float StElectronPair::positionY() const                  { return static_cast<float>(mPositionY/100.0);}
+inline float StElectronPair::positionZ() const                  { return static_cast<float>(mPositionZ/100.0);}
 
 #endif
 #endif

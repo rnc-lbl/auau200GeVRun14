@@ -5,9 +5,10 @@
  *  A specialized class for storing eventwise Npe
  *  candidates.
  *
- *  Authors:  Kunsu OH        (kunsuoh@gmail.com)
+ *  Authors:  **Kunsu OH        (kunsuoh@gmail.com)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *
+ *  **Code Maintainer
  * **************************************************
  */
 

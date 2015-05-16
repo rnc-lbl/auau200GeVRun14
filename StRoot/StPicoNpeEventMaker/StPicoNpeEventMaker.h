@@ -5,9 +5,10 @@
  *  A Maker that reads StPicoEvents' and creates 
  *  StPicoNpeEvents and stores them.
  *
- *  Authors:  Kunsu OH        (kunsuoh@gmail.com)
+ *  Authors:  **Kunsu OH        (kunsuoh@gmail.com)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *
+ *  **Code Maintainer
  * **************************************************
  */
 
@@ -33,12 +34,12 @@ class StPicoNpeEventMaker : public StMaker
     virtual Int_t Finish();
     
   private:
-    bool  isGoodEvent();
+    bool  isGoodEvent() const;
     bool  isGoodTrack(StPicoTrack const*) const;
     bool  isElectron(StPicoTrack const*) const;
     bool  isPartnerElectron(StPicoTrack const*) const;
     bool  isGoodElectronPair(StElectronPair const &, float) const;
-    bool  isGoodQaElectronPair(StElectronPair const&, StPicoTrack const&,StPicoTrack const&);
+    bool  isGoodQaElectronPair(StElectronPair const&, StPicoTrack const&,StPicoTrack const&) const;
 
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
