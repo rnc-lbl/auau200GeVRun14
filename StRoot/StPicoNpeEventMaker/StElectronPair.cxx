@@ -53,23 +53,8 @@ mPositionZ(std::numeric_limits<short>::quiet_NaN())
     }
     
     
-    // to be used for testing with preview II pico production
     StPhysicalHelixD electronHelix = electron->dcaGeometry().helix();
     StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
-    
-    // move origins of helices to the primary vertex origin
-    //    electronHelix.moveOrigin(electronHelix.pathLength(vtx));
-    //    partnerHelix.moveOrigin(partnerHelix.pathLength(vtx));
-    
-    // use straight lines approximation to get point of DCA of electron-partner pair
-    //    StThreeVectorF const electronMom = electronHelix.momentum(bField * kilogauss);
-    //    StThreeVectorF const partnerMom = partnerHelix.momentum(bField * kilogauss);
-    //    StPhysicalHelixD const kStraightLine(electronMom, electronHelix.origin(), 0, electron->charge());
-    //    StPhysicalHelixD const pStraightLine(partnerMom, partnerHelix.origin(), 0, partner->charge());
-    
-    //    pair<double, double> const ss = kStraightLine.pathLengths(pStraightLine);
-    //    StThreeVectorF const kAtDcaTopartner = kStraightLine.at(ss.first);
-    //    StThreeVectorF const pAtDcaToelectron = pStraightLine.at(ss.second);
     
     // normal method
     pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
