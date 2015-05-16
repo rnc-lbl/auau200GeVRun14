@@ -1,7 +1,9 @@
 /* *********************************************************************   
  *  ROOT macro - Toy Monte Carlo Simulation of Particle Decay Kinematics   
+ *  Example for D+/D- --> Kpipi
  *   
  *  Authors:  Mustafa Mustafa (mmustafa@lbl.gov)   
+ *            Michael Lomnitz (mrlomnitz@lbl.gov)
  *   
  * *********************************************************************
 */
@@ -27,7 +29,7 @@ using namespace std;
 void setDecayChannels(int const mdme);
 void decay(int const kf, TLorentzVector* b, TClonesArray& daughters);
 void fill(int const kf, TLorentzVector* b, double const weight, TClonesArray& daughters);
-void get_kinematics(double& pt, double& eta, double& phi, double& px, double& py, double& pz);
+void getKinematics(TLorentzVector& b,double const mass);
 TLorentzVector smearMom(TLorentzVector const& b,TF1 const * const fMomResolution);
 void bookObjects();
 void write();
@@ -35,14 +37,18 @@ void write();
 TPythia6Decayer* pydecay;
 TNtuple* nt;
 TFile* result;
+
 TF1* fKaonMomResolution = 0;
 TF1* fPionMomResolution = 0;
+TF1* fWeightFunction = 0;
 
+string outFileName = "Dpm.root";
 std::pair<int,int> const decayChannels(673,736);
-float const accp_eta = 1;
+std::pair<float,float> const momentumRange(0,10);
+float const acceptanceEta = 1.0;
 
 //============== main  program ==================
-void pythia(int npart = 100)
+void pythia_decay(int npart = 100)
 {
    gRandom->SetSeed();
    bookObjects();
@@ -50,30 +56,21 @@ void pythia(int npart = 100)
    pydecay = TPythia6Decayer::Instance();
    pydecay->Init();
 
-   //.. kinetic variables for each ptcls.
-   TLorentzVector* b_d = new TLorentzVector;
-
-   //.. holder of decay particles ...
-   TClonesArray ptl("TParticle", 10);
-
-   double pt = -999, eta = -999, phi = -999, px = -999, py = -999, pz = -999;
-
-
    setDecayChannels(719); // D+/D- --> Kpipi
+
+   TLorentzVector* b_d = new TLorentzVector;
+   TClonesArray ptl("TParticle", 10);
    for (int ipart = 0; ipart < npart; ipart++)
    {
       if (!(ipart % 100000))
          cout << "____________ ipart = " << ipart << " ________________" << endl;
 
-      get_kinematics(pt, eta, phi, px, py, pz);
-
-      double E_d0 = sqrt(px * px + py * py + pz * pz + M_D_PLUS * M_D_PLUS);
-      b_d->SetPxPyPzE(px, py, pz, E_d0);
+      getKinematics(*b_d,M_D_PLUS);
 
       decay(411,b_d,ptl);
-      fill(411, b_d, 1, ptl);
+      fill(411, b_d, fWeightFunction->Eval(b_d->Perp()), ptl);
       decay(-411,b_d,ptl);
-      fill(-411, b_d, 1, ptl);
+      fill(-411, b_d, fWeightFunction->Eval(b_d->Perp()), ptl);
    }
 
    write();
@@ -122,12 +119,12 @@ void fill(int const kf, TLorentzVector* b, double const weight, TClonesArray& da
    TLorentzVector p1RMom = smearMom(p1Mom,fPionMomResolution);
    TLorentzVector p2RMom = smearMom(p2Mom,fPionMomResolution);
    TLorentzVector rMom = kRMom + p1RMom + p2RMom;
-   TLorentzVector rMom = kRMom + p1RMom;
 
    // save
    float arr[100];
    int iArr = 0;
    arr[iArr++] = kf;
+   arr[iArr++] = weight;
    arr[iArr++] = b->M();
    arr[iArr++] = b->Perp();
    arr[iArr++] = b->PseudoRapidity();
@@ -178,20 +175,20 @@ void fill(int const kf, TLorentzVector* b, double const weight, TClonesArray& da
    
    nt->Fill(arr);
 }
-//.. produce decay kinematics ....
-void get_kinematics(double& pt, double& eta, double& phi, double& px, double& py, double& pz)
+
+void getKinematics(TLorentzVector& b,double const mass)
 {
-   pt = gRandom->Uniform(0, 10);
-   eta = gRandom->Uniform(-accp_eta, accp_eta);
-   phi = TMath::TwoPi() * gRandom->Rndm();
-   px = pt * cos(phi);
-   py = pt * sin(phi);
-   pz = pt * sinh(eta);
+   float const pt = gRandom->Uniform(momentumRange.first,momentumRange.second);
+   float const eta = gRandom->Uniform(-acceptanceEta,acceptanceEta);
+   float const phi = TMath::TwoPi() * gRandom->Rndm();
+
+   b.SetXYZM(pt * cos(phi),pt * sin(phi),pt * sinh(eta), mass);
 }
+
 TLorentzVector smearMom(TLorentzVector const& b,TF1 const * const fMomResolution)
 {
   float const pt = b.Perp();
-  float const sPt = gRandom->Gaus(pt,1.5*pt*fMomResolution->Eval(pt));
+  float const sPt = gRandom->Gaus(pt,pt*fMomResolution->Eval(pt));
 
   TLorentzVector sMom;
   sMom.SetXYZM(sPt*cos(b.Phi()),sPt*sin(b.Phi()),sPt*sinh(b.PseudoRapidity()),b.M());
@@ -200,9 +197,10 @@ TLorentzVector smearMom(TLorentzVector const& b,TF1 const * const fMomResolution
 //___________
 void bookObjects()
 {
-   result = new TFile("out.root", "recreate");
+   result = new TFile(outFileName.c_str(), "recreate");
    result->cd();
-   nt = new TNtuple("nt", "", "pid:m:pt:eta:y:phi:" // MC D+
+
+   nt = new TNtuple("nt", "", "pid:w:m:pt:eta:y:phi:" // MC D+
                               "rM:rPt:rEta:rY:rPhi:" // Rc D+
                               "kM:kPt:kEta:kY:kPhi:" // MC Kaon
                               "kRM:kRPt:kREta:kRY:kRPhi:" // Rc Kaon
@@ -215,6 +213,10 @@ void bookObjects()
    fPionMomResolution = (TF1*)f.Get("fPion")->Clone("fPionMomResolution");
    fKaonMomResolution = (TF1*)f.Get("fKaon")->Clone("fKaonMomResolution");
    f.Close();
+
+   TFile fPP("pp200_spectra.root");
+   fWeightFunction = (TF1*)fPP.Get("run12/f1Levy")->Clone("fWeightFunction");
+   fPP.Close();
 }
 //___________
 void write()
