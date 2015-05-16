@@ -34,7 +34,7 @@ class StPicoNpeEventMaker : public StMaker
     virtual Int_t Finish();
     
   private:
-    bool  isGoodEvent();
+    bool  isGoodEvent() const;
     bool  isGoodTrack(StPicoTrack const*) const;
     bool  isElectron(StPicoTrack const*) const;
     bool  isPartnerElectron(StPicoTrack const*) const;

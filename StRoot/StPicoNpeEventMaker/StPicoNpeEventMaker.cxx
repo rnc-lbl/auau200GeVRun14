@@ -159,7 +159,7 @@ Int_t StPicoNpeEventMaker::Make()
 }
 
 //-----------------------------------------------------------------------------
-bool StPicoNpeEventMaker::isGoodEvent()
+bool StPicoNpeEventMaker::isGoodEvent() const
 {
     return
     fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
