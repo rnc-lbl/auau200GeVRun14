@@ -5,9 +5,10 @@
  *  A class to create and save Npe production QA
  *  histograms.
  *
- *  Authors:  Kunsu OH        (kunsuoh@gmail.com)
+ *  Authors:  **Kunsu OH        (kunsuoh@gmail.com)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *
+ *  **Code Maintainer
  * **************************************************
  */
 

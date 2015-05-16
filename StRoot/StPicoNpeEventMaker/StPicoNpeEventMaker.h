@@ -5,9 +5,10 @@
  *  A Maker that reads StPicoEvents' and creates 
  *  StPicoNpeEvents and stores them.
  *
- *  Authors:  Kunsu OH        (kunsuoh@gmail.com)
+ *  Authors:  **Kunsu OH        (kunsuoh@gmail.com)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *
+ *  **Code Maintainer
  * **************************************************
  */
 

@@ -7,9 +7,10 @@
  *  lorentz vector and topological decay parameters
  *  and storing them.
  *
- *  Authors:  Kunsu OH        (kunsuoh@gmail.com)
+ *  Authors:  **Kunsu OH        (kunsuoh@gmail.com)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *
+ *  **Code Maintainer
  * **************************************************
  */
 
