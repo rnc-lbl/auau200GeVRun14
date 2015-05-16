@@ -63,7 +63,7 @@ mPositionZ(std::numeric_limits<short>::quiet_NaN())
     
     // calculate DCA of partner to electron at their DCA
     StThreeVectorD VectorDca = kAtDcaToPartner - pAtDcaToElectron;
-    mPairDca = (float)VectorDca.mag();
+    mPairDca = static_cast<float>(VectorDca.mag());
     
     // calculate Lorentz vector of electron-partner pair
     StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, bField * kilogauss);
@@ -72,12 +72,22 @@ mPositionZ(std::numeric_limits<short>::quiet_NaN())
     StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_ELECTRON));
     StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
     StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
-    mMass = (unsigned short)(epairFourMom.m()*1000);
+
+    mMass = static_cast<unsigned int>(epairFourMom.m()*1000) < std::numeric_limits<unsigned short>::max() ?
+            static_cast<unsigned short>(epairFourMom.m()*1000) : std::numeric_limits<unsigned short>::quiet_NaN();
     
-    StThreeVectorD Position = kAtDcaToPartner + pAtDcaToElectron;
-    mPositionX = (short)(Position.x()/2*100.0);
-    mPositionY = (short)(Position.y()/2*100.0);
-    mPositionZ = (short)(Position.z()/2*100.0);
-    
+    StThreeVectorD Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
+
+    mPositionX = static_cast<int>((Position.x()*100.0)) > std::numeric_limits<short>::lowest() &&
+                 static_cast<int>((Position.x()*100.0)) < std::numeric_limits<short>::max()?
+                 static_cast<short>((Position.x()*100.0)) : std::numeric_limits<short>::quiet_NaN();
+
+    mPositionY = static_cast<int>((Position.y()*100.0)) > std::numeric_limits<short>::lowest() &&
+                 static_cast<int>((Position.y()*100.0)) < std::numeric_limits<short>::max()?
+                 static_cast<short>((Position.y()*100.0)) : std::numeric_limits<short>::quiet_NaN();
+
+    mPositionZ = static_cast<int>((Position.z()*100.0)) > std::numeric_limits<short>::lowest() &&
+                 static_cast<int>((Position.z()*100.0)) < std::numeric_limits<short>::max()?
+                 static_cast<short>((Position.z()*100.0)) : std::numeric_limits<short>::quiet_NaN();
 }
 #endif // __ROOT__
