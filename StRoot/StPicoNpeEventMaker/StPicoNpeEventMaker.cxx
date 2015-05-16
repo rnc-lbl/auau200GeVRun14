@@ -32,8 +32,8 @@ StPicoNpeEventMaker::StPicoNpeEventMaker(char const* makerName, StPicoDstMaker* 
     int Split = 1;
     mTree = new TTree("T", "T", BufSize);
     mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
-    mTree->Branch("dEvent", "StPicoNpeEvent", &mPicoNpeEvent, BufSize, Split);
-    
+    mTree->Branch("npeEvent", "StPicoNpeEvent", &mPicoNpeEvent, BufSize, Split);
+
     mPicoNpeHists = new StPicoNpeHists(fileBaseName);
 }
 
