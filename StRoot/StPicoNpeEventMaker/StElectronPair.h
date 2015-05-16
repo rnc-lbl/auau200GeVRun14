@@ -53,13 +53,13 @@ private:
     
     ClassDef(StElectronPair,1)
 };
-inline unsigned short   StElectronPair::electronIdx() const     { return mElectronIdx;                      }
-inline unsigned short   StElectronPair::partnerIdx() const      { return mPartnerIdx;                       }
-inline float StElectronPair::pairMass()    const                       { return (float)mMass/1000.;                }
-inline float StElectronPair::pairDca() const                    { return (float)mPairDca;                   }
-inline float StElectronPair::positionX() const                  { return (float)mPositionX/100.0;           }
-inline float StElectronPair::positionY() const                  { return (float)mPositionY/100.0;           }
-inline float StElectronPair::positionZ() const                  { return (float)mPositionZ/100.0;           }
+inline unsigned short   StElectronPair::electronIdx() const     { return mElectronIdx;                        }
+inline unsigned short   StElectronPair::partnerIdx() const      { return mPartnerIdx;                         }
+inline float StElectronPair::pairMass()    const                { return static_cast<float>(mMass/1000.);     }
+inline float StElectronPair::pairDca() const                    { return mPairDca;                            }
+inline float StElectronPair::positionX() const                  { return static_cast<float>(mPositionX/100.0);}
+inline float StElectronPair::positionY() const                  { return static_cast<float>(mPositionY/100.0);}
+inline float StElectronPair::positionZ() const                  { return static_cast<float>(mPositionZ/100.0);}
 
 #endif
 #endif
