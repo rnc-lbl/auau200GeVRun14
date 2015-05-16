@@ -111,8 +111,6 @@ Int_t StPicoNpeEventMaker::Make()
             if (isPartnerElectron(trk)) idxPicoPartnerEs.push_back(iTrack);
         } // .. end tracks loop
 
-        float const bField = mPicoEvent->bField();
-        
         mPicoNpeEvent->nElectrons(idxPicoTaggedEs.size());
         mPicoNpeEvent->nPartners(idxPicoPartnerEs.size());
 
@@ -125,6 +123,7 @@ Int_t StPicoNpeEventMaker::Make()
         // -- Mustafa
 
         float const bField = mPicoEvent->bField();
+
         for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
         {
 
