@@ -203,7 +203,7 @@ bool StPicoNpeEventMaker::isGoodElectronPair(StElectronPair const & epair, float
     ;
 }
 //-----------------------------------------------------------------------------
-bool  StPicoNpeEventMaker::isGoodQaElectronPair(StElectronPair  const& epair, StPicoTrack const& electron, StPicoTrack const& partner)
+bool  StPicoNpeEventMaker::isGoodQaElectronPair(StElectronPair  const& epair, StPicoTrack const& electron, StPicoTrack const& partner) const
 {
     return
     electron.nHitsFit() >= cuts::qaNHitsFit &&

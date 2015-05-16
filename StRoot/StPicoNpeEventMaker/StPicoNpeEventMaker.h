@@ -39,7 +39,7 @@ class StPicoNpeEventMaker : public StMaker
     bool  isElectron(StPicoTrack const*) const;
     bool  isPartnerElectron(StPicoTrack const*) const;
     bool  isGoodElectronPair(StElectronPair const &, float) const;
-    bool  isGoodQaElectronPair(StElectronPair const&, StPicoTrack const&,StPicoTrack const&);
+    bool  isGoodQaElectronPair(StElectronPair const&, StPicoTrack const&,StPicoTrack const&) const;
 
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
