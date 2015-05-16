@@ -15,8 +15,6 @@
  */
 
 #include "TObject.h"
-#include "TClonesArray.h"
-#include "StLorentzVectorF.hh"
 
 class StPicoTrack;
 class StPicoEvent;
