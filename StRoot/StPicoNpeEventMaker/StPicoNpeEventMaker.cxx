@@ -24,7 +24,7 @@ StPicoNpeEventMaker::StPicoNpeEventMaker(char const* makerName, StPicoDstMaker* 
   mOutputFile(NULL), mTree(NULL), mPicoNpeEvent(NULL)
 {
     mPicoNpeEvent = new StPicoNpeEvent();
-    
+
     TString baseName(fileBaseName);
     mOutputFile = new TFile(Form("%s.picoNpe.root",fileBaseName), "RECREATE");
     mOutputFile->SetCompressionLevel(1);
@@ -74,40 +74,41 @@ Int_t StPicoNpeEventMaker::Make()
         LOG_WARN << " No PicoDstMaker! Skip! " << endm;
         return kStWarn;
     }
-    
+
     StPicoDst const * picoDst = mPicoDstMaker->picoDst();
     if (!picoDst)
     {
         LOG_WARN << " No PicoDst! Skip! " << endm;
         return kStWarn;
     }
-    
+
     mPicoEvent = picoDst->event();
     mPicoNpeEvent->addPicoEvent(*mPicoEvent);
-    
+
     if (isGoodEvent())
     {
         UInt_t nTracks = picoDst->numberOfTracks();
-        
+
         std::vector<unsigned short> idxPicoTaggedEs;
         std::vector<unsigned short> idxPicoPartnerEs;
-        
+
         unsigned int nHftTracks = 0;
-        
+
         for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
         {
             StPicoTrack* trk = picoDst->track(iTrack);
             
             if (!trk || !isGoodTrack(trk)) continue;
             ++nHftTracks;
-            
-            if (isElectron(trk)) {
+
+            if (isElectron(trk))
+            {
                 idxPicoTaggedEs.push_back(iTrack);
                 StElectronTrack electronTrack((StPicoTrack const *)trk, iTrack);
                 mPicoNpeEvent->addElectron(&electronTrack);
             }
+
             if (isPartnerElectron(trk)) idxPicoPartnerEs.push_back(iTrack);
-            
         } // .. end tracks loop
 
         float const bField = mPicoEvent->bField();
@@ -117,44 +118,42 @@ Int_t StPicoNpeEventMaker::Make()
         
         for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
         {
-            
+
             StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
-            
+
             // make electron pairs
             for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
             {
-                
+
                 if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
-                
+
                 StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
-                
+
                 StElectronPair electronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
-                
-                
+
                 if (!isGoodElectronPair(electronPair, electron->gPt())) continue;
-                
+
                 mPicoNpeEvent->addElectronPair(&electronPair);
-                
+
                 if(electron->charge() * partner->charge() <0) // fill histograms for unlike sign pairs only
                 {
                     bool fillMass = isGoodQaElectronPair(&electronPair, *electron, *partner);
                     mPicoNpeHists->addElectronPair(&electronPair, electron->gPt(), fillMass);
                 }
-                
+
             } // .. end make electron pairs
         } // .. end of tagged e loop
-        
+
         mPicoNpeHists->addEvent(*mPicoEvent,*mPicoNpeEvent,nHftTracks);
         idxPicoTaggedEs.clear();
         idxPicoPartnerEs.clear();
-     //   printf("%d\n",mPicoEvent->triggerWord());
     } //.. end of good event fill
 
     // This should never be inside the good event block
     // because we want to save header information about all events, good or bad
     mTree->Fill();
     mPicoNpeEvent->clear("C");
-    
+
     return kStOK;
 }
 
@@ -163,8 +162,7 @@ bool StPicoNpeEventMaker::isGoodEvent() const
 {
     return
     fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
-    fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz
-    ;
+    fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz;
 }
 //-----------------------------------------------------------------------------
 bool StPicoNpeEventMaker::isGoodTrack(StPicoTrack const * const trk) const
@@ -181,9 +179,8 @@ bool StPicoNpeEventMaker::isElectron(StPicoTrack const * const trk) const
 {
     return
     (!cuts::requireHFT || trk->isHFTTrack()) &&
-    fabs(trk->nSigmaElectron()) < cuts::nSigmaElectron &&
-    trk->gPt() > cuts::pt
-    ;
+    trk->gPt() > cuts::pt &&
+    fabs(trk->nSigmaElectron()) < cuts::nSigmaElectron;
 }
 //-----------------------------------------------------------------------------
 bool StPicoNpeEventMaker::isPartnerElectron(StPicoTrack const * const trk) const
@@ -211,14 +208,7 @@ bool  StPicoNpeEventMaker::isGoodQaElectronPair(StElectronPair  const& epair, St
 
     electron.nSigmaElectron() < cuts::qaNSigmaElectronMax && electron.nSigmaElectron() > cuts::qaNSigmaElectronMin &&
     partner.nSigmaElectron() < cuts::qaNSigmaElectronMax && partner.nSigmaElectron() > cuts::qaNSigmaElectronMin &&
-    
+
     epair.pairDca() < cuts::qaPairDca &&
-    epair.pairMass() < cuts::qaPairMass
-    ;
+    epair.pairMass() < cuts::qaPairMass;
 }
-
-
-
-
-
-
