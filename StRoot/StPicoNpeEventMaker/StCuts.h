@@ -1,19 +1,25 @@
+#ifndef NPE_EVENT_CUTS_H
+#define NPE_EVENT_CUTS_H
 /* **************************************************
  *  Cuts namespace.
  *
- *  Authors:  Kunsu OH        (kunsuoh@gmail.com)
- *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *  Authors:  **Kunsu OH        (kunsuoh@gmail.com)
+ *              Mustafa Mustafa (mmustafa@lbl.gov)
+ *
+ *  **Code Maintainer
  *
  * **************************************************
  */
 
-#include "StCuts.h"
+#include "Rtypes.h"
+#include <string>
 
 namespace cuts
 {
     // path to lists of triggers prescales
     // lists are obtained from http://www.star.bnl.gov/protected/common/common2014/trigger2014/plots_au200gev/
     std::string const prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
+
     //event
     float const vz = 6.0;// cm.
     float const vzVpdVz = 3.0; // 3 cm.
@@ -45,3 +51,4 @@ namespace cuts
     float const qaPairDca = 0.1;
     float const qaPairMass = 0.1;
 }
+#endif
