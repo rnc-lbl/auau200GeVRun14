@@ -1,3 +1,14 @@
+/* **************************************************
+ *  A macro to run StPicoD0EventMaker
+ *
+ *  Authors:  **Mustafa Mustafa (mmustafa@lbl.gov)
+ *
+ *  **Code Maintainer
+ *
+ * **************************************************
+ */
+
+
 #include <TSystem>
 
 class StMaker;

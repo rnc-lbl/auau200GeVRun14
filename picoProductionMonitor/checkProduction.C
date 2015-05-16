@@ -1,8 +1,11 @@
 /*
- * File:   checkProduction.C
- * Author: mustafa
- *
  * This macro is to check the intergrity of prorductions.
+ *
+ * File:   checkProduction.C
+ * Author: 
+ *         **Mustafa Mustafa (mmustafa@lbl.gov)
+ *
+ * **Code Maintainer
  */
 
 #include <fstream>
