@@ -3,11 +3,11 @@
 
 /* **************************************************
  *  Class to fit primary vertex using KF vertex maker
- *  
+ *
  *  Usage:
  *
  * **************************************************
- *  Authors:  
+ *  Authors:
  *            **Liang He(he202@purdue.edu)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *
@@ -26,20 +26,22 @@ class StDcaGeometry;
 class StPicoKFVertexFitter
 {
   public:
-    StPicoKFVertexFitter(StThreeVectorF *kfVertex,StPicoDstMaker* picoDstMaker);
-    StPicoKFVertexFitter(StThreeVectorF *kfVertex, vector<int>& daughter, StPicoDstMaker* picoDstMaker);
-    StPicoKFVertexFitter() {}
-    virtual ~StPicoKFVertexFitter();
-//User's function
-    int primaryVertexRefit();
-  private:
-    StPicoDstMaker *mPicoDstMaker;
-    StThreeVectorF *mKFVertex;
-    StPicoDst *picoDst;
-    vector<int> d0Daughters;
-    StDcaGeometry *dcaG;
+   StPicoKFVertexFitter(StThreeVectorF *kfVertex, StPicoDstMaker* picoDstMaker);
+   StPicoKFVertexFitter(StThreeVectorF *kfVertex, vector<int>& daughter, StPicoDstMaker* picoDstMaker);
+   StPicoKFVertexFitter() {}
+   virtual ~StPicoKFVertexFitter();
+   
+   //User's function
+   int primaryVertexRefit();
 
-    ClassDef(StPicoKFVertexFitter, 1)
+  private:
+   StPicoDstMaker *mPicoDstMaker;
+   StThreeVectorF *mKFVertex;
+   StPicoDst *picoDst;
+   vector<int> d0Daughters;
+   StDcaGeometry *dcaG;
+
+   ClassDef(StPicoKFVertexFitter, 1)
 };
 
 #endif
