@@ -15,7 +15,7 @@ StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const p
    vector<int> goodTracks;
 
    // make a list of good tracks to be used in the KFVertex fit
-   for (int iTrk = 0; iTrk < picoDst->numberOfTracks(); ++iTrk)
+   for (unsigned int iTrk = 0; iTrk < picoDst->numberOfTracks(); ++iTrk)
    {
       StPicoTrack* gTrack = (StPicoTrack*)picoDst->track(iTrk);
       if (! gTrack) continue;
@@ -31,7 +31,7 @@ StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const p
    // fill an array of KFParticles
    KFParticle* particles[goodTracks.size()];
 
-   for (size_t iTrk = 0; iTrk < goodTracks.size(); iTrk)
+   for (size_t iTrk = 0; iTrk < goodTracks.size(); ++iTrk)
    {
       StPicoTrack* gTrack = (StPicoTrack*)picoDst->track(goodTracks[iTrk]);
 
@@ -56,11 +56,11 @@ StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const p
                                   (Bool_t*) Flag.GetArray(), TMath::Sqrt(StAnneling::Chi2Cut() / 2));
    delete[] particles;
 
-   StThreeVector kfVertex(-999.,-999.,-999.);
+   StThreeVectorF kfVertex(-999.,-999.,-999.);
 
    if (aVertex.GetX())
    {
-     kfVertex->set(aVertex.GetX(), aVertex.GetY(), aVertex.GetZ());
+     kfVertex.set(aVertex.GetX(), aVertex.GetY(), aVertex.GetZ());
    }
 
    return kfVertex;
