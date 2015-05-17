@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Author: Mustafa Mustafa (mmustafa@lbl.gov) -->
+
 <job fileListSyntax="paths" maxFilesPerProcess="150" simulateSubmission="false">
 
         <stdout discard="true" />

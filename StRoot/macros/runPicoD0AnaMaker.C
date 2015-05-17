@@ -1,3 +1,14 @@
+/* **************************************************
+ *  A macro to run StPicoD0AnaMaker
+ *
+ *  Authors:  **Mustafa Mustafa (mmustafa@lbl.gov)
+ *
+ *  **Code Maintainer
+ *
+ * **************************************************
+ */
+
+
 void runPicoD0AnaMaker(TString d0list, TString outFileName, TString badRunListFileName = "picoList_bad_MB.list")
 {
    //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
