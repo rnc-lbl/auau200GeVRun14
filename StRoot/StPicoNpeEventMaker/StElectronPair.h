@@ -47,9 +47,9 @@ private:
     unsigned short mPartnerIdx;     // index of partner track in StPicoDstEvent (2 Bytes)
     unsigned short mMass;           // mass * 1000 (2 Bytes)
     float mPairDca;                 // pair dca (4 Bytes)
-    short mPositionX;               // conversion position x  * 100.0 (2 Bytes)
-    short mPositionY;               // conversion position y  * 100.0 (2 Bytes)
-    short mPositionZ;               // conversion position z  * 100.0 (2 Bytes)
+    float mPositionX;               // conversion position x (4 Bytes)
+    float mPositionY;               // conversion position y (4 Bytes)
+    float mPositionZ;               // conversion position z (4 Bytes)
     
     ClassDef(StElectronPair,1)
 };
@@ -57,9 +57,9 @@ inline unsigned short   StElectronPair::electronIdx() const     { return mElectr
 inline unsigned short   StElectronPair::partnerIdx() const      { return mPartnerIdx;                         }
 inline float StElectronPair::pairMass()    const                { return static_cast<float>(mMass/1000.);     }
 inline float StElectronPair::pairDca() const                    { return mPairDca;                            }
-inline float StElectronPair::positionX() const                  { return static_cast<float>(mPositionX/100.0);}
-inline float StElectronPair::positionY() const                  { return static_cast<float>(mPositionY/100.0);}
-inline float StElectronPair::positionZ() const                  { return static_cast<float>(mPositionZ/100.0);}
+inline float StElectronPair::positionX() const                  { return mPositionX;}
+inline float StElectronPair::positionY() const                  { return mPositionY;}
+inline float StElectronPair::positionZ() const                  { return mPositionZ;}
 
 #endif
 #endif
