@@ -9,7 +9,7 @@
 
 using namespace std;
 
-int StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const picoDst
+StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const picoDst,
     std::vector<int> const& tracksToRemove) const
 {
    vector<int> goodTracks;
