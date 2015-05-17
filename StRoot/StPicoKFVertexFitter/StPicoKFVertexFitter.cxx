@@ -1,4 +1,4 @@
-#include "StarClassLibrary/StThreeVector.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
 #include "StarRoot/MTrack.h"
 #include "StiMaker/StKFVerticesCollection.h"
 #include "StEvent/StDcaGeometry.h"

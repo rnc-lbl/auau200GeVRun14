@@ -17,8 +17,8 @@
  */
 
 #include <vector>
+#include "StThreeVectorF.hh"
 
-class StThreeVectorF;
 class StPicoDst;
 
 class StPicoKFVertexFitter
