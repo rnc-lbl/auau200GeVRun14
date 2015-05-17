@@ -33,9 +33,7 @@ public:
     Int_t   runId()   const;
     Int_t   eventId() const;
     TClonesArray const * electronPairArray()   const;
-    TClonesArray const * electronArray()   const;
     int     nElectronPair()  const;
-    int     nElectron()  const;
     int     nElectrons() const;
     int     nPartners() const;
     
@@ -48,9 +46,7 @@ private:
     int   mNPartners;
     
     TClonesArray*        mElectronPairArray;
-    TClonesArray*        mElectronArray;
     static TClonesArray* fgElectronPairArray;
-    static TClonesArray* fgElectronArray;
     
     ClassDef(StPicoNpeEvent, 1)
 };
@@ -59,7 +55,6 @@ inline void StPicoNpeEvent::nElectrons(int n) { mNElectrons = n; }
 inline void StPicoNpeEvent::nPartners(int n) { mNPartners = n; }
 
 inline TClonesArray const * StPicoNpeEvent::electronPairArray()   const { return mElectronPairArray;}
-inline TClonesArray const * StPicoNpeEvent::electronArray()   const { return mElectronArray;}
 inline int   StPicoNpeEvent::nElectronPair()  const { return mNElectronPair;}
 inline int   StPicoNpeEvent::nElectrons()  const { return mNElectrons;}
 inline int   StPicoNpeEvent::nPartners()  const { return mNPartners;}

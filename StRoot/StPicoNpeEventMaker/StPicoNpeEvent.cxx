@@ -7,7 +7,6 @@
 ClassImp(StPicoNpeEvent)
 
 TClonesArray *StPicoNpeEvent::fgElectronPairArray = 0;
-TClonesArray *StPicoNpeEvent::fgElectronArray = 0;
 
 //-----------------------------------------------------------------------
 StPicoNpeEvent::StPicoNpeEvent() : mRunId(-1), mEventId(-1), mNElectronPair(0), mNElectrons(0), mNPartners(0), mElectronPairArray(NULL)
