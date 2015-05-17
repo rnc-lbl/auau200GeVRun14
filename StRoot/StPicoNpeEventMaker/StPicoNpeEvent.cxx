@@ -29,7 +29,6 @@ void StPicoNpeEvent::addPicoEvent(StPicoEvent const & picoEvent)
 void StPicoNpeEvent::clear(char const *option)
 {
     mElectronPairArray->Clear(option);
-    mElectronArray->Clear(option);
     mRunId = -1;
     mEventId = -1;
     mNElectronPair = 0;
