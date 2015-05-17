@@ -17,7 +17,6 @@
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoNpeEventMaker/StPicoNpeEvent.h"
 #include "StPicoNpeEventMaker/StElectronPair.h"
-#include "StPicoNpeEventMaker/StElectronTrack.h"
 #include "StPicoNpeAnaMaker.h"
 #include "StCuts.h"
 #include "phys_constants.h"
