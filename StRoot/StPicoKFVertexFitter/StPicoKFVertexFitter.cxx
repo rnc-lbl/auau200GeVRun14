@@ -1,115 +1,67 @@
 #include "StarClassLibrary/StThreeVector.hh"
 #include "StarRoot/MTrack.h"
 #include "StiMaker/StKFVerticesCollection.h"
+#include "StEvent/StDcaGeometry.h"
 
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoKFVertexFitter.h"
 
-ClassImp(StPicoKFVertexFitter)
+using namespace std;
 
-StPicoKFVertexFitter::StPicoKFVertexFitter(StThreeVectorF *kfVertex, StPicoDstMaker* picoDstMaker):
-   mKFVertex(kfVertex), d0Daughters(NULL), mPicoDstMaker(picoDstMaker)
+int StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const picoDst
+    std::vector<int> const& tracksToRemove) const
 {
-//  d0Daughters.clear();
-   dcaG = new StDcaGeometry();
-}
+   vector<int> goodTracks;
 
-StPicoKFVertexFitter::StPicoKFVertexFitter(StThreeVectorF *kfVertex, vector<int>& daughter, StPicoDstMaker* picoDstMaker):
-   mKFVertex(kfVertex), d0Daughters(daughter), mPicoDstMaker(picoDstMaker)
-{
-//  d0Daughters = daughter;
-   dcaG = new StDcaGeometry();
-}
-
-//-----------------------------------------------------------------------------
-StPicoKFVertexFitter::~StPicoKFVertexFitter()
-{
-   /*  */
-   delete dcaG;
-}
-//-----------------------------------------------------------------------------
-int StPicoKFVertexFitter::primaryVertexRefit()
-{
-
-   picoDst = mPicoDstMaker->picoDst();
-   int nTracks = picoDst->numberOfTracks();
-   int N = 0;//nTracks - d0Daughters.size();
-   for (int i = 0; i < nTracks; i++)
+   // make a list of good tracks to be used in the KFVertex fit
+   for (int iTrk = 0; iTrk < picoDst->numberOfTracks(); ++iTrk)
    {
-      StPicoTrack *gTrack = (StPicoTrack*)picoDst->track(i);
+      StPicoTrack* gTrack = (StPicoTrack*)picoDst->track(iTrk);
       if (! gTrack) continue;
-      Int_t kg = gTrack->id();
 
-      bool flagDd0DaughtersCand = false;
-      for (vector<int>::size_type j = 0; j < d0Daughters.size(); j++)
+      for (size_t  j = 0; j < tracksToRemove.size(); ++j)
       {
-         if (d0Daughters[j] == kg)
-         {
-            flagDd0DaughtersCand = 1;
-         }
+        if (tracksToRemove[j] == gTrack->id()) continue;
       }
-      if (flagDd0DaughtersCand == 1) continue;
-      N++;
+
+      goodTracks.push_back(iTrk);
    }
-   KFParticle *particles[N];
-   //  KFParticle **particles = new KFParticle*[N];
-   //  StKFVertexMaker fitter;
-   Int_t NGoodGlobals = 0;
-   for (int i = 0; i < nTracks; i++)
+
+   // fill an array of KFParticles
+   KFParticle* particles[goodTracks.size()];
+
+   for (size_t iTrk = 0; iTrk < goodTracks.size(); iTrk)
    {
-      StPicoTrack *gTrack = (StPicoTrack*)picoDst->track(i);
-      if (! gTrack) continue;
-      dcaG->set(gTrack->params(), gTrack->errMatrix());
-      if (! dcaG) continue;
-      Int_t kg = gTrack->id();
+      StPicoTrack* gTrack = (StPicoTrack*)picoDst->track(goodTracks[iTrk]);
 
-      bool flagDd0DaughtersCand = false;
-      for (vector<int>::size_type j = 0; j < d0Daughters.size(); j++)
-      {
-         if (d0Daughters[j] == kg)
-         {
-            flagDd0DaughtersCand = 1;
-         }
-      }
-      if (flagDd0DaughtersCand == 1) continue;
-
-
-      // particles[NGoodGlobals] = fitter.AddTrackAt(dcaG,kg);
-      if (! dcaG) return 0;
+      StDcaGeometry dcaG = gTrack->dcaGeometry();
       Double_t xyzp[6], CovXyzp[21];
-      dcaG->GetXYZ(xyzp, CovXyzp);
-      static MTrack track;
+      dcaG.GetXYZ(xyzp, CovXyzp);
+      MTrack track;
       track.SetParameters(xyzp);
       track.SetCovarianceMatrix(CovXyzp);
       track.SetNDF(1);
-      //    track.SetChi2(GlobalTracks_mChiSqXY[k]);
-      track.SetID(kg);
-      Int_t q   = 1;
-      Int_t pdg = 211;
-      if (dcaG->charge() < 0)
-      {
-         q = -1;
-         pdg = -211;
-      }
-      track.SetCharge(q);
-      particles[NGoodGlobals] = new KFParticle(track, pdg);
-      particles[NGoodGlobals]->SetID(kg);
-      //////////////////
-      NGoodGlobals++;
-   }
-   TArrayC Flag(N);
-   KFVertex aVertex;
-   aVertex.ConstructPrimaryVertex((const KFParticle **) particles, N,
-                                  (Bool_t*) Flag.GetArray(), TMath::Sqrt(StAnneling::Chi2Cut() / 2));
-   //  delete [] particles;
-   for (int i = 0; i < N; ++i)
-   {
-      //    particles[i]->Clear();
-      delete particles[i];
+      track.SetID(gTrack->id());
+      track.SetCharge(dcaG.charge());
+
+      Int_t pdg = dcaG.charge() > 1 ? 211 : -211;
+
+      particles[iTrk] = new KFParticle(track, pdg);
    }
 
-   if (aVertex.GetX() == 0) return 0;
-   mKFVertex->set(aVertex.GetX(), aVertex.GetY(), aVertex.GetZ());
-   return 1;
+   TArrayC Flag(goodTracks.size());
+   KFVertex aVertex;
+   aVertex.ConstructPrimaryVertex((const KFParticle **) particles, goodTracks.size(),
+                                  (Bool_t*) Flag.GetArray(), TMath::Sqrt(StAnneling::Chi2Cut() / 2));
+   delete[] particles;
+
+   StThreeVector kfVertex(-999.,-999.,-999.);
+
+   if (aVertex.GetX())
+   {
+     kfVertex->set(aVertex.GetX(), aVertex.GetY(), aVertex.GetZ());
+   }
+
+   return kfVertex;
 }
