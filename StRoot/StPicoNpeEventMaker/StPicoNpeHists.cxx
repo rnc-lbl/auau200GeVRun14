@@ -8,7 +8,6 @@
 #include "../StPicoPrescales/StPicoPrescales.h"
 #include "StPicoNpeEvent.h"
 #include "StElectronPair.h"
-#include "StElectronTrack.h"
 #include "StCuts.h"
 
 #include "StPicoNpeHists.h"
@@ -78,11 +77,6 @@ void StPicoNpeHists::addElectronPair(StElectronPair const* const epair, float el
         mh2ConversionPositionQaCut->Fill(epair->positionX(),epair->positionY());
     }
 }//---------------------------------------------------------------------
-void StPicoNpeHists::addElectron(StElectronTrack const* const e)
-{
-    
-}
-//---------------------------------------------------------------------
 void StPicoNpeHists::closeFile()
 {
     mOutFile->cd();

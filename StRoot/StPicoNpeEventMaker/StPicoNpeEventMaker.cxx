@@ -104,8 +104,6 @@ Int_t StPicoNpeEventMaker::Make()
             if (isElectron(trk))
             {
                 idxPicoTaggedEs.push_back(iTrack);
-                StElectronTrack electronTrack(trk, iTrack);
-                mPicoNpeEvent->addElectron(&electronTrack);
             }
 
             if (isPartnerElectron(trk)) idxPicoPartnerEs.push_back(iTrack);
