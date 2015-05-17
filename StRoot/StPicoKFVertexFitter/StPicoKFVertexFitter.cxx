@@ -20,11 +20,17 @@ StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const p
       StPicoTrack* gTrack = (StPicoTrack*)picoDst->track(iTrk);
       if (! gTrack) continue;
 
+      bool rejectTrak = false;
       for (size_t  j = 0; j < tracksToRemove.size(); ++j)
       {
-        if (tracksToRemove[j] == gTrack->id()) continue;
+        if (tracksToRemove[j] == gTrack->id())
+        {
+          rejectTrak = true;
+          break;
+        }
       }
 
+      if(rejectTrak) continue;
       goodTracks.push_back(iTrk);
    }
 
@@ -45,7 +51,7 @@ StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const p
       track.SetID(gTrack->id());
       track.SetCharge(dcaG.charge());
 
-      Int_t pdg = dcaG.charge() > 1 ? 211 : -211;
+      Int_t pdg = dcaG.charge() > 1 ? 211 : -211; // assume all tracks are pions.
 
       particles[iTrk] = new KFParticle(track, pdg);
    }
