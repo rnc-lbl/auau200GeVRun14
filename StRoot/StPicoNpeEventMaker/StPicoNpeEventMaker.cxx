@@ -173,7 +173,8 @@ bool StPicoNpeEventMaker::isGoodEvent() const
 //-----------------------------------------------------------------------------
 bool StPicoNpeEventMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
-    return trk->nHitsFit() >= cuts::nHitsFit;
+    return trk->gPt() > cuts::pt &&
+    trk->nHitsFit() >= cuts::nHitsFit;
 }
 
 //-----------------------------------------------------------------------------
@@ -181,7 +182,6 @@ bool StPicoNpeEventMaker::isElectron(StPicoTrack const * const trk) const
 {
     return
     (!cuts::requireHFT || trk->isHFTTrack()) &&
-    trk->gPt() > cuts::pt &&
     fabs(trk->nSigmaElectron()) < cuts::nSigmaElectron;
 }
 //-----------------------------------------------------------------------------

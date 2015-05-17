@@ -26,10 +26,10 @@ namespace cuts
     
     //tracking
     int const nHitsFit = 15;
+    float const pt = .2;
     
     // electrons
     bool const requireHFT = true;
-    float const pt = .2;
     float const nSigmaElectron = 3.;
     
     // partner
