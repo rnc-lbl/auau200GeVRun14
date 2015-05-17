@@ -1,20 +1,10 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cmath>
-
-#include "TFile.h"
-#include "TClonesArray.h"
-#include "TTree.h"
-#include "TNtuple.h"
-
-#include "StPicoDstMaker/StPicoDstMaker.h"
-#include "StPicoDstMaker/StPicoDst.h"
-#include "StPicoDstMaker/StPicoEvent.h"
-#include "StPicoDstMaker/StPicoTrack.h"
+#include "StarClassLibrary/StThreeVector.hh"
+#include "StarRoot/MTrack.h"
 #include "StiMaker/StKFVerticesCollection.h"
+
+#include "StPicoDstMaker/StPicoDst.h"
+#include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoKFVertexFitter.h"
-#include "MTrack.h"
 
 ClassImp(StPicoKFVertexFitter)
 
@@ -118,5 +108,3 @@ int StPicoKFVertexFitter::primaryVertexRefit()
   mKFVertex->set(aVertex.GetX(),aVertex.GetY(),aVertex.GetZ());
   return 1;
 }
-//-----------------------------------------------------------------------------
-

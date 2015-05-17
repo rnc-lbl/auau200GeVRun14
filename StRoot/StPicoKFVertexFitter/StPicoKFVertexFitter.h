@@ -17,11 +17,9 @@
  */
 
 #include <vector>
-#include "StThreeVectorF.hh"
+
+class StThreeVectorF;
 class StPicoDst;
-class StPicoD0Event;
-class StPicoDstMaker;
-class StPicoTrack;
 class StDcaGeometry;
 
 
