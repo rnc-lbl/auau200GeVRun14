@@ -54,7 +54,9 @@ StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const p
    KFVertex aVertex;
    aVertex.ConstructPrimaryVertex((const KFParticle **) particles, goodTracks.size(),
                                   (Bool_t*) Flag.GetArray(), TMath::Sqrt(StAnneling::Chi2Cut() / 2));
-   delete[] particles;
+
+   // clean up
+   for(size_t iTrk = 0; iTrk < goodTracks.size(); ++iTrk) delete particles[iTrk];
 
    StThreeVectorF kfVertex(-999.,-999.,-999.);
 
