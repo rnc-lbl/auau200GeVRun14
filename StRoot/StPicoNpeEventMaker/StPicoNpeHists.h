@@ -46,7 +46,6 @@ private:
     TH1F* mh1TotalElectronsInRun;
     TH1F* mh1TotalPartnersInRun;
     TH1F* mh1TotalPhECandidatesInRun;
-    TH1F* mh1TotalNPECandidatesInRun;
     
     TH2F* mh2NElectronsVsNPartners;
     TH2F* mh2PairDcaVsPt;

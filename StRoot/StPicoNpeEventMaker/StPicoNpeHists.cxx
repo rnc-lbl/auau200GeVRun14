@@ -32,7 +32,6 @@ mh2InvariantMassVsPt(NULL)
     mh1TotalElectronsInRun = new TH1F("mh1TotalElectronsInRun","totalElectronsInRun;runIndex;totalElectronsInRun",nRuns+1,0,nRuns+1);
     mh1TotalPartnersInRun = new TH1F("mh1TotalPartnersInRun","totalPartnersInRun;runIndex;totalPartnersInRun",nRuns+1,0,nRuns+1);
     mh1TotalPhECandidatesInRun = new TH1F("mh1TotalPhECandidatesInRun","totalPhECandidatesInRun;runIndex;totalPhECandidatesInRun",nRuns+1,0,nRuns+1);
-    mh1TotalNPECandidatesInRun = new TH1F("mh1TotalNPECandidatesInRun","totalNPECandidatesInRun;runIndex;totalPhECandidatesInRun",nRuns+1,0,nRuns+1);
     mh2NElectronsVsNPartners = new TH2F("mh2NElectronsVsNPartners","nElectronsVsNPartners;nPartners;nElectrons",500,0,500,200,0,200);
   
     mh2PairDcaVsPt = new TH2F("mh2PairDcaVsPt","PairDcaVsPt;p_{T}(Tagged e)(GeV/c);Pair DCA(cm))",120,0,12,100,0,1);
@@ -61,7 +60,6 @@ void StPicoNpeHists::addEvent(StPicoEvent const& picoEvent,StPicoNpeEvent const 
     mh1TotalElectronsInRun->Fill(runIndex,picoNpeEvent.nElectrons());
     mh1TotalPartnersInRun->Fill(runIndex,picoNpeEvent.nPartners());
     mh1TotalPhECandidatesInRun->Fill(runIndex,picoNpeEvent.nElectronPair());
-    mh1TotalNPECandidatesInRun->Fill(runIndex,picoNpeEvent.nElectron());
     mh2NElectronsVsNPartners->Fill(picoNpeEvent.nPartners(),picoNpeEvent.nElectrons());
     
 }
@@ -86,7 +84,6 @@ void StPicoNpeHists::closeFile()
     mh1TotalElectronsInRun->Write();
     mh1TotalPartnersInRun->Write();
     mh1TotalPhECandidatesInRun->Write();
-    mh1TotalNPECandidatesInRun->Write();
     mh2NElectronsVsNPartners->Write();
     
     mh2PairDcaVsPt->Write();
