@@ -1,5 +1,5 @@
-#ifndef NPE_EVENT_CUTS_H
-#define NPE_EVENT_CUTS_H
+#ifndef NPE_ANA_CUTS_H
+#define NPE_ANA_CUTS_H
 /* **************************************************
  *  Cuts namespace.
  *
@@ -14,12 +14,14 @@
 #include "Rtypes.h"
 #include <string>
 
-namespace cuts
+namespace anaCuts
 {
     // path to lists of triggers prescales
     // lists are obtained from http://www.star.bnl.gov/protected/common/common2014/trigger2014/plots_au200gev/
+    // Below cuts are default value of StPicoNpeEnentMaker
+    
     std::string const prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
-
+    
     //event
     float const vz = 6.0;// cm.
     float const vzVpdVz = 3.0; // 3 cm.

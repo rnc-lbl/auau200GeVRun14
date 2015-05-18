@@ -23,7 +23,6 @@ class StPicoTrack;
 class StPicoEvent;
 class StPicoNpeEvent;
 class StElectronPair;
-class StElectronTrack;
 
 
 class StPicoNpeHists: public TObject
@@ -33,7 +32,6 @@ public:
     virtual ~StPicoNpeHists();
     void addEvent(StPicoEvent const &, StPicoNpeEvent const &,unsigned int const nHftTracks);
     void addElectronPair(StElectronPair const*, float electronPt, bool fillMass);
-    void addElectron(StElectronTrack const*);
     void closeFile();
     
 private:
@@ -48,7 +46,6 @@ private:
     TH1F* mh1TotalElectronsInRun;
     TH1F* mh1TotalPartnersInRun;
     TH1F* mh1TotalPhECandidatesInRun;
-    TH1F* mh1TotalNPECandidatesInRun;
     
     TH2F* mh2NElectronsVsNPartners;
     TH2F* mh2PairDcaVsPt;
