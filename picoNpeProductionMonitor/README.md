@@ -4,12 +4,12 @@
 ###Authors:  
 	**Kunsu OH	(kunsuoh@gmail.com)
 	Mustafa Mustafa	(mmustafa@lbl.gov)  
-
-  **Code Maintainer
+	
+	**Code Maintainer
 
 ###Requirement : 
-	- pandoc, root
+pandoc, root
 ###How to use : 
 ```c++
-	./createHtml.sh ROOT_FILE_NAME
+./createHtml.sh ROOT_FILE_NAME
 ```
