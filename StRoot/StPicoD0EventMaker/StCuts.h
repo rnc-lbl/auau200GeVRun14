@@ -43,6 +43,7 @@ namespace cuts
    float const maxMass = 2.1;
 
    // histograms kaonPion pair cuts
+   float const qaPt = 1.2;
    float const qaNHitsFit = 20;
    float const qaNSigmaKaon = 2.0;
    float const qaCosTheta = 0.995;

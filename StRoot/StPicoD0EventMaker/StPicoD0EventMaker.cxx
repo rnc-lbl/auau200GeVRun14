@@ -191,7 +191,8 @@ bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
 //-----------------------------------------------------------------------------
 bool  StPicoD0EventMaker::isGoodQaPair(StKaonPion const& kp, StPicoTrack const& kaon,StPicoTrack const& pion)
 {
-  return pion.nHitsFit() >= cuts::qaNHitsFit && kaon.nHitsFit() >= cuts::qaNHitsFit &&
+  return pion.gPt() >= cuts::qaPt && kaon.gPt() >= cuts::qaPt && 
+         pion.nHitsFit() >= cuts::qaNHitsFit && kaon.nHitsFit() >= cuts::qaNHitsFit &&
          fabs(kaon.nSigmaKaon()) < cuts::qaNSigmaKaon && 
          cos(kp.pointingAngle()) > cuts::qaCosTheta &&
          kp.pionDca() > cuts::qaPDca && kp.kaonDca() > cuts::qaKDca &&
