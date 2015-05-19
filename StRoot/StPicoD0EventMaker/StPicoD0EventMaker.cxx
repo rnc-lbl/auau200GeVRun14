@@ -11,6 +11,7 @@
 #include "../StPicoDstMaker/StPicoEvent.h"
 #include "../StPicoDstMaker/StPicoTrack.h"
 #include "../StPicoDstMaker/StPicoBTofPidTraits.h"
+#include "../StPicoKFVertexFitter/StPicoKFVertexFitter.h"
 #include "StPicoD0Event.h"
 #include "StPicoD0EventMaker.h"
 #include "StPicoD0Hists.h"
@@ -20,7 +21,8 @@ ClassImp(StPicoD0EventMaker)
 
 //-----------------------------------------------------------------------------
 StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
-   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL), mPicoD0Hists(NULL)
+   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL), mPicoD0Hists(NULL), 
+     mKfVertexFitter(), mOutputFile(NULL), mTree(NULL), mPicoD0Event(NULL) 
 {
    mPicoD0Event = new StPicoD0Event();
 
