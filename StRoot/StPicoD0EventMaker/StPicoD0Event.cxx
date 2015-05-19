@@ -23,7 +23,7 @@ void StPicoD0Event::addPicoEvent(StPicoEvent const & picoEvent, StThreeVectorF c
    mEventId = picoEvent.eventId();
 
    if(kfVertex) mKfVertex = *kfVertex;
-   else mKfVertex.Set(-999.,-999.,-999.);
+   else mKfVertex.set(-999.,-999.,-999.);
 }
 
 //-----------------------------------------------------------------------
