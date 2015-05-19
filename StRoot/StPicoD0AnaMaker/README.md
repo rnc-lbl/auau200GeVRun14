@@ -20,6 +20,11 @@ cd myAnalysis
 # Replace address below with your own fork if you have one
 git clone git@github.com:rnc-lbl/auau200GeVRun14.git
 
+# To use D0 trees produced for the pico production I (tagged physics as ooposed to physics2 for production II).  
+cd auau200GeVRun14
+git checkout v1.0
+cd ..
+
 # Now you need to get StPicoDstMaker
 # If compiling at PDSF you need to get a klog token as below.
 # - You don't need this step at RCF - 
