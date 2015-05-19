@@ -29,13 +29,11 @@ cvs co -r Run14_AuAu200_physics offline/users/dongx/pico/source/StPicoDstMaker
 
 # Link all needed code under one StRoot directory:
 mkdir StRoot
-cd StRoot
-ln -s `pwd`/../auau200GeVRun14/StRoot/StPicoD0AnaMaker
-ln -s `pwd`/../auau200GeVRun14/StRoot/StPicoD0EventMaker
-ln -s `pwd`/../auau200GeVRun14/StRoot/StPicoPrescales
-ln -s `pwd`/../auau200GeVRun14/StRoot/StPicoHFMaker
-ln -s `pwd`/../offline/users/dongx/pico/source/StPicoDstMaker
-cd ..
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoD0AnaMaker StRoot
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoD0EventMaker StRoot
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoPrescales StRoot
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoHFMaker StRoot
+ln -s `pwd`/offline/users/dongx/pico/source/StPicoDstMaker StRoot
 cp -r -p auau200GeVRun14/run14AuAu200GeVPrescales/ .
 
 # Compile
