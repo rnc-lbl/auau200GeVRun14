@@ -20,6 +20,7 @@ class TFile;
 class StPicoDstMaker;
 class StPicoEvent;
 class StPicoTrack;
+class StPicoKFVertexFitter;
 class StPicoD0Event;
 class StKaonPion;
 class StPicoD0Hists;
@@ -46,6 +47,7 @@ class StPicoD0EventMaker : public StMaker
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
     StPicoD0Hists*  mPicoD0Hists;
+    StPicoKFVertexFitter mKfVertexFitter;
     
     TFile* mOutputFile;
     TTree* mTree;
