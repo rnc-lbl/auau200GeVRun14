@@ -1,0 +1,74 @@
+##Template analysis code for reading pico D<sup>0</sup> production
+LBNL - STAR Experiment, Relativistic Heavy Ion Collider (RHIC), BNL  
+RHIC year 2014 Run, with Heavy Flavor Tracker
+  
+###Code Authors:  
+	Mustafa Mustafa (mmustafa@lbl.gov)  
+
+- - -
+### Presentations:  
+#### STAR Protected:  
+- [Introduction to data production and pipeline](http://www.star.bnl.gov/protected/heavy/mstftsm/run14/talks/2015-04-02.pdf), Mustafa, HF PWG, 2014-04-02  
+
+- - -
+###How to build this code:  
+```bash
+mkdir myAnalysis
+cd myAnalysis
+
+# Clone LBNL PicoHFLib
+# Replace address below with your own fork if you have one
+git clone git@github.com:rnc-lbl/auau200GeVRun14.git
+
+# Now you need to get StPicoDstMaker
+# If compiling at PDSF you need to get a klog token as below.
+# - You don't need this step at RCF - 
+# You will need to enter your RCF password.
+klog -principal YOURRCFUSERNAME
+cvs co -r Run14_AuAu200_physics offline/users/dongx/pico/source/StPicoDstMaker
+
+# Link all needed code under one StRoot directory:
+mkdir StRoot
+cd StRoot
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoD0AnaMaker
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoD0EventMaker
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoPrescales
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoHFMaker
+ln -s `pwd`/offline/users/dongx/pico/source/StPicoDstMaker
+cd ..
+cp -r -p auau200GeVRun14/run14AuAu200GeVPrescales/ .
+
+# Compile
+starver SL15c
+cons
+```
+
+###How to get a list of files:  
+```bash
+# Clone the file list repo:
+git clone git@github.com:rnc-lbl/fileLists.git
+
+# The list of daily D0 production will be under:
+ls fileLists/Run14/AuAu/200GeV/physics/picoD0Lists/daily
+
+# To update your local copy of the list of files (recommended to do daily):
+git pull origin master
+
+# You need to link to the bad runs list in myAnalysis
+ln -s fileLists/Run14/AuAu/200GeV/physics/picoLists/picoList_bad_MB.list
+```
+
+###How to run this code:  
+```bash
+# For testing we can run the code on one file:
+tail -n1 fileLists/Run14/AuAu/200GeV/physics/picoD0Lists/daily/picoD0List_2015-04-10.list > test.list
+ln -s `pwd`/auau200GeVRun14/StRoot/macros/runPicoD0AnaMaker.C
+root4star -l -b -q -x runPicoD0AnaMaker.C\(\"test.list\",\"test_out\"\)
+```
+
+###How to submit jobs:
+```bash
+# You cah find STAR Scheduler XML file under:
+cp -p auau200GeVRun14/starSubmit/submitPicoD0AnaMaker.xml .
+# auau200GeVRun14/starSubmit/uREADME contains a how to use.
+```
