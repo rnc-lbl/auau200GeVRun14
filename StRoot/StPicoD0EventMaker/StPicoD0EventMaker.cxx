@@ -11,11 +11,12 @@
 #include "../StPicoDstMaker/StPicoEvent.h"
 #include "../StPicoDstMaker/StPicoTrack.h"
 #include "../StPicoDstMaker/StPicoBTofPidTraits.h"
-#include "../StPicoKFVertexFitter/StPicoKFVertexFitter.h"
 #include "StPicoD0Event.h"
-#include "StPicoD0EventMaker.h"
 #include "StPicoD0Hists.h"
+#include "StKaonPion.h"
 #include "StCuts.h"
+
+#include "StPicoD0EventMaker.h"
 
 ClassImp(StPicoD0EventMaker)
 

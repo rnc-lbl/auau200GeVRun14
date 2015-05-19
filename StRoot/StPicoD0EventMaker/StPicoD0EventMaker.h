@@ -14,13 +14,13 @@
  */
 
 #include "StMaker.h"
+#include "../StPicoKFVertexFitter/StPicoKFVertexFitter.h"
 
 class TTree;
 class TFile;
 class StPicoDstMaker;
 class StPicoEvent;
 class StPicoTrack;
-class StPicoKFVertexFitter;
 class StPicoD0Event;
 class StKaonPion;
 class StPicoD0Hists;
