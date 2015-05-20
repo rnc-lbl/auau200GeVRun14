@@ -40,6 +40,7 @@ public:
    int     nKaonPion()  const;
    int     nKaons() const;
    int     nPions() const;
+   StThreeVectorF const& kfVertex() const;
 
 private:
    // some variables below are kept in ROOT types to match the same ones in StPicoEvent
@@ -65,4 +66,5 @@ inline int   StPicoD0Event::nKaons()  const { return mNKaons;}
 inline int   StPicoD0Event::nPions()  const { return mNPions;}
 inline Int_t StPicoD0Event::runId()   const { return mRunId; }
 inline Int_t StPicoD0Event::eventId() const { return mEventId; }
+inline StThreeVectorF const& StPicoD0Event::kfVertex() const { return mKfVertex; }
 #endif
