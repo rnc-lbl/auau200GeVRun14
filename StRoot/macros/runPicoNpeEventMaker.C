@@ -39,7 +39,7 @@ void runPicoNpeEventMaker(const Char_t *inputFile="test.list", const Char_t *out
 
 	for (Int_t i=0; i<nEvents; i++)
   {
-	  if(i%10==0)
+	  if(i%1000==0)
 		cout << "Working on eventNumber " << i << endl;
 		
 	  chain->Clear();
