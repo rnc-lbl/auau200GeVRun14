@@ -35,6 +35,6 @@ class StPicoKFVertexFitter
 inline StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* picoDst) const
 {
   std::vector<int> v;
-  primaryVertexRefit(picoDst,v);
+  return primaryVertexRefit(picoDst,v);
 }
 #endif
