@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "StarClassLibrary/StThreeVectorF.hh"
 #include "StarRoot/MTrack.h"
 #include "StiMaker/StKFVerticesCollection.h"
@@ -10,8 +12,11 @@
 using namespace std;
 
 StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const picoDst,
-    std::vector<int> const& tracksToRemove) const
+    std::vector<int>& tracksToRemove) const
 {
+   // just in case it is not sorted
+   std::sort(tracksToRemove.begin(),tracksToRemove.end());
+
    vector<int> goodTracks;
 
    // make a list of good tracks to be used in the KFVertex fit
@@ -20,17 +25,8 @@ StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const p
       StPicoTrack* gTrack = (StPicoTrack*)picoDst->track(iTrk);
       if (! gTrack) continue;
 
-      bool rejectTrak = false;
-      for (size_t  j = 0; j < tracksToRemove.size(); ++j)
-      {
-        if (tracksToRemove[j] == gTrack->id())
-        {
-          rejectTrak = true;
-          break;
-        }
-      }
+      if(std::binary_search(tracksToRemove.begin(), tracksToRemove.end(), iTrk)) continue;
 
-      if(rejectTrak) continue;
       goodTracks.push_back(iTrk);
    }
 
