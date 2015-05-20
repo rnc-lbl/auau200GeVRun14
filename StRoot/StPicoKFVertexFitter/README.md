@@ -22,3 +22,16 @@ You can pass a `std::vector<int>` of track indices to remove from the fit.
   StThreeVectorF kfVertex = kfVertexFitter.primaryVertexRefit(picoDst);
 
 ```
+You will need load the following libraries:
+```c++
+  // KFVertexFitter dependancies
+  gSystem->Load("StTpcDb");
+  gSystem->Load("StDbUtilities");
+  gSystem->Load("Sti");
+  gSystem->Load("StiUtilities");
+  gSystem->Load("StSsdDbMaker");
+  gSystem->Load("StSvtDbMaker");
+  gSystem->Load("StiMaker");
+  gSystem->Load("StPicoKFVertexFitter");
+  // ---
+```
