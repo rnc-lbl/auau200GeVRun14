@@ -35,6 +35,18 @@ void runPicoD0EventMaker(const Char_t *inputFile, const Char_t *outputFile="test
 
 	gSystem->Load("StPicoDstMaker");
   gSystem->Load("StPicoPrescales");
+
+  // KFVertexFitter dependancies
+  gSystem->Load("StTpcDb");
+  gSystem->Load("StDbUtilities");
+  gSystem->Load("Sti");
+  gSystem->Load("StiUtilities");
+  gSystem->Load("StSsdDbMaker");
+  gSystem->Load("StSvtDbMaker");
+  gSystem->Load("StiMaker");
+  gSystem->Load("StPicoKFVertexFitter");
+  // ---
+
   gSystem->Load("StPicoD0EventMaker");
 
 	chain = new StChain();
