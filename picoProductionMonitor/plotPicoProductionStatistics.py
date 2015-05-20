@@ -46,6 +46,8 @@ def makeIndexFile(nMuDstEvents,nPicoEvents):
     os.system('echo ![]\(%s\) >> index2.md'%gTotalNumberOfEventsVsDayFileName)
     os.system('echo ![]\(%s\) >> index2.md'%gNumberOfEventsVsDayFileName)
     os.system('echo \ \ >> index2.md')
+    os.system('echo \ \ *Fit is for last 7 days only.>> index2.md')
+    os.system('echo \ \ >> index2.md')
     os.system('echo \ \ Last updated on %s %s >> index2.md'%(now,timeZone))
     os.system('cat index2.md indexProduction1.md > index.md')
     os.system('rm -f index2.md')
@@ -82,7 +84,7 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
     xx = np.linspace(xNum.min(),projectionDate,300)
     dd = mdates.num2date(xx)
 
-    plotText = '                              Average is %1.2fM events per day'%fit[0]
+    plotText = '                              *Average is %1.2fM events per day'%fit[0]
     plotTextX = datetime.datetime.strptime('04/01/2015','%m/%d/%Y').date()
 
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
