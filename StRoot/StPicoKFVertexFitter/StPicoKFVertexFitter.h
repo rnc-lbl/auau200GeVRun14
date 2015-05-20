@@ -27,8 +27,14 @@ class StPicoKFVertexFitter
    StPicoKFVertexFitter() {}
    ~StPicoKFVertexFitter() {}
    
+   StThreeVectorF primaryVertexRefit(StPicoDst const*) const;
    StThreeVectorF primaryVertexRefit(StPicoDst const*,
-       std::vector<int> const& tracksToRemove = std::vector<int>()) const;
+       std::vector<int>& tracksToRemove) const;
 };
 
+inline StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* picoDst) const
+{
+  std::vector<int> v;
+  primaryVertexRefit(picoDst,v);
+}
 #endif

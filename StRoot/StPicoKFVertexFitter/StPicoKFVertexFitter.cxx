@@ -12,9 +12,8 @@
 using namespace std;
 
 StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const picoDst,
-    std::vector<int> const& tracksToRemove) const
+    std::vector<int>& tracksToRemove) const
 {
-
    // just in case it is not sorted
    std::sort(tracksToRemove.begin(),tracksToRemove.end());
 
@@ -26,9 +25,8 @@ StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const p
       StPicoTrack* gTrack = (StPicoTrack*)picoDst->track(iTrk);
       if (! gTrack) continue;
 
-      if(std::binary_search(tracksToRemove.begin(), tracksToRemove.end(), iTrk) != tracksToRemove.end()) continue;
+      if(std::binary_search(tracksToRemove.begin(), tracksToRemove.end(), iTrk)) continue;
 
-      if(rejectTrak) continue;
       goodTracks.push_back(iTrk);
    }
 
