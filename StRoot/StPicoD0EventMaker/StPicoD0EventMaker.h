@@ -13,7 +13,12 @@
  * **************************************************
  */
 
+#include <bitset>
+#include <climits>
+#include <vector>
+
 #include "StMaker.h"
+#include "StThreeVectorF.hh"
 #include "../StPicoKFVertexFitter/StPicoKFVertexFitter.h"
 
 class TTree;
@@ -38,11 +43,13 @@ class StPicoD0EventMaker : public StMaker
     
   private:
     bool  isGoodEvent();
+    bool  isGoodForVertexFit(StPicoTrack const*,StThreeVectorF const& vtx) const;
     bool  isGoodTrack(StPicoTrack const*) const;
     bool  isPion(StPicoTrack const*) const;
     bool  isKaon(StPicoTrack const*) const;
     bool  isGoodPair(StKaonPion const &) const;
     bool  isGoodQaPair(StKaonPion const&, StPicoTrack const&,StPicoTrack const&);
+    size_t popcount(size_t) const;
 
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
@@ -55,5 +62,9 @@ class StPicoD0EventMaker : public StMaker
 
     ClassDef(StPicoD0EventMaker, 1)
 };
-
+inline size_t StPicoD0EventMaker::popcount(size_t n) const
+{
+    std::bitset<sizeof(size_t) * CHAR_BIT> b(n);
+    return b.count();
+}
 #endif
