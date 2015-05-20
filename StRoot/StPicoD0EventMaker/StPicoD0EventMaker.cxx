@@ -111,22 +111,24 @@ Int_t StPicoD0EventMaker::Make()
       StThreeVectorF const kfVertex = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtx);
       mPicoD0Event->addPicoEvent(*mPicoEvent,&kfVertex);
 
-      mPicoD0Event->nKaons(idxPicoKaons.size());
-      mPicoD0Event->nPions(idxPicoPions.size());
-
-      float const bField = mPicoEvent->bField();
-      for (unsigned short ik = 0; ik < idxPicoKaons.size(); ++ik)
+      if(kfVertex.z() > -100.)
       {
-         StPicoTrack const * kaon = picoDst->track(idxPicoKaons[ik]);
+        mPicoD0Event->nKaons(idxPicoKaons.size());
+        mPicoD0Event->nPions(idxPicoPions.size());
 
-         // make Kπ pairs
-         for (unsigned short ip = 0; ip < idxPicoPions.size(); ++ip)
-         {
+        float const bField = mPicoEvent->bField();
+        for (unsigned short ik = 0; ik < idxPicoKaons.size(); ++ik)
+        {
+          StPicoTrack const * kaon = picoDst->track(idxPicoKaons[ik]);
+
+          // make Kπ pairs
+          for (unsigned short ip = 0; ip < idxPicoPions.size(); ++ip)
+          {
             if (idxPicoKaons[ik] == idxPicoPions[ip]) continue;
 
             StPicoTrack const * pion = picoDst->track(idxPicoPions[ip]);
 
-            StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
+            StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], kfVertex, bField);
 
 
             if (!isGoodPair(kaonPion)) continue;
@@ -139,8 +141,9 @@ Int_t StPicoD0EventMaker::Make()
               mPicoD0Hists->addKaonPion(&kaonPion,fillMass);
             }
 
-         } // .. end make Kπ pairs
-      } // .. end of kaons loop
+          } // .. end make Kπ pairs
+        } // .. end of kaons loop
+      }
 
       mPicoD0Hists->addEvent(*mPicoEvent,*mPicoD0Event,nHftTracks);
       idxPicoKaons.clear();
