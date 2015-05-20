@@ -80,10 +80,12 @@ Int_t StPicoD0EventMaker::Make()
    }
 
    mPicoEvent = picoDst->event();
-   mPicoD0Event->addPicoEvent(*mPicoEvent);
 
    if (isGoodEvent())
    {
+      StThreeVectorF const kfVertex = mKfVertexFitter.primaryVertexRefit(picoDst);
+      mPicoD0Event->addPicoEvent(*mPicoEvent,&kfVertex);
+
       UInt_t nTracks = picoDst->numberOfTracks();
 
       std::vector<unsigned short> idxPicoKaons;
@@ -140,6 +142,10 @@ Int_t StPicoD0EventMaker::Make()
       idxPicoKaons.clear();
       idxPicoPions.clear();
    } //.. end of good event fill
+   else
+   {
+     mPicoD0Event->addPicoEvent(*mPicoEvent);
+   }
 
    // This should never be inside the good event block
    // because we want to save header information about all events, good or bad
