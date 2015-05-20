@@ -70,7 +70,7 @@ ln -s fileLists/Run14/AuAu/200GeV/physics2/picoLists/picoList_bad_MB.list
 ###How to run this code:  
 ```bash
 # For testing we can run the code on one file:
-tail -n1 fileLists/Run14/AuAu/200GeV/physics2/picoD0Lists/daily/picoD0List_2015-05-06.list > test.list
+tail -n1 fileLists/Run14/AuAu/200GeV/physics2/picoD0Lists/daily/picoD0List_2015-05-21.list > test.list
 ln -s `pwd`/auau200GeVRun14/StRoot/macros/runPicoD0AnaMaker.C
 root4star -l -b -q -x runPicoD0AnaMaker.C\(\"test.list\",\"test_out\"\)
 ```
