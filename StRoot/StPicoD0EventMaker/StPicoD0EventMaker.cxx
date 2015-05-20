@@ -12,15 +12,17 @@
 #include "../StPicoDstMaker/StPicoTrack.h"
 #include "../StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoD0Event.h"
-#include "StPicoD0EventMaker.h"
 #include "StPicoD0Hists.h"
+#include "StKaonPion.h"
 #include "StCuts.h"
+
+#include "StPicoD0EventMaker.h"
 
 ClassImp(StPicoD0EventMaker)
 
-//-----------------------------------------------------------------------------
 StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
-   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL), mPicoD0Hists(NULL)
+   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL), mPicoD0Hists(NULL), 
+     mKfVertexFitter(), mOutputFile(NULL), mTree(NULL), mPicoD0Event(NULL) 
 {
    mPicoD0Event = new StPicoD0Event();
 
@@ -36,7 +38,6 @@ StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* pi
    mPicoD0Hists = new StPicoD0Hists(fileBaseName);
 }
 
-//-----------------------------------------------------------------------------
 StPicoD0EventMaker::~StPicoD0EventMaker()
 {
    /* mTree is owned by mOutputFile directory, it will be destructed once
@@ -44,13 +45,11 @@ StPicoD0EventMaker::~StPicoD0EventMaker()
    delete mPicoD0Hists;
 }
 
-//-----------------------------------------------------------------------------
 Int_t StPicoD0EventMaker::Init()
 {
    return kStOK;
 }
 
-//-----------------------------------------------------------------------------
 Int_t StPicoD0EventMaker::Finish()
 {
    mOutputFile->cd();
@@ -59,13 +58,12 @@ Int_t StPicoD0EventMaker::Finish()
    mPicoD0Hists->closeFile();
    return kStOK;
 }
-//-----------------------------------------------------------------------------
+
 void StPicoD0EventMaker::Clear(Option_t *opt)
 {
    mPicoD0Event->clear("C");
 }
 
-//-----------------------------------------------------------------------------
 Int_t StPicoD0EventMaker::Make()
 {
    if (!mPicoDstMaker)
@@ -151,14 +149,12 @@ Int_t StPicoD0EventMaker::Make()
    return kStOK;
 }
 
-//-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodEvent()
 {
    return (mPicoEvent->triggerWord() & cuts::triggerWord) &&
           fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
           fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz;
 }
-//-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
    // Require at least one hit on every layer of PXL and IST.
@@ -167,17 +163,14 @@ bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
    return (!cuts::requireHFT || trk->isHFTTrack()) && 
           trk->nHitsFit() >= cuts::nHitsFit;
 }
-//-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isPion(StPicoTrack const * const trk) const
 {
    return fabs(trk->nSigmaPion()) < cuts::nSigmaPion;
 }
-//-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk) const
 {
    return fabs(trk->nSigmaKaon()) < cuts::nSigmaKaon;
 }
-//-----------------------------------------------------------------------------
 bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
 {
    return kp.m() > cuts::minMass && kp.m() < cuts::maxMass &&
@@ -185,10 +178,10 @@ bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
           kp.decayLength() > cuts::decayLength &&
           kp.dcaDaughters() < cuts::dcaDaughters;
 }
-//-----------------------------------------------------------------------------
 bool  StPicoD0EventMaker::isGoodQaPair(StKaonPion const& kp, StPicoTrack const& kaon,StPicoTrack const& pion)
 {
-  return pion.nHitsFit() >= cuts::qaNHitsFit && kaon.nHitsFit() >= cuts::qaNHitsFit &&
+  return pion.gPt() >= cuts::qaPt && kaon.gPt() >= cuts::qaPt && 
+         pion.nHitsFit() >= cuts::qaNHitsFit && kaon.nHitsFit() >= cuts::qaNHitsFit &&
          fabs(kaon.nSigmaKaon()) < cuts::qaNSigmaKaon && 
          cos(kp.pointingAngle()) > cuts::qaCosTheta &&
          kp.pionDca() > cuts::qaPDca && kp.kaonDca() > cuts::qaKDca &&

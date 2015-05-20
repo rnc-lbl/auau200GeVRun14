@@ -6,14 +6,15 @@
  *  StPicoD0Events and stores them.
  *
  *  Authors:  Xin Dong        (xdong@lbl.gov)
- *            Michael Lomnitz (mrlomnitz@lbl.gov)
- *            Mustafa Mustafa (mmustafa@lbl.gov)
- *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *            **Mustafa Mustafa (mmustafa@lbl.gov)
+ *
+ *  **Code Maintainer
  *
  * **************************************************
  */
 
 #include "StMaker.h"
+#include "../StPicoKFVertexFitter/StPicoKFVertexFitter.h"
 
 class TTree;
 class TFile;
@@ -46,6 +47,7 @@ class StPicoD0EventMaker : public StMaker
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
     StPicoD0Hists*  mPicoD0Hists;
+    StPicoKFVertexFitter mKfVertexFitter;
     
     TFile* mOutputFile;
     TTree* mTree;

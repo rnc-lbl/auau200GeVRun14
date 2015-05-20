@@ -1,83 +1,83 @@
-#ifndef StPicoD0AnaMaker_h
-#define StPicoD0AnaMaker_h
+#ifndef StPicoNpeAnaMaker_h
+#define StPicoNpeAnaMaker_h
 
 /* **************************************************
- *  A Maker to read a StPicoEvent and StPicoD0Event
+ *  A Maker to read a StPicoEvent and StPicoNpeEvent
  *  simultaneously and do analysis. 
  *
  *  Please write your analysis in the ::Make() function.
  *
- *  Authors:  **Mustafa Mustafa (mmustafa@lbl.gov)
- *
- *  **Code Maintainer
+ *  Authors:  Xin Dong        (xdong@lbl.gov)
+ *            Michael Lomnitz (mrlomnitz@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *            Jochen Thaeder  (jmthader@lbl.gov)   
  *
  * **************************************************
  */
+ 
 
 #include "TChain.h"
 #include "StMaker.h"
+#include "THnSparse.h"
+#include "TH2F.h"
 
 class TString;
 class TFile;
 class TNtuple;
-class StPicoD0Event;
-class StKaonPion;
+class StPicoNpeEvent;
+class StElectronTrack;
+class StElectronPair;
 class StPicoDstMaker;
-class StHFCuts;
+class StPicoTrack;
 
-
-class StPicoD0AnaMaker : public StMaker
+class StPicoNpeAnaMaker : public StMaker
 {
   public:
-    StPicoD0AnaMaker(char const * name, char const * inputFilesList, 
+    StPicoNpeAnaMaker(char const * name, char const * inputFilesList, 
         char const * outName,StPicoDstMaker* picoDstMaker);
-    virtual ~StPicoD0AnaMaker();
+    virtual ~StPicoNpeAnaMaker();
 
     virtual Int_t Init();
     virtual Int_t Make();
     virtual Int_t Finish();
 
     int getEntries() const;
-
-    void setHFCuts(StHFCuts* cuts);    
-
+    
+    
   private:
-    StPicoD0AnaMaker() {}
+    StPicoNpeAnaMaker() {}
     void readNextEvent();
 
-    bool isGoodPair(StKaonPion const*) const;
-
+    bool isGoodPair(StElectronPair const*) const;
+    
     StPicoDstMaker* mPicoDstMaker;
-    StPicoD0Event* mPicoD0Event;
+    StPicoNpeEvent* mPicoNpeEvent;
 
     TString mOutFileName;
     TString mInputFileList;
     TFile* mOutputFile;
     TChain* mChain;
     int mEventCounter;
-
-    StHFCuts* mHFCuts;
-
+    
+    
     // -------------- USER variables -------------------------
     // add your member variables here. 
     // Remember that ntuples size can be really big, use histograms where appropriate
-
-    ClassDef(StPicoD0AnaMaker, 1)
+    
+    
+    
+    
+    ClassDef(StPicoNpeAnaMaker, 1)
 };
 
-inline int StPicoD0AnaMaker::getEntries() const 
+inline int StPicoNpeAnaMaker::getEntries() const 
 {
   return mChain? mChain->GetEntries() : 0;
 }
 
-inline void StPicoD0AnaMaker::readNextEvent()
+inline void StPicoNpeAnaMaker::readNextEvent()
 {
   mChain->GetEntry(mEventCounter++);
-}
-
-inline void StPicoD0AnaMaker::setHFCuts(StHFCuts* cuts)   
-{ 
-  mHFCuts = cuts; 
 }
 
 #endif

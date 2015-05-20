@@ -5,10 +5,9 @@
  *  A class to create and save D0 production QA
  *  histograms.
  *
- *  Authors:  Xin Dong        (xdong@lbl.gov)
- *            Michael Lomnitz (mrlomnitz@lbl.gov)
- *            Mustafa Mustafa (mmustafa@lbl.gov)
- *            Jochen Thaeder  (jmthader@lbl.gov)   
+ *  Authors:  **Mustafa Mustafa (mmustafa@lbl.gov)
+ *
+ *  **Code Maintainer
  *
  * **************************************************
  */
