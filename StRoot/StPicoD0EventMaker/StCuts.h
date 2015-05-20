@@ -25,6 +25,10 @@ namespace cuts
    float const vz = 6.0;// cm.
    float const vzVpdVz = 3.0; // 3 cm.
 
+   // vertex refit track quality
+   float const vtxDca = 3.0;
+   size_t const vtxNumberOfFitPoints = 20;
+
    //tracking
    int const nHitsFit = 15;
    bool const requireHFT = true;

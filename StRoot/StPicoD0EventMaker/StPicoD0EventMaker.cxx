@@ -6,6 +6,7 @@
 #include "TString.h"
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
+#include "StPhysicalHelixD.hh"
 #include "../StPicoDstMaker/StPicoDst.h"
 #include "../StPicoDstMaker/StPicoDstMaker.h"
 #include "../StPicoDstMaker/StPicoEvent.h"
@@ -83,21 +84,23 @@ Int_t StPicoD0EventMaker::Make()
 
    if (isGoodEvent())
    {
-      StThreeVectorF const kfVertex = mKfVertexFitter.primaryVertexRefit(picoDst);
-      mPicoD0Event->addPicoEvent(*mPicoEvent,&kfVertex);
-
       UInt_t nTracks = picoDst->numberOfTracks();
 
       std::vector<unsigned short> idxPicoKaons;
       std::vector<unsigned short> idxPicoPions;
+      std::vector<int> idxTracksToRejectFromVtx;
 
+      StThreeVectorF const pVtx = mPicoEvent->primaryVertex();
       unsigned int nHftTracks = 0;
 
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
       {
          StPicoTrack* trk = picoDst->track(iTrack);
+         if(!trk) continue;
 
-         if (!trk || !isGoodTrack(trk)) continue;
+         if(!isGoodForVertexFit(trk,pVtx)) idxTracksToRejectFromVtx.push_back(iTrack);
+
+         if (!isGoodTrack(trk)) continue;
          ++nHftTracks;
 
          if (isPion(trk)) idxPicoPions.push_back(iTrack);
@@ -105,12 +108,13 @@ Int_t StPicoD0EventMaker::Make()
 
       } // .. end tracks loop
 
-      float const bField = mPicoEvent->bField();
-      StThreeVectorF const pVtx = mPicoEvent->primaryVertex();
+      StThreeVectorF const kfVertex = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtx);
+      mPicoD0Event->addPicoEvent(*mPicoEvent,&kfVertex);
 
       mPicoD0Event->nKaons(idxPicoKaons.size());
       mPicoD0Event->nPions(idxPicoPions.size());
 
+      float const bField = mPicoEvent->bField();
       for (unsigned short ik = 0; ik < idxPicoKaons.size(); ++ik)
       {
          StPicoTrack const * kaon = picoDst->track(idxPicoKaons[ik]);
@@ -161,6 +165,20 @@ bool StPicoD0EventMaker::isGoodEvent()
           fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
           fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz;
 }
+
+bool StPicoD0EventMaker::isGoodForVertexFit(StPicoTrack const* const trk, StThreeVectorF const& vtx) const
+{
+  StPhysicalHelixD helix = trk->dcaGeometry().helix();
+  float dca = helix.at(helix.pathLength(vtx)).mag();
+
+  if (dca > cuts::vtxDca) return false;
+
+  size_t numberOfFitPoints = popcount(trk->map0() >> 1); // drop first bit, primary vertex point
+  numberOfFitPoints += popcount(trk->map1() & 0x1FFFFF); // only the first 21 bits are important, see StTrackTopologyMap.cxx
+
+  return numberOfFitPoints >= cuts::vtxNumberOfFitPoints;
+}
+
 bool StPicoD0EventMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
    // Require at least one hit on every layer of PXL and IST.
