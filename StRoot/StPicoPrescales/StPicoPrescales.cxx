@@ -44,7 +44,7 @@ void StPicoPrescales::readList(unsigned int trg)
    stringstream st;
    st << mTriggersIds[trg];
    string listFileName = mPrescalesFilesDirectoryName + "/" + st.str() + ".txt";
-   cout << "StPicoPrescales - Reading prescale values for trigger " << mTriggersIds[trg] << "From list " << listFileName << endl;
+   cout << "StPicoPrescales - Reading prescale values for trigger " << mTriggersIds[trg] << " from list " << listFileName << endl;
 
    //Open list
    ifstream runs(listFileName.c_str());

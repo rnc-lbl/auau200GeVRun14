@@ -14,6 +14,7 @@
  */
 
 #include "StMaker.h"
+#include "../StPicoKFVertexFitter/StPicoKFVertexFitter.h"
 
 class TTree;
 class TFile;
@@ -46,6 +47,7 @@ class StPicoD0EventMaker : public StMaker
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
     StPicoD0Hists*  mPicoD0Hists;
+    StPicoKFVertexFitter mKfVertexFitter;
     
     TFile* mOutputFile;
     TTree* mTree;
