@@ -22,13 +22,14 @@
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
 #include "StBTofUtil/tofPathLength.hh"
+#include "StPicoHFMaker/StHFCuts.h"
 
 ClassImp(StPicoNpeAnaMaker)
 
 StPicoNpeAnaMaker::StPicoNpeAnaMaker(char const * name,char const * inputFilesList,
                                      char const * outName,StPicoDstMaker* picoDstMaker):
 StMaker(name),mPicoDstMaker(picoDstMaker),mPicoNpeEvent(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
-mOutputFile(NULL), mChain(NULL), mEventCounter(0)
+mOutputFile(NULL), mChain(NULL), mEventCounter(0), mHFCuts(NULL)
 {}
 
 Int_t StPicoNpeAnaMaker::Init()
@@ -58,8 +59,15 @@ Int_t StPicoNpeAnaMaker::Init()
     mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
     mOutputFile->cd();
     
+    if (!mHFCuts)
+        mHFCuts = new StHFCuts;
+    mHFCuts->init();
+
     
     // -------------- USER VARIABLES -------------------------
+    // check if good event (including bad run)
+    if(!mHFCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL))
+        return kStOk;
 
     
     
