@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Author: Kunsu OH (code maintainer, kunsuoh@gmail.com), Mustafa Mustafa (mmustafa@lbl.gov) -->
+
+<job fileListSyntax="paths" maxFilesPerProcess="150" simulateSubmission="false">
+
+        <stdout discard="true" />
+        <stderr URL="file:./err/$JOBID.err" />
+                
+        <Generator>
+        <Location>./report/</Location>
+        <ScriptLocation>./csh/</ScriptLocation>
+        <ListLocation>./list/</ListLocation>
+        </Generator>
+                                                
+<command>
+starver SL15c
+
+root4star -q -b -l StRoot/macros/runPicoNpeAnaMaker.C\(\"$FILELIST\",\"$JOBID.root\"\) &gt;&amp; ${JOBID}.log
+tar -zcvf ${JOBID}.log.tgz ${JOBID}.log
+</command>
+
+    <input URL="filelist:/path/to/your/directory/&listOfFiles;" />
+    <output fromScratch="*.root" toURL="/path/to/your/directory/production/" />
+    <output fromScratch="*.log.tgz" toURL="/path/to/your/directory/log/" />
+
+<SandBox installer="ZIP">
+	<Package name="LocalLibraries">
+		<File>file:./StRoot/</File>
+		<File>file:./run14AuAu200GeVPrescales/</File>
+    <File>file:./picoList_bad_MB.list</File>
+		<File>file:./.sl64_gcc447/</File>
+	</Package>
+</SandBox>
+
+</job>
