@@ -65,9 +65,6 @@ Int_t StPicoNpeAnaMaker::Init()
 
     
     // -------------- USER VARIABLES -------------------------
-    // check if good event (including bad run)
-    if(!mHFCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL))
-        return kStOk;
 
     
     
@@ -133,6 +130,9 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
         
         // -------------- USER ANALYSIS -------------------------
+        // check if good event (including bad run)
+        if(!mHFCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL))
+            return kStOk;
 
         
         
