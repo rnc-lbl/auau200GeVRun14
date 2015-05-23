@@ -12,63 +12,68 @@
 
 void runPicoNpeAnaMaker(TString Npelist, TString outFileName, TString badRunListFileName = "picoList_bad_MB.list")
 {
-   //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
-   string SL_version = "SL15c";
-   string env_SL = getenv("STAR");
-   if (env_SL.find(SL_version) == string::npos)
-   {
-      cout << "Environment Star Library does not match the requested library in runPicoNpeEventMaker.C. Exiting..." << endl;
-      exit(1);
-   }
-
-   gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
-   loadSharedLibraries();
-
-   gSystem->Load("StBTofUtil");
-   gSystem->Load("StPicoDstMaker");
-   gSystem->Load("StPicoPrescales");
-   gSystem->Load("StPicoNpeEventMaker");
-   gSystem->Load("StPicoNpeAnaMaker");
-   gSystem->Load("StPicoHFMaker");
-
-   chain = new StChain();
-
-   // create list of picoDst files
-   TString command = "sed 's/hft\\\/npeTree/picodsts/g' " + Npelist + " >correspondingPico.list";
-   gSystem->Exec(command.Data());
-   command = "sed -i 's/picoNpe/picoDst/g' correspondingPico.list";
-   gSystem->Exec(command.Data());
-   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, "correspondingPico.list", "picoDstMaker");
-   StPicoNpeAnaMaker*  picoNpeAnaMaker = new StPicoNpeAnaMaker("picoNpeAnaMaker", Npelist, outFileName.Data(), picoDstMaker);
-
-   StHFCuts* NpeCuts = new StHFCuts("NpeCuts");
-   picoNpeAnaMaker->setHFCuts(NpeCuts);
-
-   // -------------- USER variables -------------------------
-
-   // -- File name of bad run list
-   NpeCuts->setBadRunListFileName(badRunListFileName);
-
-   // add your cuts here.
-
-   chain->Init();
-   int nEntries = picoNpeAnaMaker->getEntries();
-   for (int iEvent = 0; iEvent < nEntries; ++iEvent)
-   {
-      chain->Clear();
-      int iret = chain->Make();
-      if (iret)
-      {
-         cout << "Bad return code!" << iret << endl;
-         break;
-      }
-   }
-
-   chain->Finish();
-   delete chain;
-
-   // delete list of picos
-   command = "rm -f correspondingPico.list";
-   gSystem->Exec(command.Data());
-
+    //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
+    string SL_version = "SL15c";
+    string env_SL = getenv("STAR");
+    if (env_SL.find(SL_version) == string::npos)
+    {
+        cout << "Environment Star Library does not match the requested library in runPicoNpeEventMaker.C. Exiting..." << endl;
+        exit(1);
+    }
+    
+    gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
+    loadSharedLibraries();
+    
+    gSystem->Load("StBTofUtil");
+    gSystem->Load("StPicoDstMaker");
+    gSystem->Load("StPicoPrescales");
+    gSystem->Load("StPicoNpeEventMaker");
+    gSystem->Load("StPicoNpeAnaMaker");
+    gSystem->Load("StPicoHFMaker");
+    
+    chain = new StChain();
+    
+    // create list of picoDst files
+    TString command = "sed 's/hft\\\/npeTree/picodsts/g' " + Npelist + " >correspondingPico.list";
+    gSystem->Exec(command.Data());
+    command = "sed -i 's/picoNpe/picoDst/g' correspondingPico.list";
+    gSystem->Exec(command.Data());
+    StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, "correspondingPico.list", "picoDstMaker");
+    StPicoNpeAnaMaker*  picoNpeAnaMaker = new StPicoNpeAnaMaker("picoNpeAnaMaker", Npelist, outFileName.Data(), picoDstMaker);
+    
+    cout << "debug " << endl;
+    StHFCuts* NpeCuts = new StHFCuts("NpeCuts");
+    cout << "debug " << endl;
+    picoNpeAnaMaker->setHFCuts(NpeCuts);
+    cout << "debug " << endl;
+    
+    // -------------- USER variables -------------------------
+    cout << "debug " << endl;
+    
+    // -- File name of bad run list
+    NpeCuts->setBadRunListFileName(badRunListFileName);
+    cout << "debug " << endl;
+    
+    // add your cuts here.
+    
+    chain->Init();
+    int nEntries = picoNpeAnaMaker->getEntries();
+    for (int iEvent = 0; iEvent < nEntries; ++iEvent)
+    {
+        chain->Clear();
+        int iret = chain->Make();
+        if (iret)
+        {
+            cout << "Bad return code!" << iret << endl;
+            break;
+        }
+    }
+    
+    chain->Finish();
+    delete chain;
+    
+    // delete list of picos
+    command = "rm -f correspondingPico.list";
+    gSystem->Exec(command.Data());
+    
 }
