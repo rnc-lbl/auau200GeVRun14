@@ -16,12 +16,8 @@ cd myAnalysis
 
 # Clone LBNL PicoHFLib
 # Replace address below with your own fork if you have one
-git clone git@github.com:rnc-lbl/auau200GeVRun14.git
-
-# NPE trees produced for Production II (physics2).  
-cd auau200GeVRun14
-git checkout v1.0
-cd ..
+git clone https://github.com/kunsuoh/auau200GeVRun14rnc.git auau200GeVRun14
+git clone http://github.com/rnc-lbl/auau200GeVRun14.git
 
 # Now you need to get StPicoDstMaker
 # If compiling at PDSF you need to get a klog token as below.
@@ -34,6 +30,7 @@ cvs co -r Run14_AuAu200_physics2 offline/users/dongx/pico/source/StPicoDstMaker
 mkdir StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoNpeAnaMaker StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoNpeEventMaker StRoot
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoHFMaker StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoPrescales StRoot
 ln -s `pwd`/offline/users/dongx/pico/source/StPicoDstMaker StRoot
 cp -r -p auau200GeVRun14/run14AuAu200GeVPrescales/ .
@@ -46,7 +43,7 @@ cons
 ###How to get a list of files:  
 ```bash
 # Clone the file list repo:
-git clone git@github.com:rnc-lbl/fileLists.git
+git clone https://github.com/rnc-lbl/fileLists.git
 
 # The list of daily NPE production will be under:
 ls fileLists/Run14/AuAu/200GeV/physics2/picoNpeLists/daily
