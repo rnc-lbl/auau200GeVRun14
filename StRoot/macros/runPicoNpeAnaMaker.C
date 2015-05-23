@@ -47,7 +47,7 @@ void runPicoNpeAnaMaker(TString Npelist, TString outFileName, TString badRunList
     chain->Init();
     cout << "DEBUG!" << endl;
     int nEntries = picoNpeAnaMaker->getEntries();
-    cout << "DEBUG!" << endl;
+    cout << " Total entries = " << nEntries << endl;
     for (int iEvent = 0; iEvent < nEntries; ++iEvent)
     {
         chain->Clear();
