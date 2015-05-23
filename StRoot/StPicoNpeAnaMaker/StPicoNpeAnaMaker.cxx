@@ -29,7 +29,7 @@ ClassImp(StPicoNpeAnaMaker)
 StPicoNpeAnaMaker::StPicoNpeAnaMaker(char const * name,char const * inputFilesList,
                                      char const * outName,StPicoDstMaker* picoDstMaker):
 StMaker(name),mPicoDstMaker(picoDstMaker),mPicoNpeEvent(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
-mOutputFile(NULL), mChain(NULL), mEventCounter(0), mHFCuts(NULL)
+mOutputFile(NULL), mChain(NULL), mEventCounter(0)
 {}
 
 Int_t StPicoNpeAnaMaker::Init()
@@ -58,7 +58,7 @@ Int_t StPicoNpeAnaMaker::Init()
     
     mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
     mOutputFile->cd();
-        
+    
     // -------------- USER VARIABLES -------------------------
 
     
