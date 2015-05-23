@@ -29,7 +29,6 @@ void runPicoNpeAnaMaker(TString Npelist, TString outFileName, TString badRunList
     gSystem->Load("StPicoPrescales");
     gSystem->Load("StPicoNpeEventMaker");
     gSystem->Load("StPicoNpeAnaMaker");
-    gSystem->Load("StPicoHFMaker");
     
     chain = new StChain();
     
@@ -41,18 +40,8 @@ void runPicoNpeAnaMaker(TString Npelist, TString outFileName, TString badRunList
     StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, "correspondingPico.list", "picoDstMaker");
     StPicoNpeAnaMaker*  picoNpeAnaMaker = new StPicoNpeAnaMaker("picoNpeAnaMaker", Npelist, outFileName.Data(), picoDstMaker);
     
-    cout << "debug " << endl;
-    StHFCuts* NpeCuts = new StHFCuts("NpeCuts");
-    cout << "debug " << endl;
-    picoNpeAnaMaker->setHFCuts(NpeCuts);
-    cout << "debug " << endl;
     
     // -------------- USER variables -------------------------
-    cout << "debug " << endl;
-    
-    // -- File name of bad run list
-    NpeCuts->setBadRunListFileName(badRunListFileName);
-    cout << "debug " << endl;
     
     // add your cuts here.
     

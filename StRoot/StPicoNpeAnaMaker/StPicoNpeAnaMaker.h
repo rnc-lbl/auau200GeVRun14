@@ -29,7 +29,6 @@ class StElectronTrack;
 class StElectronPair;
 class StPicoDstMaker;
 class StPicoTrack;
-class StHFCuts;
 
 class StPicoNpeAnaMaker : public StMaker
 {
@@ -43,7 +42,6 @@ class StPicoNpeAnaMaker : public StMaker
     virtual Int_t Finish();
 
     int getEntries() const;
-    void setHFCuts(StHFCuts* cuts);
 
     
   private:
@@ -60,7 +58,6 @@ class StPicoNpeAnaMaker : public StMaker
     TFile* mOutputFile;
     TChain* mChain;
     int mEventCounter;
-    StHFCuts* mHFCuts;
 
     
     // -------------- USER variables -------------------------
@@ -81,10 +78,6 @@ inline int StPicoNpeAnaMaker::getEntries() const
 inline void StPicoNpeAnaMaker::readNextEvent()
 {
   mChain->GetEntry(mEventCounter++);
-}
-inline void StPicoNpeAnaMaker::setHFCuts(StHFCuts* cuts)
-{
-    mHFCuts = cuts;
 }
 
 #endif

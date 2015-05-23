@@ -130,13 +130,6 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
         
         // -------------- USER ANALYSIS -------------------------
-        // check if good event (including bad run)
-        if(!mHFCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL))
-            return kStOk;
-
-        
-        
-        
         
     }
     
@@ -154,3 +147,4 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     epair->pairDca() < anaCuts::pairDca
     ;
 }
+
