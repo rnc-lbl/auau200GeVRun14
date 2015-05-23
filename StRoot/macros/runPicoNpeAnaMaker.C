@@ -24,7 +24,6 @@ void runPicoNpeAnaMaker(TString Npelist, TString outFileName, TString badRunList
     gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
     loadSharedLibraries();
     
-    gSystem->Load("StBTofUtil");
     gSystem->Load("StPicoDstMaker");
     gSystem->Load("StPicoPrescales");
     gSystem->Load("StPicoNpeEventMaker");
