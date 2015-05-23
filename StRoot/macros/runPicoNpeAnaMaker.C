@@ -34,7 +34,7 @@ void runPicoNpeAnaMaker(TString Npelist, TString outFileName, TString badRunList
    chain = new StChain();
 
    // create list of picoDst files
-   TString command = "sed 's/hft\\\/npetree/picodsts/g' " + Npelist + " >correspondingPico.list";
+   TString command = "sed 's/hft\\\/npeTree/picodsts/g' " + Npelist + " >correspondingPico.list";
    gSystem->Exec(command.Data());
    command = "sed -i 's/picoNpe/picoDst/g' correspondingPico.list";
    gSystem->Exec(command.Data());
