@@ -58,12 +58,7 @@ Int_t StPicoNpeAnaMaker::Init()
     
     mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
     mOutputFile->cd();
-    
-    if (!mHFCuts)
-        mHFCuts = new StHFCuts;
-    mHFCuts->init();
-
-    
+        
     // -------------- USER VARIABLES -------------------------
 
     
