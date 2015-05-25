@@ -98,19 +98,22 @@ void StPicoCutsBase::initBase() {
   if (!runs.is_open()) {
     runs.open(Form("picoLists/%s", mBadRunListFileName.Data()));
     if (!runs.is_open()) {
-      cout << "StPicoCutsBase::init --Bad run list found :" << mBadRunListFileName << endl;
-      exit(EXIT_FAILURE);
+      cout << "StPicoCutsBase::initBase -- Bad run list NOT found :" << mBadRunListFileName << endl;
+      cout << "StPicoCutsBase::initBase -- continue without bad run selection! " << endl;
+      //exit(EXIT_FAILURE);
     }
   }
 
-  Int_t runId = 0;
-  while( runs >> runId )
-    mVecBadRunList.push_back(runId);
-  
-  runs.close();
+  if (runs.is_open()) {
+    Int_t runId = 0;
+    while( runs >> runId )
+      mVecBadRunList.push_back(runId);
+    
+    runs.close();
 
-  // -- sort bad runs vector
-  std::sort(mVecBadRunList.begin(), mVecBadRunList.end());
+    // -- sort bad runs vector
+    std::sort(mVecBadRunList.begin(), mVecBadRunList.end());
+  }
 }
 
 // _________________________________________________________
