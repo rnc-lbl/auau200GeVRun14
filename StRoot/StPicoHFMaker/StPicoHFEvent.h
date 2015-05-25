@@ -1,6 +1,5 @@
 #ifndef StPicoHFEvent__h
 #define StPicoHFEvent__h
-#ifdef __ROOT__
 
 /* **************************************************
  *  Generic class storing event-wise information in HF analysis
@@ -53,7 +52,7 @@ public:
    Int_t eventId() const;
 
    // -- different event/decay modes
-   enum eHFEventMode {kTwoParticleDecay, kThreeParticleDecay,kTwoAndTwoParticleDecay };
+   enum eHFEventMode {kTwoParticleDecay, kThreeParticleDecay, kTwoAndTwoParticleDecay };
 
 private:
 
@@ -81,6 +80,4 @@ inline unsigned int         StPicoHFEvent::nHFTertiaryVertices()  const { return
 
 inline Int_t StPicoHFEvent::runId()        const { return mRunId; }
 inline Int_t StPicoHFEvent::eventId()      const { return mEventId; }
-
-#endif
 #endif
