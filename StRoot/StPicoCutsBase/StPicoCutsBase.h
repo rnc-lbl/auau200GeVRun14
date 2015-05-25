@@ -4,6 +4,12 @@
 /* **************************************************
  *  Cut base class for pico analysis
  *  - Base class for cuts 
+ *  
+ * **************************************************
+ *  Inhertit from it if needed 
+ *
+ * **************************************************
+ *
  *
  *  Initial Authors:  
  *            Xin Dong        (xdong@lbl.gov)
@@ -38,7 +44,10 @@ class StPicoCutsBase : public TNamed
   StPicoCutsBase(const Char_t *name);
   ~StPicoCutsBase();
   
-  void init();
+  void initBase();
+
+  // -- overload init in inhertited class - but call initBase there
+  virtual void init() { initBase(); }
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 

@@ -84,7 +84,7 @@ StPicoCutsBase::~StPicoCutsBase() {
 }
 
 // _________________________________________________________
-void StPicoCutsBase::init() {
+void StPicoCutsBase::initBase() {
   // -- init cuts class
 
   // -- Read in bad run list and fill vector

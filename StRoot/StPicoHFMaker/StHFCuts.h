@@ -21,9 +21,6 @@
 
 #include "StPicoCutsBase/StPicoCutsBase.h"
 
-/* class StPicoTrack; */
-/* class StPicoEvent; */
-/* class StPicoDst; */
 
 class StHFPair;
 class StHFTriplet;
@@ -36,7 +33,9 @@ class StHFCuts : public StPicoCutsBase
   StHFCuts(const Char_t *name);
   ~StHFCuts();
   
-  void init();
+  // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
+
+  virtual void init() { initBase(); }
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 

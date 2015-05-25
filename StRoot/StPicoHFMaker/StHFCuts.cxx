@@ -8,7 +8,7 @@
 ClassImp(StHFCuts)
 
 // _________________________________________________________
-StHFCuts::StHFCuts()  : StPicoCutsBase("HFCutsBase"), 
+StHFCuts::StHFCuts() : StPicoCutsBase("HFCutsBase"), 
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
   mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
   mSecondaryPairCosThetaMin(std::numeric_limits<float>::min()), 
@@ -52,14 +52,6 @@ StHFCuts::~StHFCuts() {
   // destructor
   
 }
-
-// _________________________________________________________
-void StHFCuts::init() {
-  // -- init cuts class
-
-  
-}
-
 
 // =======================================================================
 
