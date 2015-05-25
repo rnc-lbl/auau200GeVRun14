@@ -10,3 +10,4 @@
 .sl64_gcc447
 temp_gccflags.c
 *.o
+*.so
