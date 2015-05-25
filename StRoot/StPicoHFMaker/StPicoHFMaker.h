@@ -92,9 +92,19 @@ class StPicoHFMaker : public StMaker
     virtual bool  isKaon(StPicoTrack const*)   const { return true; }
     virtual bool  isProton(StPicoTrack const*) const { return true; }
 
+    // -- Inhertited from StMaker 
+    //    NOT TO BE OVERWRITTEN by daughter class
+    //    daughter class should implement xxxHF()
+    //    -> will be declared as "final" when C++11 is used in STAR
+    Int_t Init();
+    Int_t Make();
+    void  Clear(Option_t *opt="");
+    Int_t Finish();
+
   protected:
 
     void  createTertiaryK0Shorts();
+    void  createTertiaryLambdas();
 
     unsigned int isDecayMode();
     unsigned int isMakerMode();
@@ -118,14 +128,6 @@ class StPicoHFMaker : public StMaker
     std::vector<unsigned short> mIdxPicoProtons;
 
   private:
-    // -- Inhertited from StMaker 
-    //    NOT TO BE OVERWRITTEN by daughter class
-    //    daughter class should implement xxxHF()
-    Int_t Init();
-    Int_t Make();
-    void  Clear(Option_t *opt="");
-    Int_t Finish();
-    
     void  resetEvent();
     bool  setupEvent();
     
@@ -134,8 +136,8 @@ class StPicoHFMaker : public StMaker
 
     // -- private members ------------------------
 
-    unsigned int    mDecayMode; // use enum of StPicoHFEvent::eHFEventMode
-    unsigned int    mMakerMode; // use enum of StPicoEventMaker::eMakerMode
+    unsigned int    mDecayMode;         // use enum of StPicoHFEvent::eHFEventMode
+    unsigned int    mMakerMode;         // use enum of StPicoEventMaker::eMakerMode
 
     TString         mOuputFileBaseName; // base name for output files
                                         //   for tree     -> <mOuputFileBaseName>.picoHFtree.root

@@ -2,7 +2,12 @@
 /* **************************************************
  *   Run StPicoHFMyAnaMaker in different modes
  * --------------------------------------------------
- *   
+ * run as :
+ *  root -l -b -q StRoot/macros/loadSharedHFLibraries.C StRoot/macros/runPicoHFMyAnaMaker.C++
+ *   or
+ *  root -l -b -q StRoot/macros/runPicoHFMyAnaMaker.C
+ *
+ * -------------------------------------------------- 
  *  - Different modes to use the  class
  *    - StPicoHFMaker::kAnalyze - don't write candidate trees, just fill histograms
  *        inputFile : fileList of PicoDst files or single picoDst file
@@ -23,17 +28,13 @@
  * **************************************************
  */
 
+#ifndef __CINT__
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TChain.h"
 
-
-# ifndef __CINT__
-
 #include "StMaker.h"
 #include "StChain.h"
-
-#include "StMuDSTMaker/COMMON/macros/loadSharedLibraries.C"
 
 #include "StPicoDstMaker/StPicoDstMaker.h"
 #include "StPicoHFMaker/StPicoHFEvent.h"
@@ -41,10 +42,11 @@
 
 #include "StPicoHFMyAnaMaker/StPicoHFMyAnaMaker.h"
 
+#include "loadSharedHFLibraries.C"
+
 #else
 class StChain;
 #endif
-
 
 StChain *chain;
 
@@ -60,15 +62,11 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   }
 
   Int_t nEvents = 10000000;
-	
-  gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
-  loadSharedLibraries();
 
-  gSystem->Load("StBTofUtil");
-  gSystem->Load("StPicoDstMaker");
-  gSystem->Load("StPicoPrescales");
-  gSystem->Load("StPicoHFMaker");
-  gSystem->Load("StPicoHFMyAnaMaker");
+#ifdef __CINT__
+  gROOT->LoadMacro("loadSharedHFLibraries.C");
+  loadSharedHFLibraries();
+#endif
 
   chain = new StChain();
 

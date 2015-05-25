@@ -274,6 +274,35 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
 }
 
 // _________________________________________________________
+void StPicoHFMaker::createTertiaryLambdas() {
+  // -- Create candidate for tertiary Lambdas
+
+  for (unsigned short idxProton = 0; idxProton < mIdxPicoPions.size(); ++idxProton) {
+    StPicoTrack const * proton = mPicoDst->track(mIdxPicoPions[idxProton]);
+
+    for (unsigned short idxPion = 0 ; idxPion < mIdxPicoPions.size(); ++idxPion) {
+      StPicoTrack const * pion = mPicoDst->track(mIdxPicoPions[idxPion]);      
+
+      if (mIdxPicoPions[idxProton] == mIdxPicoPions[idxPion]) 
+	continue;
+
+      StHFPair candidateK0Short(proton, pion, 
+				mHFCuts->getHypotheticalMass(StHFCuts::kProton), mHFCuts->getHypotheticalMass(StHFCuts::kPion),
+				mIdxPicoProtons[idxProton], mIdxPicoPions[idxPion], 
+				mPrimVtx, mBField);
+
+      if (!mHFCuts->isGoodTertiaryVertexPair(candidateK0Short)) 
+	continue;
+
+      mPicoHFEvent->addHFTertiaryVertexPair(&candidateK0Short);
+
+      // -- fill tertiary pair histograms
+      mHFHists->fillTertiaryPairHists(&candidateK0Short, kTRUE);
+    }
+  }
+}
+
+// _________________________________________________________
 bool StPicoHFMaker::setupEvent() {
   // -- fill members from pico event, check for good eventa and fill event statistics
 
