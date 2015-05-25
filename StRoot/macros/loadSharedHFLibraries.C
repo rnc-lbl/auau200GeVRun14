@@ -13,6 +13,7 @@ void loadSharedHFLibraries() {
 
   gSystem->Load("StBTofUtil");
   gSystem->Load("StPicoDstMaker");
+  gSystem->Load("StPicoCutsBase");
   gSystem->Load("StPicoPrescales");
   gSystem->Load("StPicoHFMaker");
   gSystem->Load("StPicoHFMyAnaMaker");
