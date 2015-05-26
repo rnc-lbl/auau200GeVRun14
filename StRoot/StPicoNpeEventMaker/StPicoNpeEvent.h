@@ -48,7 +48,7 @@ private:
     TClonesArray*        mElectronPairArray;
     static TClonesArray* fgElectronPairArray;
     
-    ClassDef(StPicoNpeEvent, 1)
+    ClassDef(StPicoNpeEvent, 2)
 };
 
 inline void StPicoNpeEvent::nElectrons(int n) { mNElectrons = n; }

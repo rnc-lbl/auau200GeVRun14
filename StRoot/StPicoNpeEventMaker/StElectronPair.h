@@ -51,7 +51,7 @@ private:
     float mPositionY;               // conversion position y (4 Bytes)
     float mPositionZ;               // conversion position z (4 Bytes)
     
-    ClassDef(StElectronPair,1)
+    ClassDef(StElectronPair,2)
 };
 inline unsigned short   StElectronPair::electronIdx() const     { return mElectronIdx;                        }
 inline unsigned short   StElectronPair::partnerIdx() const      { return mPartnerIdx;                         }
