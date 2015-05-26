@@ -1,4 +1,4 @@
-##Template analysis code for reading pico D<sup>0</sup> production
+##Template analysis code for reading pico NPE production
 LBNL - STAR Experiment, Relativistic Heavy Ion Collider (RHIC), BNL  
 RHIC year 2014 Run, with Heavy Flavor Tracker
   
