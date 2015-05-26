@@ -44,7 +44,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     // -------------- USER variables -------------------------
     
     // add your cuts here.
-    
+    chain->SetDebug();
     chain->Init();
     cout << "DEBUG!" << endl;
     int nEntries = picoNpeAnaMaker->getEntries();
