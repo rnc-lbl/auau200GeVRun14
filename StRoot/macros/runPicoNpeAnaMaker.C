@@ -48,12 +48,10 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, "correspondingPico.list", "picoDstMaker");
     StPicoNpeAnaMaker*  picoNpeAnaMaker = new StPicoNpeAnaMaker("picoNpeAnaMaker", npeList, outFileName.Data(), picoDstMaker);
     
-    cout << "DEBUG!" << endl;
     // -------------- USER variables -------------------------
     
     // add your cuts here.
     npeChain->Init();
-    cout << "DEBUG!" << endl;
     int nEntries = picoNpeAnaMaker->getEntries();
     cout << " Total entries = " << nEntries << endl;
     for (int iEvent = 0; iEvent < nEntries; ++iEvent)
@@ -66,17 +64,12 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
             break;
         }
     }
-    cout << "DEBUG!" << endl;
     
     npeChain->Finish();
-    cout << "DEBUG!" << endl;
     delete npeChain;
-    cout << "DEBUG!" << endl;
     
     // delete list of picos
     command = "rm -f correspondingPico.list";
-    cout << "DEBUG!" << endl;
     gSystem->Exec(command.Data());
-    cout << "DEBUG!" << endl;
     
 }
