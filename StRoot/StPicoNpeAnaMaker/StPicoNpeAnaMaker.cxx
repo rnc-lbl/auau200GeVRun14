@@ -17,12 +17,12 @@
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoNpeEventMaker/StPicoNpeEvent.h"
 #include "StPicoNpeEventMaker/StElectronPair.h"
-#include "StPicoNpeAnaMaker.h"
-#include "StCuts.h"
+#include "StBTofUtil/tofPathLength.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
-#include "StBTofUtil/tofPathLength.hh"
-#include "StPicoHFMaker/StHFCuts.h"
+
+#include "StPicoNpeAnaMaker.h"
+#include "StCuts.h"
 
 ClassImp(StPicoNpeAnaMaker)
 
