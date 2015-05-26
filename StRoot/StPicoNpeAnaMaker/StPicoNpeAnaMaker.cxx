@@ -54,9 +54,9 @@ Int_t StPicoNpeAnaMaker::Init()
         return kStErr;
     }
     LOG_INFO << "Debug::AnaMaker::Init()" << endm;
-    mChain->GetBranch("dEvent")->SetAutoDelete(kFALSE);
+    mChain->GetBranch("npeEvent")->SetAutoDelete(kFALSE);
     LOG_INFO << "Debug::AnaMaker::Init()" << endm;
-    mChain->SetBranchAddress("dEvent", &mPicoNpeEvent);
+    mChain->SetBranchAddress("npeEvent", &mPicoNpeEvent);
     LOG_INFO << "Debug::AnaMaker::Init()" << endm;
     
     mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
