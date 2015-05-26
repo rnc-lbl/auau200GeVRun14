@@ -30,7 +30,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     gSystem->Load("StPicoNpeAnaMaker");
     gSystem->Load("StBTofUtil");
 
-    StChain * chain = new StChain();
+    StChain * npeChain = new StChain();
     
     // create list of picoDst files
     TString command = "sed 's/hft\\\/npeTree/picodsts/g' " + npeList + " >correspondingPico.list";
@@ -44,14 +44,14 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     // -------------- USER variables -------------------------
     
     // add your cuts here.
-    chain->Init();
+    npeChain->Init();
     cout << "DEBUG!" << endl;
     int nEntries = picoNpeAnaMaker->getEntries();
     cout << " Total entries = " << nEntries << endl;
     for (int iEvent = 0; iEvent < nEntries; ++iEvent)
     {
-        chain->Clear();
-        int iret = chain->Make();
+        npeChain->Clear();
+        int iret = npeChain->Make();
         if (iret)
         {
             cout << "Bad return code!" << iret << endl;
@@ -60,9 +60,9 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     }
     cout << "DEBUG!" << endl;
     
-    chain->Finish();
+    npeChain->Finish();
     cout << "DEBUG!" << endl;
-    delete chain;
+    delete npeChain;
     cout << "DEBUG!" << endl;
     
     // delete list of picos
