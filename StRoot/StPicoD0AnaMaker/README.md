@@ -18,7 +18,7 @@ cd myAnalysis
 
 # Clone LBNL PicoHFLib
 # Replace address below with your own fork if you have one
-git clone git@github.com:rnc-lbl/auau200GeVRun14.git
+git clone https://github.com/rnc-lbl/auau200GeVRun14.git
 
 # Now you need to get StPicoDstMaker
 # If compiling at PDSF you need to get a klog token as below.
