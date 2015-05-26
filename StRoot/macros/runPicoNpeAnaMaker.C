@@ -10,7 +10,7 @@
  */
 
 
-void runPicoNpeAnaMaker(TString Npelist, TString outFileName, TString badRunListFileName = "picoList_bad_MB.list")
+void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunListFileName = "picoList_bad_MB.list")
 {
     //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
     string SL_version = "SL15c";
@@ -28,16 +28,17 @@ void runPicoNpeAnaMaker(TString Npelist, TString outFileName, TString badRunList
     gSystem->Load("StPicoPrescales");
     gSystem->Load("StPicoNpeEventMaker");
     gSystem->Load("StPicoNpeAnaMaker");
-    
+    gSystem->Load("StBTofUtil");
+
     chain = new StChain();
     
     // create list of picoDst files
-    TString command = "sed 's/hft\\\/npeTree/picodsts/g' " + Npelist + " >correspondingPico.list";
+    TString command = "sed 's/hft\\\/npeTree/picodsts/g' " + npeList + " >correspondingPico.list";
     gSystem->Exec(command.Data());
     command = "sed -i 's/picoNpe/picoDst/g' correspondingPico.list";
     gSystem->Exec(command.Data());
     StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, "correspondingPico.list", "picoDstMaker");
-    StPicoNpeAnaMaker*  picoNpeAnaMaker = new StPicoNpeAnaMaker("picoNpeAnaMaker", Npelist, outFileName.Data(), picoDstMaker);
+    StPicoNpeAnaMaker*  picoNpeAnaMaker = new StPicoNpeAnaMaker("picoNpeAnaMaker", npeList, outFileName.Data(), picoDstMaker);
     
     cout << "DEBUG!" << endl;
     // -------------- USER variables -------------------------
