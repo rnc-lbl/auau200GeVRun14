@@ -9,9 +9,12 @@
  * **************************************************
  */
 
+#include <TSystem>
+
 class StMaker;
 class StChain;
 class StPicoDstMaker;
+
 StChain * npeChain;
 
 void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunListFileName = "picoList_bad_MB.list")
@@ -28,11 +31,12 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
     loadSharedLibraries();
     
+    gSystem->Load("StBTofUtil");
     gSystem->Load("StPicoDstMaker");
     gSystem->Load("StPicoPrescales");
     gSystem->Load("StPicoNpeEventMaker");
     gSystem->Load("StPicoNpeAnaMaker");
-    gSystem->Load("StBTofUtil");
+    gSystem->Load("StPicoHFMaker");
 
     npeChain = new StChain();
     

@@ -6,8 +6,6 @@
 #include "TFile.h"
 #include "TClonesArray.h"
 #include "TTree.h"
-#include "TNtuple.h"
-#include "THnSparse.h"
 
 #include "StPicoDstMaker/StPicoDstMaker.h"
 #include "StPicoDstMaker/StPicoDst.h"
@@ -24,10 +22,11 @@
 #include "StPicoNpeAnaMaker.h"
 #include "StCuts.h"
 
+
 ClassImp(StPicoNpeAnaMaker)
 
 StPicoNpeAnaMaker::StPicoNpeAnaMaker(char const * name,char const * inputFilesList,
-                                     char const * outName,StPicoDstMaker* picoDstMaker):
+                                     char const * outName, StPicoDstMaker* picoDstMaker):
 StMaker(name),mPicoDstMaker(picoDstMaker),mPicoNpeEvent(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
 mOutputFile(NULL), mChain(NULL), mEventCounter(0)
 {}
@@ -52,12 +51,16 @@ Int_t StPicoNpeAnaMaker::Init()
         LOG_ERROR << "StPicoNpeAnaMaker - Could not open list of files. ABORT!" << endm;
         return kStErr;
     }
-    
+    cout << "Debug::AnaMaker::Init()" << endl;
     mChain->GetBranch("dEvent")->SetAutoDelete(kFALSE);
+    cout << "Debug::AnaMaker::Init()" << endl;
     mChain->SetBranchAddress("dEvent", &mPicoNpeEvent);
+    cout << "Debug::AnaMaker::Init()" << endl;
     
     mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
+    cout << "Debug::AnaMaker::Init()" << endl;
     mOutputFile->cd();
+    cout << "Debug::AnaMaker::Init()" << endl;
     
     // -------------- USER VARIABLES -------------------------
 
