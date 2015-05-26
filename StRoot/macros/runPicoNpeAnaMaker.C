@@ -30,7 +30,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     gSystem->Load("StPicoNpeAnaMaker");
     gSystem->Load("StBTofUtil");
 
-    chain = new StChain();
+    StChain * chain = new StChain();
     
     // create list of picoDst files
     TString command = "sed 's/hft\\\/npeTree/picodsts/g' " + npeList + " >correspondingPico.list";
