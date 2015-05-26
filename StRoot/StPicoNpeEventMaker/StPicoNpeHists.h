@@ -56,6 +56,6 @@ private:
     TH2F* mh2InvariantMassVsPtQaCut;
     TH2F* mh2ConversionPositionQaCut;
     
-    ClassDef(StPicoNpeHists, 1)
+    ClassDef(StPicoNpeHists, 2)
 };
 #endif

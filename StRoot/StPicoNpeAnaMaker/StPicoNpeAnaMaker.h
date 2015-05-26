@@ -67,7 +67,7 @@ class StPicoNpeAnaMaker : public StMaker
     
     
     
-    ClassDef(StPicoNpeAnaMaker, 1)
+    ClassDef(StPicoNpeAnaMaker, 2)
 };
 
 inline int StPicoNpeAnaMaker::getEntries() const 
