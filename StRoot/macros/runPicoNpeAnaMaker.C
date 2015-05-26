@@ -61,10 +61,14 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     cout << "DEBUG!" << endl;
     
     chain->Finish();
+    cout << "DEBUG!" << endl;
     delete chain;
+    cout << "DEBUG!" << endl;
     
     // delete list of picos
     command = "rm -f correspondingPico.list";
+    cout << "DEBUG!" << endl;
     gSystem->Exec(command.Data());
+    cout << "DEBUG!" << endl;
     
 }
