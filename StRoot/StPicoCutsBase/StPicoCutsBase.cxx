@@ -29,7 +29,7 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
   
   // -- default constructor
   
-  for (Int_t idx; idx < kPicoPIDMax; ++idx) {
+  for (Int_t idx = 0; idx < kPicoPIDMax; ++idx) {
     mPtRange[idx][0] = std::numeric_limits<float>::min();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
     mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
@@ -56,7 +56,7 @@ StPicoCutsBase::StPicoCutsBase(const Char_t *name) : TNamed(name, name),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0) {
   // -- constructor
 
-  for (Int_t idx; idx < kPicoPIDMax; ++idx) {
+  for (Int_t idx = 0; idx < kPicoPIDMax; ++idx) {
     mPtRange[idx][0] = std::numeric_limits<float>::min();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
     mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
