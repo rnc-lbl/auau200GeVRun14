@@ -37,6 +37,7 @@ Int_t StPicoNpeAnaMaker::Init()
     
     mChain = new TChain("T");
     std::ifstream listOfFiles(mInputFileList.Data());
+    LOG_INFO << "Debug::AnaMaker::Init()" << endl;
     if (listOfFiles.is_open())
     {
         std::string file;
@@ -46,21 +47,22 @@ Int_t StPicoNpeAnaMaker::Init()
             mChain->Add(file.c_str());
         }
     }
+    LOG_INFO << "Debug::AnaMaker::Init()" << endl;
     else
     {
         LOG_ERROR << "StPicoNpeAnaMaker - Could not open list of files. ABORT!" << endm;
         return kStErr;
     }
-    cout << "Debug::AnaMaker::Init()" << endl;
+    LOG_INFO << "Debug::AnaMaker::Init()" << endl;
     mChain->GetBranch("dEvent")->SetAutoDelete(kFALSE);
-    cout << "Debug::AnaMaker::Init()" << endl;
+    LOG_INFO << "Debug::AnaMaker::Init()" << endl;
     mChain->SetBranchAddress("dEvent", &mPicoNpeEvent);
-    cout << "Debug::AnaMaker::Init()" << endl;
+    LOG_INFO << "Debug::AnaMaker::Init()" << endl;
     
     mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
-    cout << "Debug::AnaMaker::Init()" << endl;
+    LOG_INFO << "Debug::AnaMaker::Init()" << endl;
     mOutputFile->cd();
-    cout << "Debug::AnaMaker::Init()" << endl;
+    LOG_INFO << "Debug::AnaMaker::Init()" << endl;
     
     // -------------- USER VARIABLES -------------------------
 
