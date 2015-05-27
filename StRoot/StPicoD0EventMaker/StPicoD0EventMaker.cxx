@@ -172,7 +172,7 @@ bool StPicoD0EventMaker::isGoodEvent()
 bool StPicoD0EventMaker::isGoodForVertexFit(StPicoTrack const* const trk, StThreeVectorF const& vtx) const
 {
   StPhysicalHelixD helix = trk->dcaGeometry().helix();
-  float dca = helix.at(helix.pathLength(vtx)).mag();
+  float dca = (helix.at(helix.pathLength(vtx)) - vtx).mag();
 
   if (dca > cuts::vtxDca) return false;
 
