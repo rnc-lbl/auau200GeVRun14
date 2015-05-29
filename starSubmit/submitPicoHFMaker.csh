@@ -79,6 +79,21 @@ if  ( ! -e ${baseFolder}/StRoot/macros/${rootMacro} ) then
     exit
 endif
 
+## check if macro compiles
+if ( -e compileTest.log ) then
+    rm compileTest.log
+endif
+
+root -l -b -q starSubmit/compileTest.C |& cat > compileTest.log 
+cat compileTest.log |& grep "Compilation failed!"
+if ( $status == 0 ) then
+    echo "Compilation of ${rootMacro} failed"
+    cat compileTest.log
+    exit
+else
+    rm compileTest.log
+endif
+
 if ( ! -e ${input} ) then
     echo "Filelist ${input} does not exist"
     exit
