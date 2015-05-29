@@ -36,6 +36,7 @@ ln -s `pwd`/auau200GeVRun14/StRoot/StPicoD0EventMaker StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoKFVertexFitter StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoPrescales StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoHFMaker StRoot
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoCutsBase StRoot
 ln -s `pwd`/offline/users/dongx/pico/source/StPicoDstMaker StRoot
 cp -r -p auau200GeVRun14/run14AuAu200GeVPrescales/ .
 
