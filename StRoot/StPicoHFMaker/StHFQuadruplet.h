@@ -2,16 +2,18 @@
 #define StHFQuadruplet_hh
 
 /* **************************************************
- *  Generic class calculating and storing primary triplets in HF analysis
+ *  Generic class calculating and storing primary quadruplets in HF analysis
  *  Allows to combine:
- *  - three particles, using
+ *  - four particles, using
  *      StHFQuadruplet(StPicoTrack const * particle1, StPicoTrack const * particle2, 
  *                  StPicoTrack const * particle3, ...
+ *  - a pair and 4 particles using:
+ *      StHFQuadruplet(StPicoTrack const * particle1, StPicoTrack const * particle2,
+ *                     StPicoTrack const * particle3, StHFPair const * pair ...
  *
  * **************************************************
  *
  *  Initial Authors:                                                                                                                       
- *            Xin Dong        (xdong@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
  *            Jochen Thaeder  (jmthader@lbl.gov)
  *          **Michael Lomnitz (mrlomnitz@lbl.gov)
@@ -26,9 +28,10 @@
 
 #include "StLorentzVectorF.hh"
 #include "StThreeVectorF.hh"
-
+#include "StHFPair.h"
 class StPicoTrack;
 class StPicoEvent;
+class StHFPair;
 
 class StHFQuadruplet : public TObject
 {
@@ -39,6 +42,12 @@ class StHFQuadruplet : public TObject
 		 float p1MassHypo, float p2MassHypo, float p3MassHypo, float p4MassHypo,
 		 unsigned short p1Idx, unsigned short p2Idx, unsigned short p3Idx, unsigned short p4Idx,
 		 StThreeVectorF const & vtx, float bField);
+
+  StHFQuadruplet(StPicoTrack const * particle1, StPicoTrack const * particle2, StPicoTrack const * particle3, StHFPair const * particle4,
+		 float p1MassHypo, float p2MassHypo, float p3MassHypo, float p4MassHypo,
+		 unsigned short p1Idx, unsigned short p2Idx, unsigned short p3Idx, unsigned short p4Idx,
+		 StThreeVectorF const & vtx, float bField);
+
   ~StHFQuadruplet() {;}
 
   StLorentzVectorF const & lorentzVector() const;
