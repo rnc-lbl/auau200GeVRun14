@@ -260,7 +260,7 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
       StHFPair candidateK0Short(pion1, pion2, 
 				mHFCuts->getHypotheticalMass(StHFCuts::kPion), mHFCuts->getHypotheticalMass(StHFCuts::kPion),
 				mIdxPicoPions[idxPion1], mIdxPicoPions[idxPion2], 
-				mPrimVtx, mBField);
+				mPrimVtx, mBField, false);
 
       if (!mHFCuts->isGoodTertiaryVertexPair(candidateK0Short)) 
 	continue;
@@ -289,7 +289,7 @@ void StPicoHFMaker::createTertiaryLambdas() {
       StHFPair lambda(proton, pion, 
 		      mHFCuts->getHypotheticalMass(StHFCuts::kProton), mHFCuts->getHypotheticalMass(StHFCuts::kPion),
 		      mIdxPicoProtons[idxProton], mIdxPicoPions[idxPion], 
-		      mPrimVtx, mBField);
+		      mPrimVtx, mBField, false);
 
       if (!mHFCuts->isGoodTertiaryVertexPair(lambda)) 
 	continue;
