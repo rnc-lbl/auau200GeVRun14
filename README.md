@@ -13,3 +13,4 @@
 ### Pico production monitors:
 [Pico production monitor](http://portal.nersc.gov/project/star/mustafa/picoProductionMonitor/)  
 [Pico D0 production monitor](http://www.star.bnl.gov/protected/heavy/mstftsm/run14/picoD0ProductionMonitor/)  
+[Pico NPE production monitor](http://www.star.bnl.gov/protected/heavy/kunsu/run14/picoNpeProductionMonitor/)  

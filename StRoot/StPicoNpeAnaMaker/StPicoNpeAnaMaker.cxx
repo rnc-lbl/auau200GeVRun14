@@ -6,8 +6,6 @@
 #include "TFile.h"
 #include "TClonesArray.h"
 #include "TTree.h"
-#include "TNtuple.h"
-#include "THnSparse.h"
 
 #include "StPicoDstMaker/StPicoDstMaker.h"
 #include "StPicoDstMaker/StPicoDst.h"
@@ -17,16 +15,18 @@
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoNpeEventMaker/StPicoNpeEvent.h"
 #include "StPicoNpeEventMaker/StElectronPair.h"
-#include "StPicoNpeAnaMaker.h"
-#include "StCuts.h"
+#include "StBTofUtil/tofPathLength.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
-#include "StBTofUtil/tofPathLength.hh"
+
+#include "StPicoNpeAnaMaker.h"
+#include "StCuts.h"
+
 
 ClassImp(StPicoNpeAnaMaker)
 
 StPicoNpeAnaMaker::StPicoNpeAnaMaker(char const * name,char const * inputFilesList,
-                                     char const * outName,StPicoDstMaker* picoDstMaker):
+                                     char const * outName, StPicoDstMaker* picoDstMaker):
 StMaker(name),mPicoDstMaker(picoDstMaker),mPicoNpeEvent(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
 mOutputFile(NULL), mChain(NULL), mEventCounter(0)
 {}
@@ -51,13 +51,11 @@ Int_t StPicoNpeAnaMaker::Init()
         LOG_ERROR << "StPicoNpeAnaMaker - Could not open list of files. ABORT!" << endm;
         return kStErr;
     }
-    
-    mChain->GetBranch("dEvent")->SetAutoDelete(kFALSE);
-    mChain->SetBranchAddress("dEvent", &mPicoNpeEvent);
+    mChain->GetBranch("npeEvent")->SetAutoDelete(kFALSE);
+    mChain->SetBranchAddress("npeEvent", &mPicoNpeEvent);
     
     mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
     mOutputFile->cd();
-    
     
     // -------------- USER VARIABLES -------------------------
 
@@ -125,10 +123,6 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
         
         // -------------- USER ANALYSIS -------------------------
-
-        
-        
-        
         
     }
     
@@ -146,3 +140,4 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     epair->pairDca() < anaCuts::pairDca
     ;
 }
+

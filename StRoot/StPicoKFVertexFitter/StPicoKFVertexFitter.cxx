@@ -47,7 +47,7 @@ StThreeVectorF StPicoKFVertexFitter::primaryVertexRefit(StPicoDst const* const p
       track.SetID(gTrack->id());
       track.SetCharge(dcaG.charge());
 
-      Int_t pdg = dcaG.charge() > 1 ? 211 : -211; // assume all tracks are pions.
+      Int_t pdg = dcaG.charge() > 0 ? 211 : -211; // assume all tracks are pions.
 
       particles[iTrk] = new KFParticle(track, pdg);
    }

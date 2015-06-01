@@ -42,7 +42,7 @@ class StPicoNpeAnaMaker : public StMaker
     virtual Int_t Finish();
 
     int getEntries() const;
-    
+
     
   private:
     StPicoNpeAnaMaker() {}
@@ -58,7 +58,7 @@ class StPicoNpeAnaMaker : public StMaker
     TFile* mOutputFile;
     TChain* mChain;
     int mEventCounter;
-    
+
     
     // -------------- USER variables -------------------------
     // add your member variables here. 
@@ -67,7 +67,7 @@ class StPicoNpeAnaMaker : public StMaker
     
     
     
-    ClassDef(StPicoNpeAnaMaker, 1)
+    ClassDef(StPicoNpeAnaMaker, 2)
 };
 
 inline int StPicoNpeAnaMaker::getEntries() const 
