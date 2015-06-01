@@ -11,6 +11,7 @@
  *    - in the current implementation the incoming pair is seen as having charge = 0
  *    - after determining the vertex of particle and incoming pair, the 
  *      decay vertex (tertiary vertex) of incoming particle can be updated
+ *    - straight line approximation is the default, but full helix can be used
  *
  * **************************************************
  *
@@ -42,12 +43,12 @@ class StHFPair : public TObject
   StHFPair(StPicoTrack const * particle1, StPicoTrack const * particle2, 
 	   float p1MassHypo, float p2MassHypo,
 	   unsigned short p1Idx, unsigned short p2Idx,
-	   StThreeVectorF const & vtx, float bField);
+	   StThreeVectorF const & vtx, float bField, bool useStraightLine = true);
 
   StHFPair(StPicoTrack const * particle1, StHFPair const * particle2, 
 	   float p1MassHypo, float p2MassHypo,
 	   unsigned short p1Idx, unsigned short p2Idx,
-	   StThreeVectorF const & vtx, float bField);
+	   StThreeVectorF const & vtx, float bField, bool useStraightLine = true);
 
   ~StHFPair() {;}
   
