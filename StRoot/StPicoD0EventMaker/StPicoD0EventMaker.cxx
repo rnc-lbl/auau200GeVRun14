@@ -7,7 +7,7 @@
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
 #include "StPhysicalHelixD.hh"
-#include "../StRefMultCorr/StRefMultCorr.h"
+#include "StRoot/StRefMultCorr/StRefMultCorr.h"
 #include "../StPicoDstMaker/StPicoDst.h"
 #include "../StPicoDstMaker/StPicoDstMaker.h"
 #include "../StPicoDstMaker/StPicoEvent.h"

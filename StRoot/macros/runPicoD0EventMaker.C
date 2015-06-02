@@ -47,6 +47,7 @@ void runPicoD0EventMaker(const Char_t *inputFile, const Char_t *outputFile="test
   gSystem->Load("StPicoKFVertexFitter");
   // ---
 
+  gSystem->Load("StRefMultCorr");
   gSystem->Load("StPicoD0EventMaker");
 
 	chain = new StChain();
