@@ -26,6 +26,7 @@ class StPicoEvent;
 
 class StHFPair;
 class StHFTriplet;
+class StHFQuadruplet;
 
 class StPicoHFEvent : public TObject
 {
@@ -40,6 +41,7 @@ public:
    void  addHFSecondaryVertexPair(StHFPair const*);
    void  addHFSecondaryVertexTriplet(StHFTriplet const*);
    void  addHFTertiaryVertexPair(StHFPair const*);
+   void  addHFSecondaryVertexQuadruplet(StHFQuadruplet const*);
 
    // -- get array with particles from secondary and tertiary vertex
    TClonesArray const * aHFSecondaryVertices() const;
@@ -52,7 +54,7 @@ public:
    Int_t eventId() const;
 
    // -- different event/decay modes
-   enum eHFEventMode {kTwoParticleDecay, kThreeParticleDecay, kTwoAndTwoParticleDecay };
+   enum eHFEventMode {kTwoParticleDecay, kThreeParticleDecay, kTwoAndTwoParticleDecay, kFourParticleDecay};
 
 private:
 

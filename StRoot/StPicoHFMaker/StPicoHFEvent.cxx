@@ -3,6 +3,7 @@
 #include "StPicoHFEvent.h"
 #include "StHFPair.h"
 #include "StHFTriplet.h"
+#include "StHFQuadruplet.h"
 
 ClassImp(StPicoHFEvent)
 
@@ -33,6 +34,10 @@ StPicoHFEvent::StPicoHFEvent(unsigned int mode) : mRunId(-1), mEventId(-1), mNHF
     mHFSecondaryVerticesArray = fgHFSecondaryVerticesArray;
   }
   else if (mode == StPicoHFEvent::kTwoParticleDecay) {
+    if (!fgHFSecondaryVerticesArray) fgHFSecondaryVerticesArray = new TClonesArray("StHFPair");
+    mHFSecondaryVerticesArray = fgHFSecondaryVerticesArray;
+  }
+  else if (mode == StPicoHFEvent::kFourParticleDecay) {
     if (!fgHFSecondaryVerticesArray) fgHFSecondaryVerticesArray = new TClonesArray("StHFPair");
     mHFSecondaryVerticesArray = fgHFSecondaryVerticesArray;
   }
@@ -77,4 +82,9 @@ void StPicoHFEvent::addHFSecondaryVertexTriplet(StHFTriplet const* t) {
 void StPicoHFEvent::addHFTertiaryVertexPair(StHFPair const* t) {
   TClonesArray &vertexArray = *mHFTertiaryVerticesArray;
   new(vertexArray[mNHFTertiaryVertices++]) StHFPair(t);
+}
+// _________________________________________________________
+void StPicoHFEvent::addHFSecondaryVertexQuadruplet(StHFQuadruplet const* t) {
+  TClonesArray &vertexArray = *mHFTertiaryVerticesArray;
+  new(vertexArray[mNHFTertiaryVertices++]) StHFQuadruplet(t);
 }

@@ -28,7 +28,7 @@ tar -zcvf ${JOBID}.log.tgz ${JOBID}.log
 	<Package name="LocalLibraries">
 		<File>file:./StRoot/</File>
 		<File>file:./run14AuAu200GeVPrescales/</File>
-    <File>file:./picoList_bad_MB.list</File>
+    		<File>file:./picoList_bad_MB.list</File>
 		<File>file:./.sl64_gcc447/</File>
 	</Package>
 </SandBox>
