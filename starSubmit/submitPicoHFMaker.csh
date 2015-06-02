@@ -79,6 +79,21 @@ if  ( ! -e ${baseFolder}/StRoot/macros/${rootMacro} ) then
     exit
 endif
 
+## check if macro compiles
+if ( -e compileTest.log ) then
+    rm compileTest.log
+endif
+
+root -l -b -q starSubmit/compileTest.C |& cat > compileTest.log 
+cat compileTest.log |& grep "Compilation failed!"
+if ( $status == 0 ) then
+    echo "Compilation of ${rootMacro} failed"
+    cat compileTest.log
+    exit
+else
+    rm compileTest.log
+endif
+
 if ( ! -e ${input} ) then
     echo "Filelist ${input} does not exist"
     exit
@@ -123,6 +138,29 @@ if ( -d LocalLibraries.package ) then
 endif 
 
 # -- submit 
-star-submit-template -template submitPicoHFMaker.xml -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},rootMacro=${rootMacro}
+
+##### temporary hack until -u ie option becomes availible
+
+set hackTemplate=submitPicoHFMaker_temp.xml 
+
+if ( -e submitPicoHFMaker_temp.xml  ) then
+    rm submitPicoHFMaker_temp.xml 
+endif 
+
+echo '<?xml version="1.0" encoding="utf-8" ?>' > $hackTemplate
+echo '<\!DOCTYPE note [' >> $hackTemplate
+echo '<\!ENTITY treeName "'${treeName}'">'    >> $hackTemplate
+echo '<\!ENTITY mMode "'${makerMode}'">'     >> $hackTemplate
+echo '<\!ENTITY rootMacro "'${rootMacro}'">' >> $hackTemplate
+echo '<\!ENTITY prodId "'${productionId}'">' >> $hackTemplate
+echo '<\!ENTITY basePath "'${baseFolder}'">' >> $hackTemplate
+echo '<\!ENTITY listOfFiles "'${input}'">'   >> $hackTemplate
+echo ']>' >> $hackTemplate
+
+tail -n +2 submitPicoHFMaker.xml >> $hackTemplate
+
+star-submit -u ie $hackTemplate
+
+#star-submit-template -template submitPicoHFMaker.xml -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},rootMacro=${rootMacro}
 
 popd > /dev/null
