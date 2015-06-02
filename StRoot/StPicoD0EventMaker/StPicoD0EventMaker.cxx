@@ -7,6 +7,7 @@
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
 #include "StPhysicalHelixD.hh"
+#include "../StRefMultCorr/StRefMultCorr.h"
 #include "../StPicoDstMaker/StPicoDst.h"
 #include "../StPicoDstMaker/StPicoDstMaker.h"
 #include "../StPicoDstMaker/StPicoEvent.h"
@@ -22,7 +23,7 @@
 ClassImp(StPicoD0EventMaker)
 
 StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
-   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL), mPicoD0Hists(NULL), 
+   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL), mPicoD0Hists(NULL), mRefMultCorr(NULL),
      mKfVertexFitter(), mOutputFile(NULL), mTree(NULL), mPicoD0Event(NULL) 
 {
    mPicoD0Event = new StPicoD0Event();
@@ -37,6 +38,7 @@ StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* pi
    mTree->Branch("dEvent", "StPicoD0Event", &mPicoD0Event, BufSize, Split);
 
    mPicoD0Hists = new StPicoD0Hists(fileBaseName);
+   mRefMultCorr = new StRefMultCorr("grefmult");
 }
 
 StPicoD0EventMaker::~StPicoD0EventMaker()
@@ -44,6 +46,7 @@ StPicoD0EventMaker::~StPicoD0EventMaker()
    /* mTree is owned by mOutputFile directory, it will be destructed once
     * the file is closed in ::Finish() */
    delete mPicoD0Hists;
+   delete mRefMultCorr;
 }
 
 Int_t StPicoD0EventMaker::Init()
@@ -164,7 +167,11 @@ Int_t StPicoD0EventMaker::Make()
 
 bool StPicoD0EventMaker::isGoodEvent()
 {
-   return (mPicoEvent->triggerWord() & cuts::triggerWord) &&
+   mRefMultCorr->init(mPicoEvent->runId());
+   mRefMultCorr->initEvent(mPicoEvent->grefMult(),mPicoEvent->primaryVertex().z(),mPicoEvent->ZDCx());
+
+   return mRefMultCorr->getCentralityBin9() <= cuts::centrality && 
+          (mPicoEvent->triggerWord() & cuts::triggerWord) &&
           fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
           fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz;
 }
