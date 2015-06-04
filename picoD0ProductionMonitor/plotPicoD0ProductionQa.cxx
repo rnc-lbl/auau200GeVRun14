@@ -110,11 +110,10 @@ void drawD0InPtBins(TCanvas* cv,TH2F* h,int nEvents)
     fun.SetParLimits(2,0.008,0.030);
     fun.SetLineWidth(4);
     fun.SetLineColor(2);
-    fun.SetLineStyle(2);
     hProj->Fit(&fun,"RN");
     fun.Draw("same");
     hProj->Draw("same");
-    auto significance = getSignificance(&fun,2.5,hProj->GetBinWidth(1));
+    auto significance = getSignificance(&fun,2.5,hProj->GetBinWidth(10));
     TLatex latex;
     latex.SetTextFont(132);
     latex.DrawLatexNDC(0.60,0.87,"Au+Au #sqrt{s_{NN}} = 200 GeV");
