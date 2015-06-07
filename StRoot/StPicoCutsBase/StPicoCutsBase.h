@@ -35,6 +35,7 @@
 class StPicoTrack;
 class StPicoEvent;
 class StPicoDst;
+class StPicoBTofPidTraits;
 
 class StPicoCutsBase : public TNamed
 {
@@ -68,6 +69,8 @@ class StPicoCutsBase : public TNamed
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- TOF PID
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
+  StPicoBTofPidTraits* hasTofPid(StPicoTrack const * const trk) const;
+
   bool isTPCHadron(StPicoTrack const * const trk, int pidFlag) const;
 
   bool isTPCPion(StPicoTrack const *trk) const;
@@ -160,7 +163,7 @@ class StPicoCutsBase : public TNamed
   void setCutProtonPtotRangeHybridTOF(float min, float max);
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
- 
+
   // -- calculate beta of track -- basic calculation
   float getTofBetaBase(StPicoTrack const* const trk) const;
 

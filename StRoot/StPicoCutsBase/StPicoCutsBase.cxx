@@ -272,6 +272,15 @@ bool StPicoCutsBase::isHybridTOFHadron(StPicoTrack const *trk, float const & tof
 // =======================================================================
 
 // _________________________________________________________
+StPicoBTofPidTraits* StPicoCutsBase::hasTofPid(StPicoTrack const * const trk) const {
+  // -- check if track has TOF pid information
+  //    return NULL otherwise
+
+  int index2tof = trk->bTofPidTraitsIndex();
+  return (index2tof >= 0) ? mPicoDst->btofPidTraits(index2tof) : NULL;
+}
+
+// _________________________________________________________
 float StPicoCutsBase::getTofBetaBase(StPicoTrack const * const trk) const {
   // -- provide beta of TOF for pico track
   //    use for 
@@ -280,23 +289,19 @@ float StPicoCutsBase::getTofBetaBase(StPicoTrack const * const trk) const {
 
   float beta = std::numeric_limits<float>::quiet_NaN();
 
-  int index2tof = trk->bTofPidTraitsIndex();
-  if(index2tof >= 0) {
+  StPicoBTofPidTraits *tofPid = hasTofPid(trk);
+  if (!tofPid) 
+    return beta;
 
-    StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(index2tof);
-    if(tofPid) {
-      beta = tofPid->btofBeta();
-      
-      if (beta < 1e-4) {
-        StThreeVectorF const btofHitPos = tofPid->btofHitPos();
-	StPhysicalHelixD helix = trk->helix();
-        float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
-        float tof = tofPid->btof();
-        beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
-      }
-    }
+  beta = tofPid->btofBeta();
+  if (beta < 1e-4) {
+    StThreeVectorF const btofHitPos = tofPid->btofHitPos();
+    StPhysicalHelixD helix = trk->helix();
+    float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
+    float tof = tofPid->btof();
+    beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
   }
-  
+    
   return beta;
 }
 
@@ -314,18 +319,16 @@ float StPicoCutsBase::getTofBeta(StPicoTrack const * const trk) const {
 
 // _________________________________________________________
 float StPicoCutsBase::getTofBeta(StPicoTrack const * const trk, 
-			   StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx) const {
+				 StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx) const {
   // -- provide correced beta of TOF for pico track
   //    use for 
-  //      - secondarys 
+  //      - secondaries 
 
-  // -- get uncorrected beta
-  float beta = getTofBetaBase(trk);
-  if (beta <= 0) 
+  float beta = std::numeric_limits<float>::quiet_NaN();
+
+  StPicoBTofPidTraits *tofPid = hasTofPid(trk);
+  if (!tofPid) 
     return beta;
-
-  // -- no check for variables needed ( already applied in getTofBetaBase( )  )
-  StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(trk->bTofPidTraitsIndex());
 
   StThreeVectorD tofHit = tofPid->btofHitPos();
 
@@ -355,13 +358,11 @@ float StPicoCutsBase::getTofBeta(StPicoTrack const * const trk,
   //    use for 
   //      - tertiaries 
 
-  // -- get uncorrected beta
-  float beta = getTofBetaBase(trk);
-  if (beta <= 0) 
-    return beta;
+  float beta = std::numeric_limits<float>::quiet_NaN();
 
-  // -- no check for variables needed ( already applied in getTofBetaBase( )  )
-  StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(trk->bTofPidTraitsIndex());
+  StPicoBTofPidTraits *tofPid = hasTofPid(trk);
+  if (!tofPid) 
+    return beta;
 
   StThreeVectorD tofHit = tofPid->btofHitPos();
 
