@@ -213,7 +213,7 @@ Int_t StPicoHFMaker::Make() {
     if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyze) {
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
 	StPicoTrack* trk = mPicoDst->track(iTrack);
-	
+
 	if (!trk || !mHFCuts->isGoodTrack(trk)) continue;
 
 	if (isPion(trk))   mIdxPicoPions.push_back(iTrack);   // isPion method to be implemented by daughter class
