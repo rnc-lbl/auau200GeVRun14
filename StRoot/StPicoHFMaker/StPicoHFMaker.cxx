@@ -141,10 +141,10 @@ Int_t StPicoHFMaker::Finish() {
 
   mOutputFileList->cd();
   mOutList->Write(mOutList->GetName(), TObject::kSingleKey);
-
+  
   // -- call method of daughter class
   FinishHF();
-
+  
   mOutputFileList->Close();
 
   return kStOK;
@@ -326,7 +326,7 @@ bool StPicoHFMaker::setupEvent() {
 void StPicoHFMaker::initializeEventStats() {
   // -- Initialize event statistics histograms
   
-  const char *aEventCutNames[]   = {"all", "good run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it{v}^{VPD}_{z}", "accepted", ""};
+  const char *aEventCutNames[]   = {"all", "good run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it{v}^{VPD}_{z}", "accepted"};
 
   mOutList->Add(new TH1F("hEventStat0","Event cut statistics 0;Event Cuts;Events", mHFCuts->eventStatMax(), -0.5, mHFCuts->eventStatMax()-0.5));
   TH1F *hEventStat0 = static_cast<TH1F*>(mOutList->Last());
