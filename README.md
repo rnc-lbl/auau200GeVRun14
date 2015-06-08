@@ -13,7 +13,7 @@
 **Instituations:**  
                 - Lawrence Berkeley National Lab.  
                 - Kent State University,  
-                - University of Science and Technology, China
+                - University of Science and Technology, China  
                 - Purdue University,  
                 - Pusan National University, South Korea  
 
