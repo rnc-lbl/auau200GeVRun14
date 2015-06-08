@@ -40,12 +40,20 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
     mTOFDeltaOneOverBetaMax[idx] = 0.04;
   }
   
-  mHypotheticalMass[kPion]    = M_PION_PLUS;
-  mHypotheticalMass2[kPion]   = M_PION_PLUS*M_PION_PLUS;
-  mHypotheticalMass[kKaon]    = M_KAON_PLUS;
-  mHypotheticalMass2[kKaon]   = M_KAON_PLUS*M_KAON_PLUS;
-  mHypotheticalMass[kProton]  = M_PROTON;
-  mHypotheticalMass2[kProton] = M_PROTON*M_PROTON;
+  mHypotheticalMass[kPion]      = M_PION_PLUS;
+  mHypotheticalMass2[kPion]     = M_PION_PLUS*M_PION_PLUS;
+  mHypotheticalMass[kKaon]      = M_KAON_PLUS;
+  mHypotheticalMass2[kKaon]     = M_KAON_PLUS*M_KAON_PLUS;
+  mHypotheticalMass[kProton]    = M_PROTON;
+  mHypotheticalMass2[kProton]   = M_PROTON*M_PROTON;
+  mHypotheticalMass[kElectron]  = M_ELECTRON;
+  mHypotheticalMass2[kElectron] = M_ELECTRON*M_ELECTRON;
+  mHypotheticalMass[kMuon]      = M_MUON_PLUS;
+  mHypotheticalMass2[kMuon]     = M_MUON_PLUS*M_MUON_PLUS;
+  mHypotheticalMass[kK0Short]   = M_KAON_0_SHORT;
+  mHypotheticalMass2[kK0Short]  = M_KAON_0_SHORT*M_KAON_0_SHORT;
+  mHypotheticalMass[kLambda]    = M_LAMBDA;
+  mHypotheticalMass2[kLambda]   = M_LAMBDA*M_LAMBDA;
 }
 
 // _________________________________________________________
@@ -67,12 +75,21 @@ StPicoCutsBase::StPicoCutsBase(const Char_t *name) : TNamed(name, name),
     mTOFDeltaOneOverBetaMax[idx] = 0.04;
   }
 
-  mHypotheticalMass[kPion]    = M_PION_PLUS;
-  mHypotheticalMass2[kPion]   = M_PION_PLUS*M_PION_PLUS;
-  mHypotheticalMass[kKaon]    = M_KAON_PLUS;
-  mHypotheticalMass2[kKaon]   = M_KAON_PLUS*M_KAON_PLUS;
-  mHypotheticalMass[kProton]  = M_PROTON;
-  mHypotheticalMass2[kProton] = M_PROTON*M_PROTON;
+  mHypotheticalMass[kPion]      = M_PION_PLUS;
+  mHypotheticalMass2[kPion]     = M_PION_PLUS*M_PION_PLUS;
+  mHypotheticalMass[kKaon]      = M_KAON_PLUS;
+  mHypotheticalMass2[kKaon]     = M_KAON_PLUS*M_KAON_PLUS;
+  mHypotheticalMass[kProton]    = M_PROTON;
+  mHypotheticalMass2[kProton]   = M_PROTON*M_PROTON;
+  mHypotheticalMass[kElectron]  = M_ELECTRON;
+  mHypotheticalMass2[kElectron] = M_ELECTRON*M_ELECTRON;
+  mHypotheticalMass[kMuon]      = M_MUON_PLUS;
+  mHypotheticalMass2[kMuon]     = M_MUON_PLUS*M_MUON_PLUS;
+  mHypotheticalMass[kK0Short]   = M_KAON_0_SHORT;
+  mHypotheticalMass2[kK0Short]  = M_KAON_0_SHORT*M_KAON_0_SHORT;
+  mHypotheticalMass[kLambda]    = M_LAMBDA;
+  mHypotheticalMass2[kLambda]   = M_LAMBDA*M_LAMBDA;
+
 }
 // _________________________________________________________
 StPicoCutsBase::~StPicoCutsBase() { 

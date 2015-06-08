@@ -64,7 +64,7 @@ class StPicoCutsBase : public TNamed
   // -- PID
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   
-  enum ePicoPID {kPion, kKaon, kProton, kPicoPIDMax};
+  enum ePicoPID {kPion, kKaon, kProton, kElectron, kMuon, kK0Short, kLambda, kPicoPIDMax};
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- TOF PID
@@ -212,17 +212,17 @@ class StPicoCutsBase : public TNamed
   float mPrimaryDCAtoVtxMax;         // used for primary selection for TOF Beta recalculation
 
   // -- acceptance - per particle type [ePicoPID]
-  float mPtRange[3][2];
+  float mPtRange[kPicoPIDMax][2];
 
   // -- PID cuts - per particle type [ePicoPID]
-  float mHypotheticalMass[3];        // hypothetical mass
-  float mHypotheticalMass2[3];       // hypothetical mass squared
+  float mHypotheticalMass[kPicoPIDMax];        // hypothetical mass
+  float mHypotheticalMass2[kPicoPIDMax];       // hypothetical mass squared
 
-  float mTPCNSigmaMax[3];
-  float mTOFDeltaOneOverBetaMax[3]; 
+  float mTPCNSigmaMax[kPicoPIDMax];
+  float mTOFDeltaOneOverBetaMax[kPicoPIDMax]; 
 
-  float mPtotRangeTOF[3][2];         // momentum range [min,max], where TOF PID is applied
-  float mPtotRangeHybridTOF[3][2];   // momentum range [min,max], where Hybrid TOF PID is applied
+  float mPtotRangeTOF[kPicoPIDMax][2];         // momentum range [min,max], where TOF PID is applied
+  float mPtotRangeHybridTOF[kPicoPIDMax][2];   // momentum range [min,max], where Hybrid TOF PID is applied
 
   ClassDef(StPicoCutsBase,1)
 };
