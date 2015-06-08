@@ -32,7 +32,7 @@ class StMixerEvent{
   StMixerEvent(StMixerEvent *);
   StMixerEvent(StThreeVectorF, float);
   ~StMixerEvent(){;};
-  void addTrack(StMixerTrack *);
+  void addTrack(StMixerTrack);
   void setPos( float const, float const, float const);
   void setField( float const );
   void setNoTracks( int const );

@@ -38,7 +38,7 @@ class StMixerPair
   StMixerPair();
   StMixerPair(StMixerPair const *);
 
-  StMixerPair(StMixerTrack const * const particle1, StMixerTrack const * const particle2, 
+  StMixerPair(StMixerTrack const  particle1, StMixerTrack const particle2, 
 	   float p1MassHypo, float p2MassHypo,
 	   StThreeVectorF const & vtx1, StThreeVectorF const & vtx2,
 	   float bField);
