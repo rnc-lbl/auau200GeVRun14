@@ -27,7 +27,7 @@ StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker,
 			     char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
   StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
   mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), 
-  mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
+  mOutputTreeName("picoHFtree"), mOutputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
   mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
   mOutputFileTree(NULL), mOutputFileList(NULL) {
   // -- constructor
@@ -83,11 +83,11 @@ Int_t StPicoHFMaker::Init() {
   }
   
   // -- file which holds list of histograms
-  mOutputFileList = new TFile(Form("%s.%s.root", mOuputFileBaseName.Data(), GetName()), "RECREATE");
+  mOutputFileList = new TFile(Form("%s.%s.root", mOutputFileBaseName.Data(), GetName()), "RECREATE");
   mOutputFileList->SetCompressionLevel(1);
 
   if (mMakerMode == StPicoHFMaker::kWrite) {
-    mOutputFileTree = new TFile(Form("%s.picoHFtree.root", mOuputFileBaseName.Data()), "RECREATE");
+    mOutputFileTree = new TFile(Form("%s.%s.root", mOutputFileBaseName.Data(), mOutputTreeName.Data()), "RECREATE");
     mOutputFileTree->SetCompressionLevel(1);
     mOutputFileTree->cd();
 
