@@ -54,6 +54,7 @@ bool StPicoMixedEventMaker::LoadEventPlaneCorr(Int_t const run){
 Int_t StPicoMixedEventMaker::Init() {
   mOutputFileTree->cd();  
   mPicoEventMixer = new StPicoEventMixer();
+  mPicoEventMixer->setEventBuffer(10);
   if(!LoadEventPlaneCorr(mRunId)){
     LOG_WARN << "Event plane calculations unavalable! Skipping"<<endm;
     return kStOk;
