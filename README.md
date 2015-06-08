@@ -5,7 +5,7 @@
                 - Xin Dong        (xdong@lbl.gov),  
                 - Liang He        (he202@purdue.edu),  
                 - Michael Lomnitz (mrlomnitz@lbl.gov),  
-                - Mustafa Mustafa (mmustafa@lbl.gov),
+                - Mustafa Mustafa (mmustafa@lbl.gov),  
                 - Kunsu Oh        (kunsuoh@gmail.com),  
                 - Jochen Thaeder  (jmthader@lbl.gov),   
                 - Guannan Xie     (guannanxie@lbl.gov)  
