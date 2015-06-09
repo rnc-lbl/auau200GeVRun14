@@ -4,7 +4,7 @@
 #  and process them in individual root4star sessions
 #  
 #  - Used in makerMode = 1 (kWrite), to always have a 
-#    corresponding picoHFtree.root file for each picoDst.root file
+#    corresponding ${treeName}.root file for each picoDst.root file
 #
 # ###############################################
 
@@ -18,6 +18,8 @@ set treeName=$5
 set jobId=$6
 set rootMacro=$7
 set badRunListFileName=$8
+set productionBasePath=$9
+set decayChannel=$10
 
 echo FILELIST $fileList
 
@@ -34,9 +36,9 @@ foreach line ( `cat $fileList` )
 
     set outName=`echo $fileBaseName | awk -F ".picoDst.root" '{ print $1 }'`
 
-    root4star -q -b -l StRoot/macros/${rootMacro}'("'${line}'","'${outName}'", '${mMode}', "'${badRunListFileName}'")' > ${jobId}_${day}_${run}.log
+    root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/${rootMacro}++'("'${line}'","'${outName}'", '${mMode}', "'${badRunListFileName}'", "'${treeName}'", "'${productionBasePath}'", '${decayChannel}')' > ${jobId}_${day}_${run}.log
 
-    mv *.picoHFtree.root $outDirTree
+    mv *.${treeName}.root $outDirTree
     mv *.root  $outDirList
 
     tar -zcvf ${jobId}.log.tgz ${jobId}_${day}_${run}.log

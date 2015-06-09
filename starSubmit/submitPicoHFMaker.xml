@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job fileListSyntax="paths" minFilesPerProcess="100" maxFilesPerProcess="150" simulateSubmission="false">
+<job fileListSyntax="paths" minFilesPerProcess="150" maxFilesPerProcess="400" simulateSubmission="false">
   <stdout URL="file:&basePath;/jobs/log/$JOBID.out"/>
   <stderr URL="file:&basePath;/jobs/err/$JOBID.err"/>
 
@@ -20,9 +20,9 @@
     mkdir -p ${PRODPATH} ${LOGPATH}
 
     if ("&mMode;" == "1") then
-        &basePath;/jobs/starSubmit/parseFileList.csh ${FILELIST} &basePath; &prodId; &mMode; &treeName; ${JOBID} &rootMacro; picoList_badRuns.list
+        &basePath;/jobs/starSubmit/parseFileList.csh ${FILELIST} &basePath; &prodId; &mMode; &treeName; ${JOBID} &rootMacro; picoList_badRuns.list &productionBasePath; &decayChannel;
     else
-        root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/&rootMacro;++\(\"$FILELIST\",\"&prodId;_$JOBINDEX\",&mMode;,\"picoList_badRuns.list\"\) &gt;&amp; ${JOBID}.log
+        root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/&rootMacro;++\(\"$FILELIST\",\"&prodId;_$JOBINDEX\",&mMode;,\"picoList_badRuns.list\",\"&treeName;\",\"&productionBasePath;\",\"&decayChannel;\"\) &gt;&amp; ${JOBID}.log
         tar -zcvf ${JOBID}.log.tgz ${JOBID}.log
     endif
 

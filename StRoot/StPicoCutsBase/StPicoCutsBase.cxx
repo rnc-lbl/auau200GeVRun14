@@ -22,7 +22,7 @@ ClassImp(StPicoCutsBase)
 
 // _________________________________________________________
 StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"), 
-  mTOFCorr(new StV0TofCorrection), mPicoDst(NULL), mEventStatMax(7), mTOFResolution(0.013),
+  mTOFCorr(new StV0TofCorrection), mPicoDst(NULL), mEventStatMax(6), mTOFResolution(0.013),
   mBadRunListFileName("picoList_bad_MB.list"), 
   mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0) {
@@ -40,12 +40,20 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
     mTOFDeltaOneOverBetaMax[idx] = 0.04;
   }
   
-  mHypotheticalMass[kPion]    = M_PION_PLUS;
-  mHypotheticalMass2[kPion]   = M_PION_PLUS*M_PION_PLUS;
-  mHypotheticalMass[kKaon]    = M_KAON_PLUS;
-  mHypotheticalMass2[kKaon]   = M_KAON_PLUS*M_KAON_PLUS;
-  mHypotheticalMass[kProton]  = M_PROTON;
-  mHypotheticalMass2[kProton] = M_PROTON*M_PROTON;
+  mHypotheticalMass[kPion]      = M_PION_PLUS;
+  mHypotheticalMass2[kPion]     = M_PION_PLUS*M_PION_PLUS;
+  mHypotheticalMass[kKaon]      = M_KAON_PLUS;
+  mHypotheticalMass2[kKaon]     = M_KAON_PLUS*M_KAON_PLUS;
+  mHypotheticalMass[kProton]    = M_PROTON;
+  mHypotheticalMass2[kProton]   = M_PROTON*M_PROTON;
+  mHypotheticalMass[kElectron]  = M_ELECTRON;
+  mHypotheticalMass2[kElectron] = M_ELECTRON*M_ELECTRON;
+  mHypotheticalMass[kMuon]      = M_MUON_PLUS;
+  mHypotheticalMass2[kMuon]     = M_MUON_PLUS*M_MUON_PLUS;
+  mHypotheticalMass[kK0Short]   = M_KAON_0_SHORT;
+  mHypotheticalMass2[kK0Short]  = M_KAON_0_SHORT*M_KAON_0_SHORT;
+  mHypotheticalMass[kLambda]    = M_LAMBDA;
+  mHypotheticalMass2[kLambda]   = M_LAMBDA*M_LAMBDA;
 }
 
 // _________________________________________________________
@@ -67,12 +75,21 @@ StPicoCutsBase::StPicoCutsBase(const Char_t *name) : TNamed(name, name),
     mTOFDeltaOneOverBetaMax[idx] = 0.04;
   }
 
-  mHypotheticalMass[kPion]    = M_PION_PLUS;
-  mHypotheticalMass2[kPion]   = M_PION_PLUS*M_PION_PLUS;
-  mHypotheticalMass[kKaon]    = M_KAON_PLUS;
-  mHypotheticalMass2[kKaon]   = M_KAON_PLUS*M_KAON_PLUS;
-  mHypotheticalMass[kProton]  = M_PROTON;
-  mHypotheticalMass2[kProton] = M_PROTON*M_PROTON;
+  mHypotheticalMass[kPion]      = M_PION_PLUS;
+  mHypotheticalMass2[kPion]     = M_PION_PLUS*M_PION_PLUS;
+  mHypotheticalMass[kKaon]      = M_KAON_PLUS;
+  mHypotheticalMass2[kKaon]     = M_KAON_PLUS*M_KAON_PLUS;
+  mHypotheticalMass[kProton]    = M_PROTON;
+  mHypotheticalMass2[kProton]   = M_PROTON*M_PROTON;
+  mHypotheticalMass[kElectron]  = M_ELECTRON;
+  mHypotheticalMass2[kElectron] = M_ELECTRON*M_ELECTRON;
+  mHypotheticalMass[kMuon]      = M_MUON_PLUS;
+  mHypotheticalMass2[kMuon]     = M_MUON_PLUS*M_MUON_PLUS;
+  mHypotheticalMass[kK0Short]   = M_KAON_0_SHORT;
+  mHypotheticalMass2[kK0Short]  = M_KAON_0_SHORT*M_KAON_0_SHORT;
+  mHypotheticalMass[kLambda]    = M_LAMBDA;
+  mHypotheticalMass2[kLambda]   = M_LAMBDA*M_LAMBDA;
+
 }
 // _________________________________________________________
 StPicoCutsBase::~StPicoCutsBase() { 
@@ -272,6 +289,15 @@ bool StPicoCutsBase::isHybridTOFHadron(StPicoTrack const *trk, float const & tof
 // =======================================================================
 
 // _________________________________________________________
+StPicoBTofPidTraits* StPicoCutsBase::hasTofPid(StPicoTrack const * const trk) const {
+  // -- check if track has TOF pid information
+  //    return NULL otherwise
+
+  int index2tof = trk->bTofPidTraitsIndex();
+  return (index2tof >= 0) ? mPicoDst->btofPidTraits(index2tof) : NULL;
+}
+
+// _________________________________________________________
 float StPicoCutsBase::getTofBetaBase(StPicoTrack const * const trk) const {
   // -- provide beta of TOF for pico track
   //    use for 
@@ -280,23 +306,19 @@ float StPicoCutsBase::getTofBetaBase(StPicoTrack const * const trk) const {
 
   float beta = std::numeric_limits<float>::quiet_NaN();
 
-  int index2tof = trk->bTofPidTraitsIndex();
-  if(index2tof >= 0) {
+  StPicoBTofPidTraits *tofPid = hasTofPid(trk);
+  if (!tofPid) 
+    return beta;
 
-    StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(index2tof);
-    if(tofPid) {
-      beta = tofPid->btofBeta();
-      
-      if (beta < 1e-4) {
-        StThreeVectorF const btofHitPos = tofPid->btofHitPos();
-	StPhysicalHelixD helix = trk->helix();
-        float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
-        float tof = tofPid->btof();
-        beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
-      }
-    }
+  beta = tofPid->btofBeta();
+  if (beta < 1e-4) {
+    StThreeVectorF const btofHitPos = tofPid->btofHitPos();
+    StPhysicalHelixD helix = trk->helix();
+    float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
+    float tof = tofPid->btof();
+    beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
   }
-  
+    
   return beta;
 }
 
@@ -314,18 +336,16 @@ float StPicoCutsBase::getTofBeta(StPicoTrack const * const trk) const {
 
 // _________________________________________________________
 float StPicoCutsBase::getTofBeta(StPicoTrack const * const trk, 
-			   StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx) const {
+				 StLorentzVectorF const & secondaryMother, StThreeVectorF const & secondaryVtx) const {
   // -- provide correced beta of TOF for pico track
   //    use for 
-  //      - secondarys 
+  //      - secondaries 
 
-  // -- get uncorrected beta
-  float beta = getTofBetaBase(trk);
-  if (beta <= 0) 
+  float beta = std::numeric_limits<float>::quiet_NaN();
+
+  StPicoBTofPidTraits *tofPid = hasTofPid(trk);
+  if (!tofPid) 
     return beta;
-
-  // -- no check for variables needed ( already applied in getTofBetaBase( )  )
-  StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(trk->bTofPidTraitsIndex());
 
   StThreeVectorD tofHit = tofPid->btofHitPos();
 
@@ -355,13 +375,11 @@ float StPicoCutsBase::getTofBeta(StPicoTrack const * const trk,
   //    use for 
   //      - tertiaries 
 
-  // -- get uncorrected beta
-  float beta = getTofBetaBase(trk);
-  if (beta <= 0) 
-    return beta;
+  float beta = std::numeric_limits<float>::quiet_NaN();
 
-  // -- no check for variables needed ( already applied in getTofBetaBase( )  )
-  StPicoBTofPidTraits *tofPid = mPicoDst->btofPidTraits(trk->bTofPidTraitsIndex());
+  StPicoBTofPidTraits *tofPid = hasTofPid(trk);
+  if (!tofPid) 
+    return beta;
 
   StThreeVectorD tofHit = tofPid->btofHitPos();
 
