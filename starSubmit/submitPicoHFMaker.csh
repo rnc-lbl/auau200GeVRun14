@@ -26,7 +26,7 @@ set baseFolder=/path/to/your/directory
 
 # --input file 
 #    makerMode 0,1 : list must contain picoDst.root files
-#    makerMode 2   : list must contain picoHFtree.root files
+#    makerMode 2   : list must contain ${treeName}.root files
 set input=${baseFolder}/test.list
 
 # -- set maker mode
@@ -41,15 +41,29 @@ set rootMacro=runPicoHFMyAnaMaker.C
 # -- set filename for bad run list
 set badRunListFileName="picoList_bad_MB.list"
 
+# -- set decay channel
+#    can be defined in you analysis - otherwise ignore
+set decayChannel=0
+
 # ###############################################
-# -- DON'T CHANGE BELOW THAT LINE
+# -- CHANGE CAREFULLY BELOW THAT LINE
 # ###############################################
+
+# -- tree name (kWrite / kRead)
+set treeName=MyAna.picoHFtree
 
 # -- production Id (kAnalyse / kRead)
 set productionId=`date +%F_%H-%M`
 
-# -- production Id (kWrite)
-set treeName=hfTree
+# -- production base path (tpo find picoDsts to corresponding trees
+set productionbasePath=/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/physics2/P15ic
+
+# -- submission xml file 
+set xmlFile=submitPicoHFMaker.xml
+
+# ###############################################
+# -- DON'T CHANGE BELOW THAT LINE
+# ###############################################
 
 # -- job submission directory
 mkdir -p ${baseFolder}/jobs
@@ -62,9 +76,12 @@ pushd ${baseFolder}/jobs > /dev/null
 # -- prepare folder
 mkdir -p report err log list csh
 
+# -----------------------------------------------
+
 # -- check for prerequisits and create links
 set folders=".sl64_gcc447 StRoot run14AuAu200GeVPrescales starSubmit"
 
+echo -n "Checking prerequisits folders ...  "
 foreach folder ( $folders ) 
     if ( ! -d ${baseFolder}/${folder} ) then
 	echo "${folder} does not exist in ${baseFolder}"
@@ -73,17 +90,25 @@ foreach folder ( $folders )
 	ln -sf  ${baseFolder}/${folder}
     endif
 end
+echo "ok"
 
+# -----------------------------------------------
+
+echo -n "Checking run macro ...             "
 if  ( ! -e ${baseFolder}/StRoot/macros/${rootMacro} ) then
     echo "${rootMacro} does not exist in ${baseFolder}/StRoot/macros"
     exit
 endif
+echo "ok"
+
+# -----------------------------------------------
 
 ## check if macro compiles
 if ( -e compileTest.log ) then
     rm compileTest.log
 endif
 
+echo -n "Testing compliation ...            "
 root -l -b -q starSubmit/compileTest.C |& cat > compileTest.log 
 cat compileTest.log |& grep "Compilation failed!"
 if ( $status == 0 ) then
@@ -93,25 +118,37 @@ if ( $status == 0 ) then
 else
     rm compileTest.log
 endif
+echo "ok"
 
-if ( ! -e ${input} ) then
-    echo "Filelist ${input} does not exist"
-    exit
-endif
+# -----------------------------------------------
 
-if ( ! -e ${baseFolder}/starSubmit/submitPicoHFMaker.xml ) then
-    echo "XML submitPicoHFMaker.xml does not exist"
+echo -n "Checking xml file  ...             "
+if ( ! -e ${baseFolder}/starSubmit/${xmlFile} ) then
+    echo "XML ${xmlFile} does not exist"
     exit
 else
-    ln -sf ${baseFolder}/starSubmit/submitPicoHFMaker.xml 
+    ln -sf ${baseFolder}/starSubmit/${xmlFile} 
 endif
+echo "ok"
 
+# -----------------------------------------------
+
+echo -n "Checking bad run list  ...         "
 if  ( -e ${baseFolder}/${badRunListFileName} ) then
     cp  ${baseFolder}/${badRunListFileName} picoList_badRuns.list
 else if ( -e ${baseFolder}/picoLists/${badRunListFileName} ) then
     cp  ${baseFolder}/picoLists/${badRunListFileName} picoList_badRuns.list
 else
     echo "${badRunListFileName} does not exist in ${baseFolder} nor ${baseFolder}/picoLists"
+    exit
+endif
+echo "ok"
+
+# -----------------------------------------------
+
+echo -n "Checking input file list ...       "
+if ( ! -e ${input} ) then
+    echo "Filelist ${input} does not exist"
     exit
 endif
 
@@ -122,12 +159,15 @@ if ( ${makerMode} == 0 || ${makerMode} == 1 ) then
 	exit
     endif
 else if ( ${makerMode} == 2 ) then
-    head -n 2 ${input} | grep ".picoHFtree.root" > /dev/null
+    head -n 2 ${input} | grep ".${treeName}.root" > /dev/null
     if ( $? != 0 ) then
-	echo "Filelist does not contain HFtrees!"
+	echo "Filelist does not contain ${treeName} trees!"
 	exit
     endif
 endif
+echo "ok"
+
+# -----------------------------------------------
 
 if ( -e LocalLibraries.zip ) then
     rm LocalLibraries.zip
@@ -137,7 +177,9 @@ if ( -d LocalLibraries.package ) then
     rm -rf LocalLibraries.package
 endif 
 
+# ###############################################
 # -- submit 
+# ###############################################
 
 ##### temporary hack until -u ie option becomes availible
 
@@ -148,19 +190,21 @@ if ( -e submitPicoHFMaker_temp.xml  ) then
 endif 
 
 echo '<?xml version="1.0" encoding="utf-8" ?>' > $hackTemplate
-echo '<\!DOCTYPE note [' >> $hackTemplate
+echo '<\!DOCTYPE note ['                      >> $hackTemplate
 echo '<\!ENTITY treeName "'${treeName}'">'    >> $hackTemplate
-echo '<\!ENTITY mMode "'${makerMode}'">'     >> $hackTemplate
-echo '<\!ENTITY rootMacro "'${rootMacro}'">' >> $hackTemplate
-echo '<\!ENTITY prodId "'${productionId}'">' >> $hackTemplate
-echo '<\!ENTITY basePath "'${baseFolder}'">' >> $hackTemplate
-echo '<\!ENTITY listOfFiles "'${input}'">'   >> $hackTemplate
-echo ']>' >> $hackTemplate
+echo '<\!ENTITY decayChannel "'${decayChannel}'">' >> $hackTemplate
+echo '<\!ENTITY mMode "'${makerMode}'">'      >> $hackTemplate
+echo '<\!ENTITY rootMacro "'${rootMacro}'">'  >> $hackTemplate
+echo '<\!ENTITY prodId "'${productionId}'">'  >> $hackTemplate
+echo '<\!ENTITY basePath "'${baseFolder}'">'  >> $hackTemplate
+echo '<\!ENTITY listOfFiles "'${input}'">'    >> $hackTemplate
+echo '<\!ENTITY productionBasePath "'${productionbasePath}'">'    >> $hackTemplate
+echo ']>'                                     >> $hackTemplate
 
-tail -n +2 submitPicoHFMaker.xml >> $hackTemplate
+tail -n +2 ${xmlFile} >> $hackTemplate
 
 star-submit -u ie $hackTemplate
 
-#star-submit-template -template submitPicoHFMaker.xml -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},rootMacro=${rootMacro}
+#star-submit-template -template ${xmlFile} -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},decayChannel=${decayChannel},productionBasePath=${productionbasePath},rootMacro=${rootMacro}
 
 popd > /dev/null
