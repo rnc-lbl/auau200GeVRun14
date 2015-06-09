@@ -53,7 +53,7 @@ class StPicoD0EventMaker : public StMaker
     TTree* mTree;
     StPicoD0Event* mPicoD0Event;
 
-    ClassDef(StPicoD0EventMaker, 1)
+    ClassDef(StPicoD0EventMaker, 0)
 };
 
 #endif

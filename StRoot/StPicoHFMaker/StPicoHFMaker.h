@@ -160,7 +160,7 @@ class StPicoHFMaker : public StMaker
 
     TFile*          mOutputFileTree;     // ptr to file saving the HFtree
     TFile*          mOutputFileList;     // ptr to file saving the list of histograms
-    ClassDef(StPicoHFMaker, 1)
+    ClassDef(StPicoHFMaker, 0)
 };
 
 inline void StPicoHFMaker::setHFBaseCuts(StHFCuts* cuts)   { mHFCuts = cuts; }
