@@ -48,7 +48,7 @@ cons
 ###How to get a list of files:  
 ```bash
 # Clone the file list repo:
-git clone git@github.com:rnc-lbl/fileLists.git
+git clone https://github.com/rnc-lbl/fileLists.git
 
 # The list of daily D0 production will be under:
 ls fileLists/Run14/AuAu/200GeV/physics2/picoD0Lists/daily
