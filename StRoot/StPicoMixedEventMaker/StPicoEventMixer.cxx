@@ -19,11 +19,11 @@ StPicoEventMixer::StPicoEventMixer(): mEvents(), mEventsBuffer(std::numeric_limi
 }
 void StPicoEventMixer::InitMixedEvent(){
   setEventBuffer(3);
-  //mBackground = new TH1F("bgMass","Mixed Event Invariant mass",500,0,5);
-  int BufSize = (int)pow(2., 16.);
+  mBackground = new TH2F("bgMass","Mixed Event Invariant mass",600,1.6,2.2,150,0,15);
+  //int BufSize = (int)pow(2., 16.);
   //ntp_ME = new TNtuple("ntp_ME","MixedEvent Tree","dca1:dca2:dcaDaughters:"		       
   //"theta_hs:decayL_hs:pt_hs:mass_hs:eta_hs:phi_hs:",BufSize);
-  ntp_ME = new TTree("ntp_ME","MixedEvent",BufSize);
+  /*ntp_ME = new TTree("ntp_ME","MixedEvent",BufSize);
   ntp_ME ->SetAutoSave(1000000);
   ntp_ME->Branch("dca1",&dca1,"dca1/F");
   ntp_ME->Branch("dca1",&dca2,"dca2/F");
@@ -33,14 +33,14 @@ void StPicoEventMixer::InitMixedEvent(){
   ntp_ME->Branch("pt_hs",&pt_hs,"pt_hs/F");
   ntp_ME->Branch("mass_hs",&mass_hs,"mass_hs/F");
   ntp_ME->Branch("eta_hs",&eta_hs,"eta_hs/F");
-  ntp_ME->Branch("phi_hs",&phi_hs,"phi_hs/F");
+  ntp_ME->Branch("phi_hs",&phi_hs,"phi_hs/F");*/
 
   return;
 }
 void StPicoEventMixer::FinishMixedEvent(){
-  //mBackground -> Write();
+  mBackground -> Write();
   //ntp_ME->Write("anyName",TObject::kSingleKey);
-  ntp_ME->Write();
+  //ntp_ME->Write();
   return;
 }
 bool StPicoEventMixer::addPicoEvent(const StPicoDst * picoDst, StHFCuts *mHFCuts)
@@ -83,7 +83,7 @@ bool StPicoEventMixer::addPicoEvent(const StPicoDst * picoDst, StHFCuts *mHFCuts
 }  
 void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
 
-  cout<<"Mixing events"<<endl;
+  //cout<<"Mixing events"<<endl;
   //-------
   short int const nEvent = mEvents.size();
   int const nTracksEvt1 = mEvents.at(0)->getNoTracks();
@@ -114,8 +114,8 @@ void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
 					    mEvents.at(0)->vertex(), mEvents.at(iEvt2)->vertex(),
 					    mEvents.at(0)->field() );
 
-	if( !mHFCuts->isGoodMixerPair(pair) )
-	  //fill(pair);
+	if( mHFCuts->isGoodMixerPair(pair) )
+	 fill(pair);
 	delete pair;
       } //second event track loop
     } //first event track loop 
@@ -145,9 +145,9 @@ bool StPicoEventMixer::isMixerKaon(StMixerTrack track){
 }
 // _________________________________________________________
 void StPicoEventMixer::fill(StMixerPair const * const pair){
-  //mBackground -> Fill(pair->m());
+  mBackground -> Fill(pair->m(),pair->pt());
   
-  dca1 = pair->particle1Dca();
+  /*  dca1 = pair->particle1Dca();
   dca2 = pair->particle1Dca();
   dcaDaughters = pair->dcaDaughters();
   theta_hs = pair->pointingAngle();
@@ -157,5 +157,6 @@ void StPicoEventMixer::fill(StMixerPair const * const pair){
   eta_hs = pair->eta();
   phi_hs = pair->phi();
   ntp_ME->Fill();
+  */
   return;
 }
