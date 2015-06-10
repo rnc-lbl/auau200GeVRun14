@@ -51,6 +51,7 @@ class StPicoEventMixer {
   void fill(StMixerPair const * const);
   bool isMixerPion(StMixerTrack);
   bool isMixerKaon(StMixerTrack);
+  TH2F * mVtx;
   TH2F * mBackground;
   //TTree * ntp_ME;
   std::vector < StMixerEvent *> mEvents; //Needs to be generalized to more categories Using TCLones array

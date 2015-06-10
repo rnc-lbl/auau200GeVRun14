@@ -19,7 +19,8 @@ StPicoEventMixer::StPicoEventMixer(): mEvents(), mEventsBuffer(std::numeric_limi
 }
 void StPicoEventMixer::InitMixedEvent(){
   setEventBuffer(3);
-  mBackground = new TH2F("bgMass","Mixed Event Invariant mass",600,1.6,2.2,150,0,15);
+  mVtx = new TH2F("bgVtx","Vertex pos",500,-2.5,2.5,500,-2.5,2.5);
+  mBackground = new TH2F("bgMass","Mixed Event Invariant mass(K#pi GeV/c^2) vs pt:",80,1.6,2.2,150,0,15);
   //int BufSize = (int)pow(2., 16.);
   //ntp_ME = new TNtuple("ntp_ME","MixedEvent Tree","dca1:dca2:dcaDaughters:"		       
   //"theta_hs:decayL_hs:pt_hs:mass_hs:eta_hs:phi_hs:",BufSize);
@@ -99,6 +100,7 @@ void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
   //Template for D0 studies
   for( int iEvt2 = 1; iEvt2 < nEvent; iEvt2++){
     int const nTracksEvt2 = mEvents.at(iEvt2)->getNoTracks();
+    mVtx->Fill(mEvents.at(0)->vertex().x(),mEvents.at(0)->vertex().y());
     for( int iTrk2 = 0; iTrk2 < nTracksEvt2; iTrk2++){
       
       if ( !isMixerPion(mEvents.at(iEvt2)->trackAt(iTrk2)) )
