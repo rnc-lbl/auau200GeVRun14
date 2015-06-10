@@ -32,17 +32,21 @@ class StMixerEvent{
   StMixerEvent(StMixerEvent *);
   StMixerEvent(StThreeVectorF, float);
   ~StMixerEvent(){;};
-  void addTrack(StMixerTrack);
+  void addPion(StMixerTrack);
+  void addKaon(StMixerTrack);
   void setPos( float const, float const, float const);
   void setField( float const );
-  void setNoTracks( int const );
   int getNoTracks();
-  StMixerTrack trackAt(int const); 
+  int getNoKaons();
+  int getNoPions();
+  StMixerTrack pionAt(int const); 
+  StMixerTrack kaonAt(int const); 
   StThreeVectorF const & vertex() const;
   double const field() const;
  private:
   StThreeVectorF mVtx;
-  std::vector <StMixerTrack  > mEventTracks;
+  std::vector <StMixerTrack  > mEventKaons;
+  std::vector <StMixerTrack  > mEventPions;
   float mBField;
   int mNoTracks;
 };
@@ -50,9 +54,11 @@ inline void StMixerEvent::setPos( float const vx, float const vy, float const vz
   mVtx = StThreeVectorF(vx, vy, vz);
 }
 inline void StMixerEvent::setField( float const field ){ mBField = field; }
-inline void StMixerEvent::setNoTracks( int const noTracks ){ mNoTracks = noTracks; }
-inline int StMixerEvent::getNoTracks(){ return mEventTracks.size(); }
-inline StMixerTrack StMixerEvent::trackAt(int const counter) { return(mEventTracks.at(counter));} 
+inline int StMixerEvent::getNoPions(){ return mEventPions.size(); }
+inline int StMixerEvent::getNoKaons(){ return mEventKaons.size(); }
+inline int StMixerEvent::getNoTracks(){ return getNoPions()+getNoKaons(); }
+inline StMixerTrack StMixerEvent::pionAt(int const counter) { return(mEventPions.at(counter));} 
+inline StMixerTrack StMixerEvent::kaonAt(int const counter) { return(mEventKaons.at(counter));} 
 inline StThreeVectorF const & StMixerEvent::vertex() const { return mVtx; }
 inline double const StMixerEvent::field() const {return mBField; }
 #endif

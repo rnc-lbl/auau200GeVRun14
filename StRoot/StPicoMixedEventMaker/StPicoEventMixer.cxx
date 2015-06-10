@@ -57,19 +57,25 @@ bool StPicoEventMixer::addPicoEvent(const StPicoDst * picoDst, StHFCuts *mHFCuts
   //Event.setNoTracks( nTracks );
   for( int iTrk = 0; iTrk < nTracks; iTrk++ ){
     StPicoTrack * trk = picoDst->track(iTrk);
-    if( mHFCuts->isTPCPion(trk) && mHFCuts->isGoodTrack(trk)){
+    if( ! mHFCuts->isGoodTrack(trk) ) continue;
+    if( mHFCuts->isTPCPion(trk)){
       isTpcPi = true;
       isTofPi = true;
+      isTpcK = false;
+      isTofK = false;
+      StMixerTrack mTrack(pVertex, picoDst->event()->bField(), trk, isTpcPi, isTofPi, isTpcK, isTofK);
+      Event->addPion(mTrack);      
     }
-    if( mHFCuts->isTPCKaon(trk) && mHFCuts->isGoodTrack(trk)){
+    if( mHFCuts->isTPCKaon(trk)){
+      isTpcPi = false;
+      isTofPi = false;
       isTpcK = true;
       isTofK = true;
+      StMixerTrack mTrack(pVertex, picoDst->event()->bField(), trk, isTpcPi, isTofPi, isTpcK, isTofK);
+      Event->addKaon(mTrack);
     }
-    if(!isTpcK && !isTpcPi) continue;
-    StMixerTrack mTrack(pVertex, picoDst->event()->bField(), trk, isTpcPi, isTofPi, isTpcK, isTofK);
-    Event->addTrack(mTrack);
   } 
-  if ( nTracks > 0 ){
+  if ( Event->getNoPions() > 0 ||  Event->getNoKaons() > 0){
     mEvents.push_back(Event);
     filledBuffer+=1;
   }
@@ -87,32 +93,20 @@ void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
   //cout<<"Mixing events"<<endl;
   //-------
   short int const nEvent = mEvents.size();
-  int const nTracksEvt1 = mEvents.at(0)->getNoTracks();
-  vector <float> piEvt1, kaEvt1;
-  for( int iTrk1 = 0; iTrk1 < nTracksEvt1; iTrk1++){
-    if(isMixerPion(mEvents.at(0)->trackAt(iTrk1))){
-      piEvt1.push_back(iTrk1);
-    }
-    if(isMixerKaon(mEvents.at(0)->trackAt(iTrk1))){
-      kaEvt1.push_back(iTrk1);
-    }
-  }
+  int const nTracksEvt1 = mEvents.at(0)->getNoPions();
   //Template for D0 studies
   for( int iEvt2 = 1; iEvt2 < nEvent; iEvt2++){
-    int const nTracksEvt2 = mEvents.at(iEvt2)->getNoTracks();
+    int const nTracksEvt2 = mEvents.at(iEvt2)->getNoKaons();
     mVtx->Fill(mEvents.at(0)->vertex().x(),mEvents.at(0)->vertex().y());
     for( int iTrk2 = 0; iTrk2 < nTracksEvt2; iTrk2++){
       
-      if ( !isMixerPion(mEvents.at(iEvt2)->trackAt(iTrk2)) )
-	continue;
-      
-      for( int iTrk1 = 0; iTrk1 < kaEvt1.size(); iTrk1++){
+      for( int iTrk1 = 0; iTrk1 < nTracksEvt1; iTrk1++){
 
-	if((mEvents.at(0)->trackAt(kaEvt1.at(iTrk1)).charge() == mEvents.at(iEvt2)->trackAt(iTrk2).charge()))
+	if( mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() ) 
 	  continue;
 
-	StMixerPair *pair = new StMixerPair(mEvents.at(0)->trackAt(kaEvt1.at(iTrk1)), mEvents.at(iEvt2)->trackAt(iTrk2),
-					    StHFCuts::kPion, StHFCuts::kPion,
+	StMixerPair *pair = new StMixerPair(mEvents.at(0)->pionAt(iTrk1), mEvents.at(iEvt2)->kaonAt(iTrk2),
+					    StHFCuts::kPion, StHFCuts::kKaon,
 					    mEvents.at(0)->vertex(), mEvents.at(iEvt2)->vertex(),
 					    mEvents.at(0)->field() );
 
