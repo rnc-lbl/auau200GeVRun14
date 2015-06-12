@@ -42,30 +42,29 @@ class StPicoMixedEventMaker : public StMaker
     virtual Int_t Init();
     virtual Int_t Make();
     virtual Int_t Finish();
-    virtual void  Clear(Option_t *opt="");
-    void setHFBaseCuts(StHFCuts *cuts);
+    virtual void  Clear(Option_t* opt="");
+    void setHFBaseCuts(StHFCuts* cuts);
     Int_t SetCategories();
-    StHFCuts *mHFCuts;
+
  private:
-    int categorize(StPicoDst const *);
-    StPicoDst      *mPicoDst;
+    int categorize(StPicoDst const*);
+    StPicoDst*      mPicoDst;
     StPicoDstMaker* mPicoDstMaker;      
     StPicoEvent*    mPicoEvent;         
+    StHFCuts* mHFCuts;
     StPicoEventMixer* mPicoEventMixer; //Needs to be generalized to have mixer per category bin
 
     TString         mOuputFileBaseName; 
     TString         mInputFileName;     
 
-    int             mRunId;
     int             mEventCounter;
 
-    bool LoadEventPlaneCorr(Int_t const run);
+    bool loadEventPlaneCorr(int const runId);
                                         
     TTree*          mTree;
-
     TFile*          mOutputFileTree; 
 
-    ClassDef(StPicoMixedEventMaker, 1)
+    ClassDef(StPicoMixedEventMaker, 0)
 };
-inline void StPicoMixedEventMaker::setHFBaseCuts(StHFCuts *cuts)  {mHFCuts = cuts; }
+inline void StPicoMixedEventMaker::setHFBaseCuts(StHFCuts* cuts)  {mHFCuts = cuts; }
 #endif

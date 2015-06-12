@@ -23,8 +23,7 @@ StPicoMixedEventMaker::StPicoMixedEventMaker(char const* name, StPicoDstMaker* p
 StMaker(name), mPicoDst(NULL), mPicoDstMaker(picoMaker),  mPicoEvent(NULL),
   mPicoEventMixer(NULL),
   mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
-  mRunId(0), mEventCounter(0), 
-  mTree(NULL), mOutputFileTree(NULL){
+  mEventCounter(0), mTree(NULL), mOutputFileTree(NULL){
 
   mOutputFileTree = new TFile(Form("%s.picoMEtree.root", mOuputFileBaseName.Data()), "RECREATE");
   mOutputFileTree->SetCompressionLevel(1);
@@ -46,7 +45,7 @@ StPicoMixedEventMaker::~StPicoMixedEventMaker() {
 }
 // Method should load Q vector stuff from Hao, needs fixing
 // _________________________________________________________
-bool StPicoMixedEventMaker::LoadEventPlaneCorr(Int_t const run){
+bool StPicoMixedEventMaker::loadEventPlaneCorr(Int_t const run){
   //needs to implement, will currently break maker
   return false;
 }
@@ -55,10 +54,10 @@ Int_t StPicoMixedEventMaker::Init() {
   mOutputFileTree->cd();  
   mPicoEventMixer = new StPicoEventMixer();
   mPicoEventMixer->setEventBuffer(10);
-  if(!LoadEventPlaneCorr(mRunId)){
-    LOG_WARN << "Event plane calculations unavalable! Skipping"<<endm;
-    return kStOk;
-  }
+  // if(!LoadEventPlaneCorr(mRunId)){
+    // LOG_WARN << "Event plane calculations unavalable! Skipping"<<endm;
+    // return kStOk;
+  // }
   
   // -- reset event to be in a defined state
   //resetEvent();
@@ -72,8 +71,8 @@ Int_t StPicoMixedEventMaker::Finish() {
   //    NOT TO BE OVERWRITTEN by daughter class
   //    daughter class should implement FinishHF()
   mOutputFileTree->cd();
+  mPicoEventMixer->finish();
   mOutputFileTree->Write();
-  mPicoEventMixer->FinishMixedEvent();
   mOutputFileTree->Close();
 
   //mOutputFileList->cd();
@@ -84,7 +83,7 @@ Int_t StPicoMixedEventMaker::Finish() {
   return kStOK;
 }
 // _________________________________________________________
-void StPicoMixedEventMaker::Clear(Option_t *opt){
+void StPicoMixedEventMaker::Clear(Option_t* opt){
 }
 // _________________________________________________________
 Int_t StPicoMixedEventMaker::Make(){
@@ -94,7 +93,7 @@ Int_t StPicoMixedEventMaker::Make(){
     return kStWarn;
   }
   
-  StPicoDst const * picoDst = mPicoDstMaker->picoDst();
+  StPicoDst const* picoDst = mPicoDstMaker->picoDst();
   if (!picoDst){
     LOG_WARN << "No picoDst ! Skipping! "<<endm;
     return kStWarn;
