@@ -19,16 +19,9 @@
  */
 
 #include <vector>
-#include <limits>
-#include <iostream>
-#include "StMixerEvent.h"
-#include "StMixerTrack.h"
-#include "StMixerPair.h" 
-#include "TH1.h"
-#include "TH2.h"
-#include "TTree.h"
-#include "StMemStat.h"
 
+class TTree;
+class TH2F;
 class StPicoEvent;
 class StPicoTrack;
 class StPicoDst;
@@ -42,25 +35,24 @@ class StPicoEventMixer {
  public: 
   StPicoEventMixer();
   ~StPicoEventMixer(){;};
-  bool addPicoEvent(const StPicoDst *picoDst, StHFCuts *mHFCuts);
+  bool addPicoEvent(StPicoDst const* picoDst, StHFCuts const* mHFCuts);
   void setEventBuffer(int buffer);
   void mixEvents(StHFCuts *mHFCuts);
-  void InitMixedEvent();
-  void FinishMixedEvent();
+  void finish();
  private:
-  void fill(StMixerPair const * const);
-  bool isMixerPion(StMixerTrack);
-  bool isMixerKaon(StMixerTrack);
-  TH2F * mVtx;
-  TH2F * mBackground;
+  void fill(StMixerPair const* const);
+  bool isMixerPion(StMixerTrack const&);
+  bool isMixerKaon(StMixerTrack const&);
+
+  TH2F* mVtx;
+  TH2F* mBackground;
   //TTree * ntp_ME;
-  std::vector < StMixerEvent *> mEvents; //Needs to be generalized to more categories Using TCLones array
-  StMemStat mem;
+  std::vector <StMixerEvent*> mEvents; 
+
   unsigned short int mEventsBuffer; 
   unsigned short int filledBuffer;
   float dca1, dca2, dcaDaughters, theta_hs, decayL_hs;
   float pt_hs, mass_hs, eta_hs, phi_hs;
-
 };
 
 inline void StPicoEventMixer::setEventBuffer(int buffer){ mEventsBuffer = buffer;}
