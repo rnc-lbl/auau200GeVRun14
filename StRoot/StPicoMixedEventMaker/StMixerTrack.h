@@ -29,11 +29,11 @@ class StMixerTrack{
  public:
   StMixerTrack();
   StMixerTrack(StMixerTrack const *);
-  StMixerTrack(StThreeVectorF const & pVtx, float B,StPicoTrack const *, bool, bool, bool, bool);
+  StMixerTrack(StThreeVectorF const & pVtx, float B,StPicoTrack const&, bool, bool, bool, bool);
   short const getTrackInfo() const;
   int const charge() const ;
-  StThreeVectorF const &gMom() const;
-  StThreeVectorF const &origin() const;
+  StThreeVectorF const& gMom() const;
+  StThreeVectorF const& origin() const;
   ~StMixerTrack(){;};
  private:
   StThreeVectorF mOrigin;
