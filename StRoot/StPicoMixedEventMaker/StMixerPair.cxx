@@ -1,10 +1,10 @@
 #include <limits>
 #include <cmath>
 
-#include "StMixerPair.h"
-#include "StMixerTrack.h"
 #include "StPhysicalHelixD.hh"
 #include "SystemOfUnits.h"
+#include "StMixerPair.h"
+#include "StMixerTrack.h"
 
 ClassImp(StMixerPair)
 
@@ -25,12 +25,12 @@ StMixerPair::StMixerPair(StMixerPair const * t) : mLorentzVector(t->mLorentzVect
 }
 
 // _________________________________________________________
-StMixerPair::StMixerPair(StMixerTrack const particle1, StMixerTrack const particle2,
+StMixerPair::StMixerPair(StMixerTrack const& particle1, StMixerTrack const& particle2,
 		   float p1MassHypo, float p2MassHypo, 
-		   StThreeVectorF const & vtx1, StThreeVectorF const & vtx2, float const bField) :  mLorentzVector(StLorentzVectorF()), mDecayVertex(StThreeVectorF()),
+		   StThreeVectorF const& vtx1, StThreeVectorF const& vtx2, float const bField) :  mLorentzVector(StLorentzVectorF()), mDecayVertex(StThreeVectorF()),
                    mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
                    mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
-		   mParticle1Mom(StThreeVectorF()), mParticle2Mom(StThreeVectorF()),
+		   mParticle1Mom(particle1.gMom()), mParticle2Mom(particle2.gMom()),
                    mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN()) {
   // -- Create pair out of 2 tracks
   //     prefixes code:
@@ -38,8 +38,6 @@ StMixerPair::StMixerPair(StMixerTrack const particle1, StMixerTrack const partic
   //      p2 means particle 2
   //      pair means particle1-particle2  pair
   
-  mParticle1Mom = particle1.gMom();
-  mParticle2Mom = particle2.gMom();
   StThreeVectorF dVtx = vtx1 -vtx2;
   //Move origin of second by difference between 2 event vertices
   StPhysicalHelixD p1Helix(particle1.gMom(), particle1.origin(),bField*kilogauss, particle1.charge()); 

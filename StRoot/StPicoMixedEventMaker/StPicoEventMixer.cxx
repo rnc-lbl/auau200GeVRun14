@@ -1,3 +1,8 @@
+#include <limits>
+
+#include "TTree.h"
+#include "TH2F.h"
+
 #include "StPicoEventMixer.h"
 #include "StPicoDstMaker/StPicoEvent.h"
 #include "StPicoDstMaker/StPicoTrack.h"
@@ -9,15 +14,10 @@
 #include "StMixerEvent.h"
 #include "StMixerPair.h"
 #include "StMixerTriplet.h"
-#include <vector>
 
-StPicoEventMixer::StPicoEventMixer(): mEvents(), mEventsBuffer(std::numeric_limits<int>::min()), filledBuffer(0)
+StPicoEventMixer::StPicoEventMixer(): 
+  mEvents(NULL), mEventsBuffer(std::numeric_limits<int>::min()), filledBuffer(0)
 {
-  StMemStat mem;
-  InitMixedEvent();
-  return;
-}
-void StPicoEventMixer::InitMixedEvent(){
   setEventBuffer(3);
   mVtx = new TH2F("bgVtx","Vertex pos;vertex x;vertex y",500,-2.5,2.5,500,-2.5,2.5);
   mBackground = new TH2F("bgMass","Mixed Event Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,100,1.6,2.2);
@@ -35,52 +35,51 @@ void StPicoEventMixer::InitMixedEvent(){
   ntp_ME->Branch("mass_hs",&mass_hs,"mass_hs/F");
   ntp_ME->Branch("eta_hs",&eta_hs,"eta_hs/F");
   ntp_ME->Branch("phi_hs",&phi_hs,"phi_hs/F");*/
-
-  return;
 }
-void StPicoEventMixer::FinishMixedEvent(){
+
+void StPicoEventMixer::finish(){
   mBackground -> Write();
   //ntp_ME->Write("anyName",TObject::kSingleKey);
   //ntp_ME->Write();
   return;
 }
-bool StPicoEventMixer::addPicoEvent(const StPicoDst * picoDst, StHFCuts *mHFCuts)
+bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst, StHFCuts const* const mHFCuts)
 {
   int nTracks = picoDst->numberOfTracks();
   StThreeVectorF pVertex = picoDst->event()->primaryVertex();
-  StMixerEvent *Event = new StMixerEvent(pVertex, picoDst->event()->bField());
+  StMixerEvent* event = new StMixerEvent(pVertex, picoDst->event()->bField());
 
   bool isTpcPi = false;
   bool isTofPi = false;
   bool isTpcK = false;
   bool isTofK = false;
   //Event.setNoTracks( nTracks );
-  for( int iTrk = 0; iTrk < nTracks; iTrk++ ){
-    StPicoTrack * trk = picoDst->track(iTrk);
+  for( int iTrk = 0; iTrk < nTracks; ++iTrk){
+    StPicoTrack const* trk = picoDst->track(iTrk);
     if( ! mHFCuts->isGoodTrack(trk) ) continue;
     if( mHFCuts->isTPCPion(trk)){
       isTpcPi = true;
       isTofPi = true;
       isTpcK = false;
       isTofK = false;
-      StMixerTrack mTrack(pVertex, picoDst->event()->bField(), trk, isTpcPi, isTofPi, isTpcK, isTofK);
-      Event->addPion(mTrack);      
+      StMixerTrack mTrack(pVertex, picoDst->event()->bField(), *trk, isTpcPi, isTofPi, isTpcK, isTofK);
+      event->addPion(mTrack);      
     }
     if( mHFCuts->isTPCKaon(trk)){
       isTpcPi = false;
       isTofPi = false;
       isTpcK = true;
       isTofK = true;
-      StMixerTrack mTrack(pVertex, picoDst->event()->bField(), trk, isTpcPi, isTofPi, isTpcK, isTofK);
-      Event->addKaon(mTrack);
+      StMixerTrack mTrack(pVertex, picoDst->event()->bField(), *trk, isTpcPi, isTofPi, isTpcK, isTofK);
+      event->addKaon(mTrack);
     }
   } 
-  if ( Event->getNoPions() > 0 ||  Event->getNoKaons() > 0){
-    mEvents.push_back(Event);
+  if ( event->getNoPions() > 0 ||  event->getNoKaons() > 0){
+    mEvents.push_back(event);
     filledBuffer+=1;
   }
   else {
-    delete Event;
+    delete event;
     return false;
   }
   //Returns true if need to do mixing, false if buffer has space still
@@ -92,10 +91,10 @@ void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
 
   //cout<<"Mixing events"<<endl;
   //-------
-  short int const nEvent = mEvents.size();
+  size_t const nEvent = mEvents.size();
   int const nTracksEvt1 = mEvents.at(0)->getNoPions();
   //Template for D0 studies
-  for( int iEvt2 = 1; iEvt2 < nEvent; iEvt2++){
+  for( size_t iEvt2 = 1; iEvt2 < nEvent; iEvt2++){
     int const nTracksEvt2 = mEvents.at(iEvt2)->getNoKaons();
     mVtx->Fill(mEvents.at(0)->vertex().x(),mEvents.at(0)->vertex().y());
     for( int iTrk2 = 0; iTrk2 < nTracksEvt2; iTrk2++){
@@ -105,24 +104,23 @@ void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
 	if( mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() ) 
 	  continue;
 
-	StMixerPair *pair = new StMixerPair(mEvents.at(0)->pionAt(iTrk1), mEvents.at(iEvt2)->kaonAt(iTrk2),
+	StMixerPair pair(mEvents.at(0)->pionAt(iTrk1), mEvents.at(iEvt2)->kaonAt(iTrk2),
 					    StHFCuts::kPion, StHFCuts::kKaon,
 					    mEvents.at(0)->vertex(), mEvents.at(iEvt2)->vertex(),
 					    mEvents.at(0)->field() );
 
-	if( mHFCuts->isGoodMixerPair(pair) )
-	 fill(pair);
-	delete pair;
+	if( mHFCuts->isGoodMixerPair(&pair) )
+	 fill(&pair);
       } //second event track loop
     } //first event track loop 
   } //loop over second events
-  filledBuffer--;
+  --filledBuffer;
   delete mEvents.at(0)	;
   mEvents.erase(mEvents.begin());
   return;
 } 
 // _________________________________________________________
-bool StPicoEventMixer::isMixerPion(StMixerTrack track){
+bool StPicoEventMixer::isMixerPion(StMixerTrack const& track){
   short info = track.getTrackInfo();
   //TPC pion
   if( (info & 2) >> 1 != 1) return false;
@@ -131,7 +129,7 @@ bool StPicoEventMixer::isMixerPion(StMixerTrack track){
   return true;
 }
 // _________________________________________________________
-bool StPicoEventMixer::isMixerKaon(StMixerTrack track){
+bool StPicoEventMixer::isMixerKaon(StMixerTrack const& track){
   short info = track.getTrackInfo();
   //TPC Kaon
   if( (info & 8) >> 3 != 1) return false;
@@ -140,7 +138,7 @@ bool StPicoEventMixer::isMixerKaon(StMixerTrack track){
   return true;
 }
 // _________________________________________________________
-void StPicoEventMixer::fill(StMixerPair const * const pair){
+void StPicoEventMixer::fill(StMixerPair const* const pair){
   mBackground -> Fill(pair->pt(),pair->m());
   
   /*  dca1 = pair->particle1Dca();
