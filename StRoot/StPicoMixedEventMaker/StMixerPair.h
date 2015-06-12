@@ -15,9 +15,7 @@
  * **************************************************
  *
  *  Initial Authors: 
- *            Xin Dong        (xdong@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
- *            Jochen Thaeder  (jmthader@lbl.gov)
  *          **Michael Lomnitz (mrlomnitz@lbl.gov)
  *
  *  ** Code Maintainer 
@@ -26,25 +24,23 @@
  */
 
 #include "TObject.h"
-#include "TClonesArray.h"
-
 #include "StLorentzVectorF.hh"
 #include "StThreeVectorF.hh"
-#include "StMixerTrack.h"
 
-class StMixerPair
+class StMixerTrack;
+
+class StMixerPair : public TObject
 {
  public:
   StMixerPair();
-  StMixerPair(StMixerPair const *);
+  StMixerPair(StMixerPair const*);
 
-  StMixerPair(StMixerTrack const  particle1, StMixerTrack const particle2, 
+  StMixerPair(StMixerTrack const&  particle1, StMixerTrack const& particle2, 
 	   float p1MassHypo, float p2MassHypo,
-	   StThreeVectorF const & vtx1, StThreeVectorF const & vtx2,
+	   StThreeVectorF const& vtx1, StThreeVectorF const& vtx2,
 	   float bField);
 
   //Need to implement situation when we will have 2 2body decays, i.e. Lambda_c
-
   ~StMixerPair() {;}
   
 
@@ -86,9 +82,9 @@ class StMixerPair
   float mDcaDaughters;
   float mCosThetaStar;
 
-  ClassDef(StMixerPair,2)
+  ClassDef(StMixerPair,1)
 };
-inline StLorentzVectorF const & StMixerPair::lorentzVector() const { return mLorentzVector;}
+inline StLorentzVectorF const& StMixerPair::lorentzVector() const { return mLorentzVector;}
 inline float StMixerPair::m()    const { return mLorentzVector.m();}
 inline float StMixerPair::pt()   const { return mLorentzVector.perp();}
 inline float StMixerPair::eta()  const { return mLorentzVector.pseudoRapidity();}
