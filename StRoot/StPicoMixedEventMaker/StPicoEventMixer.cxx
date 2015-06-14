@@ -20,6 +20,7 @@ StPicoEventMixer::StPicoEventMixer():
 {
   setEventBuffer(3);
   mVtx = new TH2F("bgVtx","Vertex pos;vertex x;vertex y",500,-2.5,2.5,500,-2.5,2.5);
+  mForeground = new TH2F("fgMass","Foreground Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,100,1.6,2.2);
   mBackground = new TH2F("bgMass","Mixed Event Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,100,1.6,2.2);
   //int BufSize = (int)pow(2., 16.);
   //ntp_ME = new TNtuple("ntp_ME","MixedEvent Tree","dca1:dca2:dcaDaughters:"		       
@@ -38,6 +39,7 @@ StPicoEventMixer::StPicoEventMixer():
 }
 
 void StPicoEventMixer::finish(){
+  mForeground -> Write();
   mBackground -> Write();
   //ntp_ME->Write("anyName",TObject::kSingleKey);
   //ntp_ME->Write();
@@ -94,7 +96,7 @@ void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
   size_t const nEvent = mEvents.size();
   int const nTracksEvt1 = mEvents.at(0)->getNoPions();
   //Template for D0 studies
-  for( size_t iEvt2 = 1; iEvt2 < nEvent; iEvt2++){
+  for( size_t iEvt2 = 0; iEvt2 < nEvent; iEvt2++){
     int const nTracksEvt2 = mEvents.at(iEvt2)->getNoKaons();
     mVtx->Fill(mEvents.at(0)->vertex().x(),mEvents.at(0)->vertex().y());
     for( int iTrk2 = 0; iTrk2 < nTracksEvt2; iTrk2++){
@@ -109,8 +111,12 @@ void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
 					    mEvents.at(0)->vertex(), mEvents.at(iEvt2)->vertex(),
 					    mEvents.at(0)->field() );
 
-	if( mHFCuts->isGoodMixerPair(&pair) )
-	 fill(&pair);
+	if( mHFCuts->isGoodMixerPair(&pair) ){
+	  if(iEvt2 == 0)
+	    fillFG(&pair);
+	  else
+	    fill(&pair);
+	}
       } //second event track loop
     } //first event track loop 
   } //loop over second events
@@ -154,6 +160,12 @@ void StPicoEventMixer::fill(StMixerPair const* const pair){
   */
   return;
 }
+// _________________________________________________________
+void StPicoEventMixer::fillFG(StMixerPair const* const pair){
+  mForeground -> Fill(pair->pt(),pair->m());
+  return;
+}
+
 bool StPicoEventMixer::isCloseTrack(StPicoTrack const& trk, StThreeVectorF const& pVtx){
   StPhysicalHelixD helix = trk.dcaGeometry().helix();
   helix.moveOrigin(helix.pathLength(pVtx));
