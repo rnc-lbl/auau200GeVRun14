@@ -39,9 +39,14 @@ StMixerPair::StMixerPair(StMixerTrack const& particle1, StMixerTrack const& part
   //      pair means particle1-particle2  pair
   
   StThreeVectorF dVtx = vtx1 -vtx2;
+  
   //Move origin of second by difference between 2 event vertices
+  //StPhysicalHelixD p2Evt2Helix(particle2.gMom(), particle2.origin(), bField*kilogauss,  particle2.charge()); 
+  //p2Evt2Helix.moveOrigin(p2Evt2Helix.pathLength(vtx2));
+  
   StPhysicalHelixD p1Helix(particle1.gMom(), particle1.origin(),bField*kilogauss, particle1.charge()); 
-  StPhysicalHelixD p2Helix(particle2.gMom(), particle2.origin() - dVtx, bField*kilogauss,  particle2.charge()); 
+  StPhysicalHelixD p2Helix(particle2.gMom(), particle2.origin() + dVtx, bField*kilogauss,  particle2.charge()); 
+  //StPhysicalHelixD p2Helix(particle2.gMom(), p2Evt2Helix.origin() + dVtx, bField*kilogauss,  particle2.charge()); 
 
   // -- move origins of helices to the primary vertex origin
   p1Helix.moveOrigin(p1Helix.pathLength(vtx1));
