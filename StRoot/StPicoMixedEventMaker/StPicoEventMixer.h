@@ -20,6 +20,8 @@
 
 #include <vector>
 
+#include "StThreeVectorF.hh"
+
 class TTree;
 class TH2F;
 class StPicoEvent;
@@ -28,6 +30,7 @@ class StPicoDst;
 class StMixerTrack;
 class StMixerEvent;
 class StMixerPair;
+//class StThreeVector;
 
 class StHFCuts;
 
@@ -38,6 +41,7 @@ class StPicoEventMixer {
   bool addPicoEvent(StPicoDst const* picoDst, StHFCuts const* mHFCuts);
   void setEventBuffer(int buffer);
   void mixEvents(StHFCuts *mHFCuts);
+  bool isCloseTrack(StPicoTrack const& trk, StThreeVectorF const& pVtx);
   void finish();
  private:
   void fill(StMixerPair const* const);

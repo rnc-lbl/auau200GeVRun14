@@ -56,7 +56,7 @@ bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst, StHFCuts con
   //Event.setNoTracks( nTracks );
   for( int iTrk = 0; iTrk < nTracks; ++iTrk){
     StPicoTrack const* trk = picoDst->track(iTrk);
-    if( ! mHFCuts->isGoodTrack(trk) ) continue;
+    if( ! mHFCuts->isGoodTrack(trk)  && isCloseTrack(*trk,pVertex)) continue;
     if( mHFCuts->isTPCPion(trk)){
       isTpcPi = true;
       isTofPi = true;
@@ -153,4 +153,10 @@ void StPicoEventMixer::fill(StMixerPair const* const pair){
   ntp_ME->Fill();
   */
   return;
+}
+bool StPicoEventMixer::isCloseTrack(StPicoTrack const& trk, StThreeVectorF const& pVtx){
+  StPhysicalHelixD helix = trk.dcaGeometry().helix();
+  helix.moveOrigin(helix.pathLength(pVtx));
+  if( (helix.origin()-pVtx).mag() < 0.008 ) return false;
+  return true;
 }
