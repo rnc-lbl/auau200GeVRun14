@@ -30,18 +30,21 @@ class StPicoDst;
 class StMixerTrack;
 class StMixerEvent;
 class StMixerPair;
-//class StThreeVector;
-
-class StHFCuts;
 
 class StPicoEventMixer {
  public: 
   StPicoEventMixer();
   ~StPicoEventMixer(){;};
-  bool addPicoEvent(StPicoDst const* picoDst, StHFCuts const* mHFCuts);
+  bool addPicoEvent(StPicoDst const* picoDst);
   void setEventBuffer(int buffer);
-  void mixEvents(StHFCuts *mHFCuts);
+  void mixEvents();
+  bool isGoodEvent(StPicoDst const * const picoDst);
+  bool isGoodTrack(StPicoTrack const * const trk);
   bool isCloseTrack(StPicoTrack const& trk, StThreeVectorF const& pVtx);
+  bool isTpcPion(StPicoTrack const * const);
+  bool isTpcKaon(StPicoTrack const * const);
+  bool isGoodPair(StMixerPair const& pair);
+
   void finish();
  private:
   void fill(StMixerPair const* const);

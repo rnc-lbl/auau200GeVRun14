@@ -8,12 +8,12 @@
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoDst.h"
 
-#include "StPicoHFMaker/StHFCuts.h"
 #include "StPicoMixedEventMaker.h"
-
 #include "StMixerEvent.h"
 #include "StMixerPair.h"
 #include "StMixerTriplet.h"
+
+#include "StMixerCuts.h"
 
 StPicoEventMixer::StPicoEventMixer(): 
   mEvents(NULL), mEventsBuffer(std::numeric_limits<int>::min()), filledBuffer(0)
@@ -48,15 +48,13 @@ void StPicoEventMixer::finish(){
   //ntp_ME->Write();
   return;
 }
-bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst, StHFCuts const* const mHFCuts)
+bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst)
 {
+  if( !isGoodEvent(picoDst) )
+    return false;
   int nTracks = picoDst->numberOfTracks();
   StThreeVectorF pVertex = picoDst->event()->primaryVertex();
-  if (fabs(pVertex.z()) > 6.0 ) return false;
-  StPicoEvent *picoEvent = picoDst->event();
-  if( fabs(picoEvent->primaryVertex().z() - picoEvent->vzVpd()) > 3.0) return false;
   StMixerEvent* event = new StMixerEvent(pVertex, picoDst->event()->bField());
-  
   bool isTpcPi = false;
   bool isTofPi = false;
   bool isTpcK = false;
@@ -64,20 +62,20 @@ bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst, StHFCuts con
   //Event.setNoTracks( nTracks );
   for( int iTrk = 0; iTrk < nTracks; ++iTrk){
     StPicoTrack const* trk = picoDst->track(iTrk);
-    if( !mHFCuts->isGoodTrack(trk)  || isCloseTrack(*trk,pVertex)) continue;
-    if( mHFCuts->isTPCPion(trk)){
+    if( !isGoodTrack(trk)  || isCloseTrack(*trk,pVertex)) continue;
+    if( isTpcPion(trk)){
       isTpcPi = true;
-      isTofPi = true;
+      isTofPi = false;
       isTpcK = false;
       isTofK = false;
       StMixerTrack mTrack(pVertex, picoDst->event()->bField(), *trk, isTpcPi, isTofPi, isTpcK, isTofK);
       event->addPion(mTrack);      
     }
-    if( mHFCuts->isTPCKaon(trk)){
+    if(isTpcKaon(trk)){
       isTpcPi = false;
       isTofPi = false;
       isTpcK = true;
-      isTofK = true;
+      isTofK = false;
       StMixerTrack mTrack(pVertex, picoDst->event()->bField(), *trk, isTpcPi, isTofPi, isTpcK, isTofK);
       event->addKaon(mTrack);
     }
@@ -95,7 +93,7 @@ bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst, StHFCuts con
     return true;
   return false;
 }  
-void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
+void StPicoEventMixer::mixEvents(){
 
   //cout<<"Mixing events"<<endl;
   //-------
@@ -115,10 +113,10 @@ void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
 	if( mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() ) 
 	  continue;
 	StMixerPair pair(mEvents.at(0)->pionAt(iTrk1), mEvents.at(iEvt2)->kaonAt(iTrk2),
-			 mHFCuts->getHypotheticalMass(StHFCuts::kPion), mHFCuts->getHypotheticalMass(StHFCuts::kKaon),
+			 mxeCuts::pidMass[mxeCuts::kPion], mxeCuts::pidMass[mxeCuts::kKaon],
 					    mEvents.at(0)->vertex(), mEvents.at(iEvt2)->vertex(),
 					    mEvents.at(0)->field() );
-	if( mHFCuts->isGoodMixerPair(&pair) ){
+	if(isGoodPair(&pair) ){
 	  if(iEvt2 == 0)
 	    fillFG(&pair);
 	  else
@@ -172,10 +170,37 @@ void StPicoEventMixer::fillFG(StMixerPair const* const pair){
   mForeground -> Fill(pair->pt(),pair->m());
   return;
 }
-
-bool StPicoEventMixer::isCloseTrack(StPicoTrack const& trk, StThreeVectorF const& pVtx){
+bool StPicoEventMixer::isGoodEvent(StPicoDst const * const picoDst)
+{
+  StPicoEvent* picoEvent = picoDst->event();
+  return ((picoEvent->triggerWord() & mxeCuts::triggerWord) &&
+	  fabs(picoEvent->primaryVertex().z()) < mxeCuts::maxVz && 
+	  fabs(picoEvent->primaryVertex().z() - picoEvent->vzVpd()) < mxeCuts::vzVpdVz);
+}
+bool StPicoEventMixer::isTpcPion(StPicoTrack const * const trk)
+{
+  return( fabs(trk->nSigmaPion())<mxeCuts::nSigmaPion );
+}
+bool StPicoEventMixer::isTpcKaon(StPicoTrack const * const trk)
+{
+  return( fabs(trk->nSigmaKaon())<mxeCuts::nSigmaKaon );
+}
+bool StPicoEventMixer::isGoodTrack(StPicoTrack const * const trk)
+{
+  return ((!mxeCuts::mRequireHft || trk->isHFTTrack()) && 
+	  trk->nHitsFit() >= mxeCuts::nHitsFit && trk->gPt() > mxeCuts::minPt);
+}
+bool StPicoEventMixer::isCloseTrack(StPicoTrack const& trk, StThreeVectorF const& pVtx)
+{
   StPhysicalHelixD helix = trk.dcaGeometry().helix();
   helix.moveOrigin(helix.pathLength(pVtx));
-  if( (helix.origin()-pVtx).mag() > 0.008 ) return false;
+  if( (helix.origin()-pVtx).mag() > mxeCuts::dca2pVtx ) return false;
   return true;
+}
+bool StPicoEventMixer::isGoodPair(StMixerPair const& pair)
+{
+  return ( pair.m() > mxeCuts::massMin && pair.m() < mxeCuts::massMax &&
+	   std::cos(pair.pointingAngle()) > mxeCuts::cosTheta &&
+	   pair.decayLength() > mxeCuts::decayMin && pair.decayLength() < mxeCuts::decayMax &&
+	   pair.dcaDaughters() < mxeCuts::dcaDaughters );
 }
