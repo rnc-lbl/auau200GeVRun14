@@ -1,8 +1,7 @@
 ## PicoDst Mixed Event production library  
 
 **Contributors:**  
-                - Xin Dong        (xdong@lbl.gov),  
-                - Michael Lomnitz (mrlomnitz@lbl.gov),  
+                - **Michael Lomnitz (mrlomnitz@lbl.gov),  
                 - Mustafa Mustafa (mmustafa@lbl.gov)
 
 ** code maintainer
