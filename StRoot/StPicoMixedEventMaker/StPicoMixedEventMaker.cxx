@@ -115,8 +115,8 @@ Int_t StPicoMixedEventMaker::Make(){
   if ( centrality <4 || centrality>6 ) return kStOk;
   //cout<<"Centrality: "<<centrality<<endl;
   // - - -
-  if( mPicoEventMixer -> addPicoEvent(picoDst,mHFCuts) ==  true )
-    mPicoEventMixer->mixEvents(mHFCuts);
+  if( mPicoEventMixer -> addPicoEvent(picoDst) ==  true )
+    mPicoEventMixer->mixEvents();
   //mTree->Fill();
 
   return kStOk;

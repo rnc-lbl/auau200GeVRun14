@@ -30,7 +30,6 @@ class StPicoDst;
 class StPicoDstMaker;
 class StPicoEvent;
 class StPicoTrack;
-class StHFCuts;
 class StRefMultCorr;
 
 class StPicoEventMixer;
@@ -46,7 +45,7 @@ class StPicoMixedEventMaker : public StMaker
     virtual Int_t Make();
     virtual Int_t Finish();
     virtual void  Clear(Option_t* opt="");
-    void setHFBaseCuts(StHFCuts* cuts);
+
     Int_t SetCategories();
 
  private:
@@ -54,7 +53,6 @@ class StPicoMixedEventMaker : public StMaker
     StPicoDst*      mPicoDst;
     StPicoDstMaker* mPicoDstMaker;      
     StPicoEvent*    mPicoEvent;         
-    StHFCuts* mHFCuts;
     StRefMultCorr* mGRefMultCorrUtil;
 
     StPicoEventMixer* mPicoEventMixer; //Needs to be generalized to have mixer per category bin
@@ -71,5 +69,4 @@ class StPicoMixedEventMaker : public StMaker
 
     ClassDef(StPicoMixedEventMaker, 0)
 };
-inline void StPicoMixedEventMaker::setHFBaseCuts(StHFCuts* cuts)  {mHFCuts = cuts; }
 #endif
