@@ -46,7 +46,7 @@ inline StThreeVectorF const & StMixerTrack::gMom() const { return(mMom) ;}
 inline StThreeVectorF const & StMixerTrack::origin() const { return(mOrigin) ;}
 inline int const StMixerTrack::charge() const { 
   int temp = (mTrackInfo & 1);
-  if(temp ==1) return 1;
+  if(temp == 1) return 1;
   else return -1;
 }
 #endif
