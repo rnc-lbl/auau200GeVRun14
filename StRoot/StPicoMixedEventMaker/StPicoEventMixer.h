@@ -50,6 +50,7 @@ class StPicoEventMixer {
   bool isMixerKaon(StMixerTrack const&);
 
   TH2F* mVtx;
+  TH2F* mFgVtx;
   TH2F* mForeground;
   TH2F* mBackground;
   //TTree * ntp_ME;
