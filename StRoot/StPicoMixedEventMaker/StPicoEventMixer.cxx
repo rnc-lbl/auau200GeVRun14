@@ -52,8 +52,11 @@ bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst, StHFCuts con
 {
   int nTracks = picoDst->numberOfTracks();
   StThreeVectorF pVertex = picoDst->event()->primaryVertex();
+  if (fabs(pVertex.z()) > 6.0 ) return false;
+  StPicoEvent *picoEvent = picoDst->event();
+  if( fabs(picoEvent->primaryVertex().z() - picoEvent->vzVpd()) > 3.0) return false;
   StMixerEvent* event = new StMixerEvent(pVertex, picoDst->event()->bField());
-
+  
   bool isTpcPi = false;
   bool isTofPi = false;
   bool isTpcK = false;
@@ -112,7 +115,7 @@ void StPicoEventMixer::mixEvents(StHFCuts *mHFCuts){
 	if( mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() ) 
 	  continue;
 	StMixerPair pair(mEvents.at(0)->pionAt(iTrk1), mEvents.at(iEvt2)->kaonAt(iTrk2),
-					    StHFCuts::kPion, StHFCuts::kKaon,
+			 mHFCuts->getHypotheticalMass(StHFCuts::kPion), mHFCuts->getHypotheticalMass(StHFCuts::kKaon),
 					    mEvents.at(0)->vertex(), mEvents.at(iEvt2)->vertex(),
 					    mEvents.at(0)->field() );
 	if( mHFCuts->isGoodMixerPair(&pair) ){
