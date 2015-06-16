@@ -134,7 +134,7 @@ void StPicoCutsBase::initBase() {
 }
 
 // _________________________________________________________
-bool StPicoCutsBase::isGoodEvent(StPicoDst const * const picoDst, int *aEventCuts = NULL) {
+bool StPicoCutsBase::isGoodEvent(StPicoDst const * const picoDst, int *aEventCuts) {
   // -- method to check if good event
   //    sets also mPicoDst and mPrimVtx
   

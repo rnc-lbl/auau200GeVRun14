@@ -52,7 +52,7 @@ class StPicoCutsBase : public TNamed
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
-  bool isGoodEvent(StPicoDst const * const picoDst, int *aEventCuts);
+  bool isGoodEvent(StPicoDst const * const picoDst, int *aEventCuts = NULL);
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
