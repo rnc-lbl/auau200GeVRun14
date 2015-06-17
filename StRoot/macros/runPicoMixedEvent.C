@@ -30,7 +30,6 @@
 #include "StRoot/StRefMultCorr/StRefMultCorr.h"
 #include "StRoot/StRefMultCorr/CentralityMaker.h"
 #include "StPicoHFMaker/StPicoHFEvent.h"
-#include "StPicoHFMaker/StHFCuts.h"
 
 #include "StPicoMixedEventMaker/StPicoMixedEventMaker.h"
 #include "StMemStat.h"
@@ -97,39 +96,11 @@ void runPicoMixedEvent(const Char_t *inputFile="test.list", const Char_t *output
   }
   StPicoMixedEventMaker* picoMixedEventMaker = new StPicoMixedEventMaker("picoMixedEventMaker", picoDstMaker, grefmultCorrUtil, outputFile, sInputListHF);
 
-  StHFCuts* hfCuts = new StHFCuts("hfBaseCuts");
-  picoMixedEventMaker -> setHFBaseCuts(hfCuts);
-
   // ---------------------------------------------------
   // -- Set Base cuts for HF analysis
 
   // -- File name of bad run list
   //hfCuts->setBadRunListFileName(badRunListFileName);
-
-  // -- Event and track cuts  ----------------------------
-  hfCuts->setCutVzMax(6.);
-  hfCuts->setCutVzVpdVzMax(3.);
-  //hfCuts->setCutTriggerWord(0x1F);
-
-  hfCuts->setCutNHitsFitMax(20); 
-  hfCuts->setCutRequireHFT(true);
-  hfCuts->setCutNHitsFitnHitsMax(0.52);
-
-  // -- Topological and PID cuts ------------------------
-  hfCuts->setCutSecondaryPair(0.005, 0.003,9999,
-			      0.995, 1.6,2.2 );
-  //Single track pt
-  hfCuts->setCutPtRange(1.2,100.0,StHFCuts::kPion);
-  hfCuts->setCutPtRange(1.2,100.0,StHFCuts::kKaon);
-  //TPC setters
-  hfCuts->setCutTPCNSigmaPion(3.0);
-  hfCuts->setCutTPCNSigmaKaon(2.0);
-  //TOF setters, need to set pt range as well, not used atm
-  hfCuts->setCutTOFDeltaOneOverBeta(0.05, StHFCuts::kKaon);
-  hfCuts->setCutPtotRangeHybridTOF(1.2,2.0,StHFCuts::kKaon);
-  hfCuts->setCutTOFDeltaOneOverBeta(0.05, StHFCuts::kPion);
-  hfCuts->setCutPtotRangeHybridTOF(1.2,2.0,StHFCuts::kPion);
-  // ---------------------------------------------------
 
   chain->Init();
   cout << "chain->Init();" << endl;
