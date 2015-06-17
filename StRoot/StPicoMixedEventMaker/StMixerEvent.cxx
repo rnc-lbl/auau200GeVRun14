@@ -2,29 +2,33 @@
 
 #include <limits>
 StMixerEvent::StMixerEvent() :  mVtx(StThreeVectorF()),
-    mBField(std::numeric_limits<float>::quiet_NaN()),mNoTracks(std::numeric_limits<int>::quiet_NaN())
+    mBField(std::numeric_limits<float>::quiet_NaN())
 {
 }
-StMixerEvent::StMixerEvent(StMixerEvent *t) : mVtx(t->mVtx), mEventKaons(t->mEventKaons), mEventPions(t->mEventPions),
-    mBField(t->mBField), mNoTracks(t->mNoTracks)
+StMixerEvent::StMixerEvent(StMixerEvent *t) : mVtx(t->mVtx), mBField(t->mBField),
+					      mTracks(t->mTracks),
+					      mEventKaons(t->mEventKaons), mEventPions(t->mEventPions)
 {
 }
 StMixerEvent::StMixerEvent(StThreeVectorF vtx, float b) :  mVtx(StThreeVectorF()),
-    mBField(std::numeric_limits<float>::quiet_NaN()),mNoTracks(std::numeric_limits<int>::quiet_NaN())
+    mBField(std::numeric_limits<float>::quiet_NaN())
 {
     mVtx = vtx;
     mBField = b;
 
 }
-void StMixerEvent::addPion(StMixerTrack t)
+void StMixerEvent::addTrack(StMixerTrack t)
 {
-    mEventPions.push_back(t);
-    mNoTracks++;
-    return;
+  mTracks.push_back(t);
+  return;
 }
-void StMixerEvent::addKaon(StMixerTrack t)
+void StMixerEvent::addPion(int arrayId)
 {
-    mEventKaons.push_back(t);
-    mNoTracks++;
-    return;
+  mEventPions.push_back(arrayId);
+  return;
+}
+void StMixerEvent::addKaon(int arrayId)
+{
+  mEventKaons.push_back(arrayId);
+  return;
 }
