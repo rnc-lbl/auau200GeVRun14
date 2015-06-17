@@ -47,7 +47,9 @@ class StPicoEventMixer {
 
   void finish();
  private:
-  void fill(StMixerPair const* const);
+  void fillBgME(StMixerPair const* const);
+  void fillFgLS(StMixerPair const* const);
+  void fillBgLS(StMixerPair const* const);
   void fillFG(StMixerPair const* const);
   bool isMixerPion(StMixerTrack const&);
   bool isMixerKaon(StMixerTrack const&);
@@ -55,7 +57,9 @@ class StPicoEventMixer {
   TH2F* mVtx;
   TH2F* mFgVtx;
   TH2F* mForeground;
-  TH2F* mBackground;
+  TH2F* mFgLS;
+  TH2F* mBgLS;
+  TH2F* mBgME;
   //TTree * ntp_ME;
   std::vector <StMixerEvent*> mEvents; 
 

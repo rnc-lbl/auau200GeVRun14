@@ -21,8 +21,10 @@ StPicoEventMixer::StPicoEventMixer():
     setEventBuffer(3);
     mVtx = new TH2F("bgVtx","Vertex pos;vertex x;vertex y",250,-2.5,2.5,250,-2.5,2.5);
     mFgVtx = new TH2F("fgVtx","Vertex pos;vertex x;vertex y",250,-2.5,2.5,250,-2.5,2.5);
-    mForeground = new TH2F("fgMass","Foreground Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
-    mBackground = new TH2F("bgMass","Mixed Event Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
+    mForeground = new TH2F("Fg_Mass","Foreground Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
+    mFgLS = new TH2F("Fg_LSMass","Mixed Event Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
+    mBgLS = new TH2F("Bg_LSMass","Mixed Event Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
+    mBgME = new TH2F("Bg_MEMass","Mixed Event Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
     //int BufSize = (int)pow(2., 16.);
     //ntp_ME = new TNtuple("ntp_ME","MixedEvent Tree","dca1:dca2:dcaDaughters:"
     //"theta_hs:decayL_hs:pt_hs:mass_hs:eta_hs:phi_hs:",BufSize);
@@ -43,7 +45,9 @@ void StPicoEventMixer::finish() {
     mVtx->Write();
     mFgVtx->Write();
     mForeground -> Write();
-    mBackground -> Write();
+    mFgLS->Write();
+    mBgLS->Write();
+    mBgME->Write();
     //ntp_ME->Write("anyName",TObject::kSingleKey);
     //ntp_ME->Write();
     return;
@@ -62,23 +66,22 @@ bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst)
     //Event.setNoTracks( nTracks );
     for( int iTrk = 0; iTrk < nTracks; ++iTrk) {
         StPicoTrack const* trk = picoDst->track(iTrk);
+	bool saveTrack = false;
         if( !isGoodTrack(trk)  || isCloseTrack(*trk,pVertex)) continue;
         if( isTpcPion(trk)) {
             isTpcPi = true;
-            isTofPi = false;
-            isTpcK = false;
-            isTofK = false;
-            StMixerTrack mTrack(pVertex, picoDst->event()->bField(), *trk, isTpcPi, isTofPi, isTpcK, isTofK);
-            event->addPion(mTrack);
+            event->addPion(event->getNoTracks());
+	    saveTrack = true;
         }
         if(isTpcKaon(trk)) {
-            isTpcPi = false;
-            isTofPi = false;
             isTpcK = true;
-            isTofK = false;
-            StMixerTrack mTrack(pVertex, picoDst->event()->bField(), *trk, isTpcPi, isTofPi, isTpcK, isTofK);
-            event->addKaon(mTrack);
+	    saveTrack = true;
+            event->addKaon(event->getNoTracks());
         }
+	if(saveTrack == true){
+	  StMixerTrack mTrack(pVertex, picoDst->event()->bField(), *trk, isTpcPi, isTofPi, isTpcK, isTofK);
+	  event->addTrack(mTrack);
+	}
     }
     if ( event->getNoPions() > 0 ||  event->getNoKaons() > 0) {
         mEvents.push_back(event);
@@ -109,18 +112,28 @@ void StPicoEventMixer::mixEvents() {
         for( int iTrk2 = 0; iTrk2 < nTracksEvt2; iTrk2++) {
 
             for( int iTrk1 = 0; iTrk1 < nTracksEvt1; iTrk1++) {
-
-                if( mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() )
-                    continue;
-                StMixerPair pair(mEvents.at(0)->pionAt(iTrk1), mEvents.at(iEvt2)->kaonAt(iTrk2),
+	      //if( mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() )
+	      if(iEvt2 == 0 ){
+		if(mEvents.at(0)->pionId(iTrk1) == mEvents.at(iEvt2)->kaonId(iTrk2) )
+		  continue;
+	      }
+	      StMixerPair pair(mEvents.at(0)->pionAt(iTrk1), mEvents.at(iEvt2)->kaonAt(iTrk2),
                                  mxeCuts::pidMass[mxeCuts::kPion], mxeCuts::pidMass[mxeCuts::kKaon],
                                  mEvents.at(0)->vertex(), mEvents.at(iEvt2)->vertex(),
                                  mEvents.at(0)->field() );
                 if(isGoodPair(&pair) ) {
-                    if(iEvt2 == 0)
-                        fillFG(&pair);
-                    else
-                        fill(&pair);
+		  if(iEvt2 == 0){
+		    if( mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() )
+		      fillFgLS(&pair);
+		    else
+		      fillFG(&pair);
+		  }
+		  else{
+		    if(mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() )
+		      fillBgLS(&pair);		    
+		    else
+		      fillBgME(&pair);
+		  }
                 }
             } //second event track loop
         } //first event track loop
@@ -149,8 +162,8 @@ bool StPicoEventMixer::isMixerKaon(StMixerTrack const& track) {
     return true;
 }
 // _________________________________________________________
-void StPicoEventMixer::fill(StMixerPair const* const pair) {
-    mBackground -> Fill(pair->pt(),pair->m());
+void StPicoEventMixer::fillBgME(StMixerPair const* const pair) {
+  mBgME -> Fill(pair->pt(),pair->m());
 
     /*  dca1 = pair->particle1Dca();
     dca2 = pair->particle1Dca();
@@ -168,6 +181,16 @@ void StPicoEventMixer::fill(StMixerPair const* const pair) {
 // _________________________________________________________
 void StPicoEventMixer::fillFG(StMixerPair const* const pair) {
     mForeground -> Fill(pair->pt(),pair->m());
+    return;
+}
+// _________________________________________________________
+void StPicoEventMixer::fillFgLS(StMixerPair const* const pair) {
+    mFgLS -> Fill(pair->pt(),pair->m());
+    return;
+}
+// _________________________________________________________
+void StPicoEventMixer::fillBgLS(StMixerPair const* const pair) {
+  mBgLS -> Fill(pair->pt(),pair->m());
     return;
 }
 bool StPicoEventMixer::isGoodEvent(StPicoDst const * const picoDst)
