@@ -19,7 +19,7 @@
 
 #include "TNamed.h"
 #include "TList.h"
-#include  "../StPicoPrescales/StPicoPrescales.h"
+#include "StPicoPrescales/StPicoPrescales.h"
 
 class TH1F;
 class TH2F;

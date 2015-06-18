@@ -3,8 +3,8 @@
 
 #include "StHFPair.h"
 
-#include "StPhysicalHelixD.hh"
-#include "SystemOfUnits.h"
+#include "StarClassLibrary/StPhysicalHelixD.hh"
+#include "StarClassLibrary/SystemOfUnits.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 
 ClassImp(StHFPair)

@@ -3,9 +3,9 @@
 
 #include "StHFQuadruplet.h"
 
-#include "StPhysicalHelixD.hh"
+#include "StarClassLibrary/StPhysicalHelixD.hh"
 #include "phys_constants.h"
-#include "SystemOfUnits.h"
+#include "StarClassLibrary/SystemOfUnits.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 
 ClassImp(StHFQuadruplet)

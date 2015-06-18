@@ -1,8 +1,8 @@
 #ifndef StPicoHFMaker_h
 #define StPicoHFMaker_h
 
-#include "StMaker.h"
-#include "StLorentzVectorF.hh"
+#include "StChain/StMaker.h"
+#include "StarClassLibrary/StLorentzVectorF.hh"
 
 /* **************************************************
  *  Base class for HF analysis
