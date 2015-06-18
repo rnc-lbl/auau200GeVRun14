@@ -4,7 +4,6 @@
 #include "StHFTriplet.h"
 
 #include "StarClassLibrary/StPhysicalHelixD.hh"
-#include "phys_constants.h"
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 
