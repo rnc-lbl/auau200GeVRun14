@@ -21,6 +21,7 @@
 #include <vector>
 
 #include "StThreeVectorF.hh"
+#include "StMixerCuts.h"
 
 class TTree;
 class TH2F;
@@ -30,10 +31,11 @@ class StPicoDst;
 class StMixerTrack;
 class StMixerEvent;
 class StMixerPair;
+class StMixerHists;
 
 class StPicoEventMixer {
  public: 
-  StPicoEventMixer();
+  StPicoEventMixer(char* category);
   ~StPicoEventMixer(){;};
   bool addPicoEvent(StPicoDst const* picoDst);
   void setEventBuffer(int buffer);
@@ -44,25 +46,15 @@ class StPicoEventMixer {
   bool isTpcPion(StPicoTrack const * const);
   bool isTpcKaon(StPicoTrack const * const);
   bool isGoodPair(StMixerPair const& pair);
-
+  int getD0PtIndex(StMixerPair const& pair) const;
   void finish();
  private:
-  void fillBgME(StMixerPair const* const);
-  void fillFgLS(StMixerPair const* const);
-  void fillBgLS(StMixerPair const* const);
-  void fillFG(StMixerPair const* const);
   bool isMixerPion(StMixerTrack const&);
   bool isMixerKaon(StMixerTrack const&);
-
-  TH2F* mVtx;
-  TH2F* mFgVtx;
-  TH2F* mForeground;
-  TH2F* mFgLS;
-  TH2F* mBgLS;
-  TH2F* mBgME;
+  
   //TTree * ntp_ME;
   std::vector <StMixerEvent*> mEvents; 
-
+  StMixerHists* mHists;
   unsigned short int mEventsBuffer; 
   unsigned short int filledBuffer;
   float dca1, dca2, dcaDaughters, theta_hs, decayL_hs;

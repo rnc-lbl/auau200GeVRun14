@@ -53,7 +53,7 @@ bool StPicoMixedEventMaker::loadEventPlaneCorr(Int_t const run) {
 // _________________________________________________________
 Int_t StPicoMixedEventMaker::Init() {
     mOutputFileTree->cd();
-    mPicoEventMixer = new StPicoEventMixer();
+    mPicoEventMixer = new StPicoEventMixer("cat0");
     mPicoEventMixer->setEventBuffer(10);
     mGRefMultCorrUtil = new StRefMultCorr("grefmult");
     // if(!LoadEventPlaneCorr(mRunId)){

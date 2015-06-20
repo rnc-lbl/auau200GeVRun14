@@ -12,44 +12,18 @@
 #include "StMixerEvent.h"
 #include "StMixerPair.h"
 #include "StMixerTriplet.h"
+#include "StMixerHists.h"
 
-#include "StMixerCuts.h"
-
-StPicoEventMixer::StPicoEventMixer():
-    mEvents(NULL), mEventsBuffer(std::numeric_limits<int>::min()), filledBuffer(0)
+StPicoEventMixer::StPicoEventMixer(char* category):
+  mEvents(NULL),mHists(NULL), mEventsBuffer(std::numeric_limits<int>::min()), filledBuffer(0)
 {
     setEventBuffer(3);
-    mVtx = new TH2F("bgVtx","Vertex pos;vertex x;vertex y",250,-2.5,2.5,250,-2.5,2.5);
-    mFgVtx = new TH2F("fgVtx","Vertex pos;vertex x;vertex y",250,-2.5,2.5,250,-2.5,2.5);
-    mForeground = new TH2F("Fg_Mass","Foreground Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
-    mFgLS = new TH2F("Fg_LSMass","Mixed Event Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
-    mBgLS = new TH2F("Bg_LSMass","Mixed Event Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
-    mBgME = new TH2F("Bg_MEMass","Mixed Event Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,50,1.6,2.1);
-    //int BufSize = (int)pow(2., 16.);
-    //ntp_ME = new TNtuple("ntp_ME","MixedEvent Tree","dca1:dca2:dcaDaughters:"
-    //"theta_hs:decayL_hs:pt_hs:mass_hs:eta_hs:phi_hs:",BufSize);
-    /*ntp_ME = new TTree("ntp_ME","MixedEvent",BufSize);
-    ntp_ME ->SetAutoSave(1000000);
-    ntp_ME->Branch("dca1",&dca1,"dca1/F");
-    ntp_ME->Branch("dca1",&dca2,"dca2/F");
-    ntp_ME->Branch("dcaDaughters",&dcaDaughters,"dcaDaughters/F");
-    ntp_ME->Branch("theta_hs",&theta_hs,"theta_hs/F");
-    ntp_ME->Branch("decayL_hs",&decayL_hs,"decayL_hs/F");
-    ntp_ME->Branch("pt_hs",&pt_hs,"pt_hs/F");
-    ntp_ME->Branch("mass_hs",&mass_hs,"mass_hs/F");
-    ntp_ME->Branch("eta_hs",&eta_hs,"eta_hs/F");
-    ntp_ME->Branch("phi_hs",&phi_hs,"phi_hs/F");*/
+    mHists = new StMixerHists(category);
 }
 
 void StPicoEventMixer::finish() {
-    mVtx->Write();
-    mFgVtx->Write();
-    mForeground -> Write();
-    mFgLS->Write();
-    mBgLS->Write();
-    mBgME->Write();
-    //ntp_ME->Write("anyName",TObject::kSingleKey);
-    //ntp_ME->Write();
+  mHists->closeFile();
+  delete mHists; 
     return;
 }
 bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst)
@@ -106,13 +80,12 @@ void StPicoEventMixer::mixEvents() {
     for( size_t iEvt2 = 0; iEvt2 < nEvent; iEvt2++) {
         int const nTracksEvt2 = mEvents.at(iEvt2)->getNoKaons();
         if( iEvt2 == 0 )
-            mFgVtx->Fill(mEvents.at(0)->vertex().x(),mEvents.at(0)->vertex().y());
+	  mHists->fillSameEvt(mEvents.at(0)->vertex());
         else
-            mVtx->Fill(mEvents.at(0)->vertex().x(),mEvents.at(0)->vertex().y());
+	  mHists->fillMixedEvt(mEvents.at(0)->vertex());
         for( int iTrk2 = 0; iTrk2 < nTracksEvt2; iTrk2++) {
 
             for( int iTrk1 = 0; iTrk1 < nTracksEvt1; iTrk1++) {
-	      //if( mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() )
 	      if(iEvt2 == 0 ){
 		if(mEvents.at(0)->pionId(iTrk1) == mEvents.at(iEvt2)->kaonId(iTrk2) )
 		  continue;
@@ -121,20 +94,12 @@ void StPicoEventMixer::mixEvents() {
                                  mxeCuts::pidMass[mxeCuts::kPion], mxeCuts::pidMass[mxeCuts::kKaon],
                                  mEvents.at(0)->vertex(), mEvents.at(iEvt2)->vertex(),
                                  mEvents.at(0)->field() );
-                if(isGoodPair(&pair) ) {
-		  if(iEvt2 == 0){
-		    if( mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() )
-		      fillFgLS(&pair);
-		    else
-		      fillFG(&pair);
-		  }
-		  else{
-		    if(mEvents.at(0)->pionAt(iTrk1).charge() == mEvents.at(iEvt2)->kaonAt(iTrk2).charge() )
-		      fillBgLS(&pair);		    
-		    else
-		      fillBgME(&pair);
-		  }
-                }
+	      if(!isGoodPair(&pair) ) continue;
+	      int charge = mEvents.at(0)->pionAt(iTrk1).charge() +  mEvents.at(iEvt2)->kaonAt(iTrk2).charge();
+	      if(iEvt2 == 0)
+		mHists->fillSameEvtPair(&pair, charge );
+	      else
+		mHists->fillMixedEvtPair(&pair, charge);
             } //second event track loop
         } //first event track loop
     } //loop over second events
@@ -160,38 +125,6 @@ bool StPicoEventMixer::isMixerKaon(StMixerTrack const& track) {
     //TOF Kaon
     if( (info & 16) >> 4 != 1) return false;
     return true;
-}
-// _________________________________________________________
-void StPicoEventMixer::fillBgME(StMixerPair const* const pair) {
-  mBgME -> Fill(pair->pt(),pair->m());
-
-    /*  dca1 = pair->particle1Dca();
-    dca2 = pair->particle1Dca();
-    dcaDaughters = pair->dcaDaughters();
-    theta_hs = pair->pointingAngle();
-    decayL_hs = pair->decayLength();
-    pt_hs = pair->pt();
-    mass_hs = pair->m();
-    eta_hs = pair->eta();
-    phi_hs = pair->phi();
-    ntp_ME->Fill();
-    */
-    return;
-}
-// _________________________________________________________
-void StPicoEventMixer::fillFG(StMixerPair const* const pair) {
-    mForeground -> Fill(pair->pt(),pair->m());
-    return;
-}
-// _________________________________________________________
-void StPicoEventMixer::fillFgLS(StMixerPair const* const pair) {
-    mFgLS -> Fill(pair->pt(),pair->m());
-    return;
-}
-// _________________________________________________________
-void StPicoEventMixer::fillBgLS(StMixerPair const* const pair) {
-  mBgLS -> Fill(pair->pt(),pair->m());
-    return;
 }
 bool StPicoEventMixer::isGoodEvent(StPicoDst const * const picoDst)
 {
@@ -222,8 +155,19 @@ bool StPicoEventMixer::isCloseTrack(StPicoTrack const& trk, StThreeVectorF const
 }
 bool StPicoEventMixer::isGoodPair(StMixerPair const& pair)
 {
-    return ( pair.m() > mxeCuts::massMin && pair.m() < mxeCuts::massMax &&
-             std::cos(pair.pointingAngle()) > mxeCuts::cosTheta &&
-             pair.decayLength() > mxeCuts::decayMin && pair.decayLength() < mxeCuts::decayMax &&
-             pair.dcaDaughters() < mxeCuts::dcaDaughters );
+  int ptIndex = getD0PtIndex(pair);
+  return ( pair.m() > mxeCuts::massMin && pair.m() < mxeCuts::massMax &&
+	   pair.particle1Dca() > mxeCuts::pDca[ptIndex] && pair.particle2Dca() > mxeCuts::kDca[ptIndex] &&
+	   pair.dcaDaughters() < mxeCuts::dcaDaughters[ptIndex] &&
+	   pair.decayLength() > mxeCuts::decayLength[ptIndex] &&
+	   std::cos(pair.pointingAngle()) > mxeCuts::cosTheta[ptIndex] &&
+	   ((pair.decayLength())*sin(pair.pointingAngle())) < mxeCuts::dcaV0ToPv[ptIndex]);
+}
+//-----------------------------------------------------------------------------
+int StPicoEventMixer::getD0PtIndex(StMixerPair const& pair) const
+{
+  for(int i=0; i < mxeCuts::nPtBins; i++) {
+    if( (pair.pt() >= mxeCuts::PtEdge[i]) && (pair.pt() < mxeCuts::PtEdge[i+1]) )
+     return i; 
+  }
 }
