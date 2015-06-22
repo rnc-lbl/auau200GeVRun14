@@ -55,7 +55,7 @@ class StPicoMixedEventMaker : public StMaker
     StPicoEvent*    mPicoEvent;         
     StRefMultCorr* mGRefMultCorrUtil;
 
-    StPicoEventMixer* mPicoEventMixer; //Needs to be generalized to have mixer per category bin
+    StPicoEventMixer* mPicoEventMixer[10][9]; //Needs to be generalized, have vz and centrality
 
     TString         mOuputFileBaseName; 
     TString         mInputFileName;     

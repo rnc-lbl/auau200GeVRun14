@@ -22,7 +22,7 @@ ClassImp(StPicoMixedEventMaker)
 StPicoMixedEventMaker::StPicoMixedEventMaker(char const* name, StPicoDstMaker* picoMaker, StRefMultCorr* grefmultCorrUtil,
         char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
     StMaker(name), mPicoDst(NULL), mPicoDstMaker(picoMaker),  mPicoEvent(NULL),
-    mGRefMultCorrUtil(grefmultCorrUtil), mPicoEventMixer(NULL),
+    mGRefMultCorrUtil(grefmultCorrUtil),
     mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
     mEventCounter(0), mTree(NULL), mOutputFileTree(NULL) {
 
@@ -53,8 +53,12 @@ bool StPicoMixedEventMaker::loadEventPlaneCorr(Int_t const run) {
 // _________________________________________________________
 Int_t StPicoMixedEventMaker::Init() {
     mOutputFileTree->cd();
-    mPicoEventMixer = new StPicoEventMixer("cat0");
-    mPicoEventMixer->setEventBuffer(10);
+    for(int iVz =0 ; iVz < 10 ; ++iVz){
+      for(int iCentrality = 0 ; iCentrality < 9 ; ++iCentrality){
+	mPicoEventMixer[iVz][iCentrality] = new StPicoEventMixer(Form("Cent_%i_Vz_%i",iCentrality,iVz));
+	mPicoEventMixer[iVz][iCentrality]->setEventBuffer(10);
+      }
+    }
     mGRefMultCorrUtil = new StRefMultCorr("grefmult");
     // if(!LoadEventPlaneCorr(mRunId)){
     // LOG_WARN << "Event plane calculations unavalable! Skipping"<<endm;
@@ -73,8 +77,13 @@ Int_t StPicoMixedEventMaker::Finish() {
     //    NOT TO BE OVERWRITTEN by daughter class
     //    daughter class should implement FinishHF()
     mOutputFileTree->cd();
-    mPicoEventMixer->finish();
-    mOutputFileTree->Write();
+    for(int iVz =0 ; iVz < 10 ; ++iVz){
+      for(int iCentrality = 0 ; iCentrality < 9 ; ++iCentrality){
+	mPicoEventMixer[iVz][iCentrality]->finish();
+	delete mPicoEventMixer[iVz][iCentrality];
+      }
+    }
+    //mOutputFileTree->Write();
     mOutputFileTree->Close();
 
     //mOutputFileList->cd();
@@ -105,18 +114,21 @@ Int_t StPicoMixedEventMaker::Make() {
         LOG_WARN << " No mGRefMultCorrUtil! Skip! " << endl;
         return kStWarn;
     }
-    StThreeVectorF const pVtx = picoDst->event()->primaryVertex();
+    //Lomnitz, need to fix this bs
+   StThreeVectorF const pVtx = picoDst->event()->primaryVertex();
+    if( fabs(pVtx.z()) >6.0 )
+      return kStOk;
     mGRefMultCorrUtil->init(picoDst->event()->runId());
     mGRefMultCorrUtil->initEvent(picoDst->event()->grefMult(),pVtx.z(),picoDst->event()->ZDCx()) ;
-    int centrality  = mGRefMultCorrUtil->getCentralityBin9();
+    int const centrality  = mGRefMultCorrUtil->getCentralityBin9();
+    int const vz_bin = 5 + (int) pVtx.z()/1.2 ;
 //     4            55-60%            30-40%
 //     5            50-55%            20-30%
 //     6            45-50%            10-20%
-    if ( centrality <4 || centrality>6 ) return kStOk;
     //cout<<"Centrality: "<<centrality<<endl;
     // - - -
-    if( mPicoEventMixer -> addPicoEvent(picoDst) ==  true )
-        mPicoEventMixer->mixEvents();
+    if( mPicoEventMixer[vz_bin][centrality] -> addPicoEvent(picoDst) ==  true )
+      mPicoEventMixer[vz_bin][centrality]->mixEvents();
     //mTree->Fill();
 
     return kStOk;

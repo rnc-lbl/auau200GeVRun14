@@ -20,6 +20,8 @@ StMixerHists::StMixerHists(char* fileBaseName):
 }
 void StMixerHists::closeFile()
 {
+  mSE_Vtx->Write();
+  mME_Vtx->Write();
   mSE_LS->Write();
   mSE_US->Write();
   mME_LS->Write();
