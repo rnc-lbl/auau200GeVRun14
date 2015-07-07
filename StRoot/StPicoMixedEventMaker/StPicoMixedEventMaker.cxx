@@ -1,6 +1,8 @@
 #include "TTree.h"
 #include "TFile.h"
 #include "TChain.h"
+#include "TH1.h"
+
 
 #include "StThreeVectorF.hh"
 #include "StPicoDstMaker/StPicoDst.h"
@@ -26,15 +28,17 @@ StPicoMixedEventMaker::StPicoMixedEventMaker(char const* name, StPicoDstMaker* p
     mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
     mEventCounter(0), mTree(NULL), mOutputFileTree(NULL) {
 
+  TH1::AddDirectory(false);
+
     mOutputFileTree = new TFile(Form("%s.picoMEtree.root", mOuputFileBaseName.Data()), "RECREATE");
     mOutputFileTree->SetCompressionLevel(1);
     mOutputFileTree->cd();
     // -- create OutputTree
     int BufSize = (int)pow(2., 16.);
     int Split = 1;
-    if (!mTree)
-        mTree = new TTree("T", "T", BufSize);
-    mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
+    //if (!mTree)
+      //    mTree = new TTree("T", "T", BufSize);
+    //mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
     //  mTree->Branch("mixedEvent", "StPicoMixedEvent", &mPicoEventMixer, BufSize, Split);
 
     // -- constructor
@@ -42,7 +46,15 @@ StPicoMixedEventMaker::StPicoMixedEventMaker(char const* name, StPicoDstMaker* p
 
 // _________________________________________________________
 StPicoMixedEventMaker::~StPicoMixedEventMaker() {
-    delete mGRefMultCorrUtil;
+  cout <<"Lomnitz:: Destroying"<<endl;
+  delete mGRefMultCorrUtil;
+  for(int iVz =0 ; iVz < 10 ; ++iVz){
+    for(int iCentrality = 0 ; iCentrality < 9 ; ++iCentrality){
+      delete mPicoEventMixer[iVz][iCentrality];
+    }
+  }
+  //mOutputFileTree->Write();
+  mOutputFileTree->Close();
 }
 // Method should load Q vector stuff from Hao, needs fixing
 // _________________________________________________________
@@ -80,11 +92,10 @@ Int_t StPicoMixedEventMaker::Finish() {
     for(int iVz =0 ; iVz < 10 ; ++iVz){
       for(int iCentrality = 0 ; iCentrality < 9 ; ++iCentrality){
 	mPicoEventMixer[iVz][iCentrality]->finish();
-	delete mPicoEventMixer[iVz][iCentrality];
+	//delete mPicoEventMixer[iVz][iCentrality];
       }
     }
-    //mOutputFileTree->Write();
-    mOutputFileTree->Close();
+    //mOutputFileTree->Write()
 
     //mOutputFileList->cd();
     //mOutputFileList->Write(mOutputFileList->GetName(), TObject::kSingleKey);
