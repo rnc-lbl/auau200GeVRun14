@@ -60,7 +60,7 @@ void runPicoMixedEvent(const Char_t *inputFile="test.list", const Char_t *output
   //   Testing 
   // ========================================================================================
   Int_t nEvents = 10000000;
-  //Int_t nEvents = 300;
+  //Int_t nEvents = 20000;
 	
   gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
   loadSharedLibraries();
@@ -86,7 +86,6 @@ void runPicoMixedEvent(const Char_t *inputFile="test.list", const Char_t *output
 
   // ========================================================================================
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, sInputFile, "picoDstMaker");
-  cout<<"here"<<endl;
   StRefMultCorr* grefmultCorrUtil  = CentralityMaker::instance()->getgRefMultCorr();
   cout<<"here"<<endl;
   grefmultCorrUtil->setVzForWeight(6, -6.0, 6.0);
@@ -94,6 +93,7 @@ void runPicoMixedEvent(const Char_t *inputFile="test.list", const Char_t *output
   for(Int_t i=0;i<6;i++){
     cout << i << " " << grefmultCorrUtil->get(i, 0) << endl;
   }
+
   StPicoMixedEventMaker* picoMixedEventMaker = new StPicoMixedEventMaker("picoMixedEventMaker", picoDstMaker, grefmultCorrUtil, outputFile, sInputListHF);
 
   // ---------------------------------------------------
@@ -104,6 +104,7 @@ void runPicoMixedEvent(const Char_t *inputFile="test.list", const Char_t *output
 
   chain->Init();
   cout << "chain->Init();" << endl;
+
   int total = picoDstMaker->chain()->GetEntries();
   cout << " Total entries = " << total << endl;
   if(nEvents>total) nEvents = total;
@@ -129,6 +130,6 @@ void runPicoMixedEvent(const Char_t *inputFile="test.list", const Char_t *output
   cout << "****************************************** " << endl;
   
   delete chain;
-  
+
 }
 
