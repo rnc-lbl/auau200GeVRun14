@@ -18,6 +18,15 @@ StMixerHists::StMixerHists(char* fileBaseName):
   mME_US = new TH2F(Form("%s_me_us_mass",fileBaseName),"Mixed Event US pair Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,250,0,2.5);
   return;
 }
+StMixerHists::~StMixerHists()
+{
+  delete mSE_Vtx ;
+  delete mME_Vtx ;
+  delete mSE_LS ;
+  delete mSE_US ;
+  delete mME_LS ;
+  delete mME_US ;
+}
 void StMixerHists::closeFile()
 {
   mSE_Vtx->Write();

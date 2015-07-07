@@ -25,7 +25,7 @@ class StMixerHists: public TObject
 {
  public:
   StMixerHists(char* fileBaseName);
-  virtual ~StMixerHists(){};
+  virtual ~StMixerHists();
   void fillSameEvt(const StThreeVectorF& vtx);
   void fillMixedEvt(const StThreeVectorF& vtx);
   void fillSameEvtPair(StMixerPair const* const, int charge);
