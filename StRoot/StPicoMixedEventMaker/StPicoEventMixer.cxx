@@ -20,11 +20,15 @@ StPicoEventMixer::StPicoEventMixer(char* category):
     setEventBuffer(3);
     mHists = new StMixerHists(category);
 }
-
+StPicoEventMixer::~StPicoEventMixer()
+{
+  delete mHists; 
+  for(int i =0 ; i<mEvents.size() ; i++){
+    delete mEvents.at(i);
+  }
+}
 void StPicoEventMixer::finish() {
   mHists->closeFile();
-  delete mHists; 
-    return;
 }
 bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst)
 {

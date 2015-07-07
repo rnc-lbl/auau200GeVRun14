@@ -36,7 +36,7 @@ class StMixerHists;
 class StPicoEventMixer {
  public: 
   StPicoEventMixer(char* category);
-  ~StPicoEventMixer(){;};
+  ~StPicoEventMixer();
   bool addPicoEvent(StPicoDst const* picoDst);
   void setEventBuffer(int buffer);
   void mixEvents();
