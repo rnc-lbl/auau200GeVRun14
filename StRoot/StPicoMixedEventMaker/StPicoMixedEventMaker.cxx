@@ -11,7 +11,6 @@
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoPrescales/StPicoPrescales.h"
-#include "StPicoHFMaker/StHFCuts.h"
 #include "StPicoMixedEventMaker.h"
 #include "StPicoEventMixer.h"
 #include "StRoot/StRefMultCorr/StRefMultCorr.h"
