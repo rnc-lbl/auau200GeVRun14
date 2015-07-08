@@ -131,6 +131,7 @@ Int_t StPicoMixedEventMaker::Make() {
     mGRefMultCorrUtil->init(picoDst->event()->runId());
     mGRefMultCorrUtil->initEvent(picoDst->event()->grefMult(),pVtx.z(),picoDst->event()->ZDCx()) ;
     int const centrality  = mGRefMultCorrUtil->getCentralityBin9();
+    if(centrality < 0 || centrality >8 ) return kStOk;
     int const vz_bin = 5 + (int) pVtx.z()/1.2 ;
 //     4            55-60%            30-40%
 //     5            50-55%            20-30%
