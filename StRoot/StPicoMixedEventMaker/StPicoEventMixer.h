@@ -52,7 +52,6 @@ class StPicoEventMixer {
   bool isMixerPion(StMixerTrack const&);
   bool isMixerKaon(StMixerTrack const&);
   
-  //TTree * ntp_ME;
   std::vector <StMixerEvent*> mEvents; 
   StMixerHists* mHists;
   unsigned short int mEventsBuffer; 
