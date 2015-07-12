@@ -11,9 +11,10 @@
  * **************************************************
  */
 
+#include "StarClassLibrary/StThreeVectorF.hh"
+
 class TTree;
 class TFile;
-class StThreeVectorF;
 class StPicoEvent;
 
 class StPicoKfVertexEvent

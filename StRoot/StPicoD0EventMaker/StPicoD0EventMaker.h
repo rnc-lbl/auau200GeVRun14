@@ -20,6 +20,7 @@
 #include "StMaker.h"
 #include "StThreeVectorF.hh"
 #include "../StPicoKFVertexFitter/StPicoKFVertexFitter.h"
+#include "StPicoKfVertexEvent.h"
 
 class TTree;
 class TFile;
@@ -29,7 +30,6 @@ class StPicoTrack;
 class StPicoD0Event;
 class StKaonPion;
 class StPicoD0Hists;
-class StPicoKfVertexEvent;
 
 class StPicoD0EventMaker : public StMaker 
 {

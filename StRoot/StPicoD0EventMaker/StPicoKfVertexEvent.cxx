@@ -2,8 +2,6 @@
 #include "TFile.h"
 #include "TTree.h"
 
-#include "StarClassLibrary/StThreeVectorF.hh"
-
 #include "StPicoDstMaker/StPicoEvent.h"
 #include "StPicoKfVertexEvent.h"
 
@@ -41,9 +39,9 @@ void StPicoKfVertexEvent::addEvent(StPicoEvent const& picoEvent,StThreeVectorF c
   mEventId  = picoEvent.eventId();
   mRefMult  = picoEvent.refMult();
   mGRefMult = picoEvent.grefMult();
-  mVx       = picoEvent->primaryVertex().x();
-  mVy       = picoEvent->primaryVertex().y();
-  mVz       = picoEvent->primaryVertex().z();
+  mVx       = picoEvent.primaryVertex().x();
+  mVy       = picoEvent.primaryVertex().y();
+  mVz       = picoEvent.primaryVertex().z();
   mKfVx     = kfVertex.x();
   mKfVy     = kfVertex.y();
   mKfVz     = kfVertex.z();
