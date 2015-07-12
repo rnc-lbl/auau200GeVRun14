@@ -12,8 +12,6 @@
  * **************************************************
  */
 
-#include "TObject.h"
-
 class TH1F;
 class TH2F;
 class TFile;
@@ -24,7 +22,7 @@ class StPicoD0Event;
 class StKaonPion;
 
 
-class StPicoD0Hists: public TObject
+class StPicoD0Hists
 {
   public:
    StPicoD0Hists(TString fileBaseName);
@@ -50,7 +48,5 @@ class StPicoD0Hists: public TObject
    TH2F* mh2CosThetaVsPt;
    TH2F* mh2DcaDaughtersVsPt;
    TH2F* mh2InvariantMassVsPt;
-
-   ClassDef(StPicoD0Hists, 1)
 };
 #endif

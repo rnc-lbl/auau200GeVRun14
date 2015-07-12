@@ -11,8 +11,6 @@
 
 #include "StPicoD0Hists.h"
 
-ClassImp(StPicoD0Hists)
-
 //-----------------------------------------------------------------------
 StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(NULL),
   mh1TotalEventsInRun(NULL), mh1TotalHftTracksInRun(NULL), mh1TotalGRefMultInRun(NULL),
