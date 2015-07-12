@@ -24,7 +24,8 @@ class StMixerHists
 {
  public:
   StMixerHists(char* fileBaseName);
-  virtual ~StMixerHists();
+  ~StMixerHists();
+
   void fillSameEvt(const StThreeVectorF& vtx);
   void fillMixedEvt(const StThreeVectorF& vtx);
   void fillSameEvtPair(StMixerPair const* const, int charge);
