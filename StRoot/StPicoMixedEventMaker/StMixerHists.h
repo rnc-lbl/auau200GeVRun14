@@ -9,7 +9,6 @@
  * **************************************************
  */
 
-#include "TObject.h"
 #include "StThreeVectorF.hh"
 #include "TH1F.h"
 #include "TH2F.h"
@@ -21,7 +20,7 @@ class TH3F;
 class TFile;
 class TString;
 
-class StMixerHists: public TObject
+class StMixerHists
 {
  public:
   StMixerHists(char* fileBaseName);
@@ -39,7 +38,6 @@ class StMixerHists: public TObject
   TH2F* mME_LS;
   TH2F* mME_US;
   
-  ClassDef(StMixerHists,1);
 };
 inline void StMixerHists::fillSameEvt(const StThreeVectorF& vtx)
 {

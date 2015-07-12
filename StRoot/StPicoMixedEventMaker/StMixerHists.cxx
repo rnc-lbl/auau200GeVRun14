@@ -3,8 +3,6 @@
 #include "StMixerHists.h"
 #include "StMixerPair.h"
 
-ClassImp(StMixerHists);
-
 StMixerHists::StMixerHists(char* fileBaseName):
   mSE_Vtx(NULL), mME_Vtx(NULL), mSE_LS(NULL), mSE_US(NULL),
   mME_LS(NULL), mME_US(NULL)
