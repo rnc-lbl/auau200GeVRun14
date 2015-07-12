@@ -45,7 +45,7 @@ namespace cuts
    float const dcaDaughters = 0.0200; // maximum
    float const decayLength = 0.0030; // minimum
    float const minMass = 1.6;
-   float const maxMass = 2.1;
+   float const maxMass = 2.2;
 
    // histograms kaonPion pair cuts
    float const qaPt = 1.2;

@@ -132,16 +132,14 @@ Int_t StPicoD0EventMaker::Make()
 
             StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], kfVertex, bField);
 
-
             if (!isGoodPair(kaonPion)) continue;
 
-            mPicoD0Event->addKaonPion(&kaonPion);
+            if(isGoodMass(kaonPion)) mPicoD0Event->addKaonPion(&kaonPion);
 
-            if(kaon->charge() * pion->charge() <0) // fill histograms for unlike sign pairs only
-            {
-              bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
-              mPicoD0Hists->addKaonPion(&kaonPion,fillMass);
-            }
+            bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
+            bool unlike = kaon->charge() * pion->charge() < 0 ? true : false;
+
+            if(fillMass || unlike) mPicoD0Hists->addKaonPion(&kaonPion,fillMass, unlike);
 
           } // .. end make Kπ pairs
         } // .. end of kaons loop
@@ -201,11 +199,16 @@ bool StPicoD0EventMaker::isKaon(StPicoTrack const * const trk) const
 }
 bool StPicoD0EventMaker::isGoodPair(StKaonPion const & kp) const
 {
-   return kp.m() > cuts::minMass && kp.m() < cuts::maxMass &&
-          std::cos(kp.pointingAngle()) > cuts::cosTheta &&
+   return std::cos(kp.pointingAngle()) > cuts::cosTheta &&
           kp.decayLength() > cuts::decayLength &&
           kp.dcaDaughters() < cuts::dcaDaughters;
 }
+
+bool StPicoD0EventMaker::isGoodMass(StKaonPion const & kp) const
+{
+   return kp.m() > cuts::minMass && kp.m() < cuts::maxMass;
+}
+
 bool  StPicoD0EventMaker::isGoodQaPair(StKaonPion const& kp, StPicoTrack const& kaon,StPicoTrack const& pion)
 {
   return pion.gPt() >= cuts::qaPt && kaon.gPt() >= cuts::qaPt && 

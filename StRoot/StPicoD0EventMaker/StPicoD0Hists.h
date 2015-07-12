@@ -28,7 +28,7 @@ class StPicoD0Hists
    StPicoD0Hists(TString fileBaseName);
    virtual ~StPicoD0Hists();
    void addEvent(StPicoEvent const &, StPicoD0Event const &,unsigned int const nHftTracks);
-   void addKaonPion(StKaonPion const*, bool fillMass);
+   void addKaonPion(StKaonPion const*, bool fillMass, bool unlike);
    void closeFile();
 
   private:
@@ -47,6 +47,7 @@ class StPicoD0Hists
    TH2F* mh2PionDcaVsPt;
    TH2F* mh2CosThetaVsPt;
    TH2F* mh2DcaDaughtersVsPt;
-   TH2F* mh2InvariantMassVsPt;
+   TH2F* mh2InvariantMassVsPtUnlike;
+   TH2F* mh2InvariantMassVsPtLike;
 };
 #endif
