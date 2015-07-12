@@ -23,7 +23,7 @@ ClassImp(StPicoD0EventMaker)
 
 StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
    : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL), mPicoD0Hists(NULL),
-     mKfVertexFitter(), mOutputFile(NULL), mTree(NULL), mPicoD0Event(NULL) 
+     mKfVertexFitter(), mKfVertexEvent(fileBaseName), mOutputFile(NULL), mTree(NULL), mPicoD0Event(NULL) 
 {
    mPicoD0Event = new StPicoD0Event();
 
@@ -57,6 +57,7 @@ Int_t StPicoD0EventMaker::Finish()
    mOutputFile->Write();
    mOutputFile->Close();
    mPicoD0Hists->closeFile();
+   mKfVertexEvent.closeFile();
    return kStOK;
 }
 
@@ -82,6 +83,8 @@ Int_t StPicoD0EventMaker::Make()
 
    mPicoEvent = picoDst->event();
 
+   StThreeVectorF kfVertex(-999.,-999.,-999.);
+   
    if (isGoodEvent())
    {
       UInt_t nTracks = picoDst->numberOfTracks();
@@ -108,8 +111,7 @@ Int_t StPicoD0EventMaker::Make()
 
       } // .. end tracks loop
 
-      StThreeVectorF const kfVertex = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtx);
-      mPicoD0Event->addPicoEvent(*mPicoEvent,&kfVertex);
+      kfVertex = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtx);
 
       if(kfVertex.z() > -100.)
       {
@@ -149,10 +151,9 @@ Int_t StPicoD0EventMaker::Make()
       idxPicoKaons.clear();
       idxPicoPions.clear();
    } //.. end of good event fill
-   else
-   {
-     mPicoD0Event->addPicoEvent(*mPicoEvent);
-   }
+
+   mPicoD0Event->addPicoEvent(*mPicoEvent,&kfVertex);
+   mKfVertexEvent.addEvent(*mPicoEvent,kfVertex);
 
    // This should never be inside the good event block
    // because we want to save header information about all events, good or bad
