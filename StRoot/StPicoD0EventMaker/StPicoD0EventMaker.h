@@ -23,7 +23,6 @@
 
 class TTree;
 class TFile;
-class StRefMultCorr;
 class StPicoDstMaker;
 class StPicoEvent;
 class StPicoTrack;
@@ -55,9 +54,8 @@ class StPicoD0EventMaker : public StMaker
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
     StPicoD0Hists*  mPicoD0Hists;
-    StRefMultCorr*  mRefMultCorr;
     StPicoKFVertexFitter mKfVertexFitter;
-    
+
     TFile* mOutputFile;
     TTree* mTree;
     StPicoD0Event* mPicoD0Event;
