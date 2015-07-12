@@ -1,10 +1,11 @@
 #include <limits>
 #include <cmath>
 
+#include "StarClassLibrary/StPhysicalHelixD.hh"
+#include "StarClassLibrary/SystemOfUnits.h"
+
 #include "StMixerTriplet.h"
 #include "StMixerTrack.h"
-#include "StPhysicalHelixD.hh"
-#include "SystemOfUnits.h"
 
 ClassImp(StMixerTriplet)
 

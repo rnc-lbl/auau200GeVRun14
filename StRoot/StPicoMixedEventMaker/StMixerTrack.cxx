@@ -1,7 +1,7 @@
+#include <limits>
+
 #include "StMixerTrack.h"
 #include "StPicoDstMaker/StPicoTrack.h"
-#include "StThreeVectorF.hh"
-#include <limits>
 
 StMixerTrack::StMixerTrack() : mOrigin(StThreeVectorF()), mMom(StThreeVectorF()), mTrackInfo(std::numeric_limits<short>::min())
 {

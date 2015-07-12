@@ -1,6 +1,7 @@
+#include <limits>
+
 #include "StMixerEvent.h"
 
-#include <limits>
 StMixerEvent::StMixerEvent() :  mVtx(StThreeVectorF()),
     mBField(std::numeric_limits<float>::quiet_NaN())
 {

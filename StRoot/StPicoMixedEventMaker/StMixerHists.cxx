@@ -1,7 +1,4 @@
-#include <cmath>
-
 #include "StMixerHists.h"
-#include "StMixerPair.h"
 
 StMixerHists::StMixerHists(char* fileBaseName):
   mSE_Vtx(NULL), mME_Vtx(NULL), mSE_LS(NULL), mSE_US(NULL),

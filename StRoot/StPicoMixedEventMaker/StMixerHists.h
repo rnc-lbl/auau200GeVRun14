@@ -9,16 +9,10 @@
  * **************************************************
  */
 
-#include "StThreeVectorF.hh"
-#include "TH1F.h"
+#include "StarClassLibrary/StThreeVectorF.hh"
 #include "TH2F.h"
 
 #include "StMixerPair.h"
-class TH1F;
-class TH2F;
-class TH3F;
-class TFile;
-class TString;
 
 class StMixerHists
 {

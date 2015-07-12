@@ -1,8 +1,9 @@
 #ifndef StMixerEvent_hh
 #define StMixerEvent_hh
-#include <math.h>
+
 #include <vector>
-#include "StThreeVectorF.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
+
 #include "StMixerTrack.h"
 /* **************************************************
  *

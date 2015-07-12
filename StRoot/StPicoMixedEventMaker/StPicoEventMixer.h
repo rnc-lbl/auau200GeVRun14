@@ -20,7 +20,7 @@
 
 #include <vector>
 
-#include "StThreeVectorF.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
 #include "StMixerCuts.h"
 
 class TTree;

@@ -19,9 +19,8 @@
  *
  * **************************************************
  */
-#include <math.h>
 
-#include "StThreeVectorF.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
 
 class StPicoTrack;
 
