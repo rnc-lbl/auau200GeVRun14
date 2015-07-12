@@ -20,15 +20,12 @@ StMixerEvent::StMixerEvent(StThreeVectorF vtx, float b) :  mVtx(StThreeVectorF()
 void StMixerEvent::addTrack(StMixerTrack t)
 {
   mTracks.push_back(t);
-  return;
 }
 void StMixerEvent::addPion(int arrayId)
 {
   mEventPions.push_back(arrayId);
-  return;
 }
 void StMixerEvent::addKaon(int arrayId)
 {
   mEventKaons.push_back(arrayId);
-  return;
 }
