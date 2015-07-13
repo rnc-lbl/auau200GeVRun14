@@ -19,9 +19,8 @@
  *
  * **************************************************
  */
-#include <math.h>
 
-#include "StThreeVectorF.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
 
 class StPicoTrack;
 
@@ -34,7 +33,7 @@ class StMixerTrack{
   int const charge() const ;
   StThreeVectorF const& gMom() const;
   StThreeVectorF const& origin() const;
-  ~StMixerTrack(){;};
+  ~StMixerTrack();
  private:
   StThreeVectorF mOrigin;
   StThreeVectorF mMom;

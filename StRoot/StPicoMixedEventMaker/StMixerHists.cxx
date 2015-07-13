@@ -1,9 +1,4 @@
-#include <cmath>
-
 #include "StMixerHists.h"
-#include "StMixerPair.h"
-
-ClassImp(StMixerHists);
 
 StMixerHists::StMixerHists(char* fileBaseName):
   mSE_Vtx(NULL), mME_Vtx(NULL), mSE_LS(NULL), mSE_US(NULL),
@@ -16,7 +11,6 @@ StMixerHists::StMixerHists(char* fileBaseName):
   mSE_US = new TH2F(Form("%s_se_us_mass",fileBaseName),"Same Event US pair Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,250,0,2.5);
   mME_LS = new TH2F(Form("%s_me_ls_mass",fileBaseName),"Mixed Event LS pair Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,250,0,2.5);
   mME_US = new TH2F(Form("%s_me_us_mass",fileBaseName),"Mixed Event US pair Invariant mass(K#pi);p_{T}(K#pi)(GeV/c),Mass_{K#pi}(GeV/c^{2})",150,0,15,250,0,2.5);
-  return;
 }
 StMixerHists::~StMixerHists()
 {
@@ -35,5 +29,4 @@ void StMixerHists::closeFile()
   mSE_US->Write();
   mME_LS->Write();
   mME_US->Write();
-  return;
 }

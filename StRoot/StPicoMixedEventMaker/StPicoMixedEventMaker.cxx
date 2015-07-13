@@ -4,7 +4,7 @@
 #include "TH1.h"
 
 
-#include "StThreeVectorF.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
 #include "StPicoDstMaker/StPicoEvent.h"

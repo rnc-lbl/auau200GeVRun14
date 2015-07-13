@@ -110,7 +110,6 @@ void StPicoEventMixer::mixEvents() {
     --filledBuffer;
     delete mEvents.at(0)	;
     mEvents.erase(mEvents.begin());
-    return;
 }
 // _________________________________________________________
 bool StPicoEventMixer::isMixerPion(StMixerTrack const& track) {

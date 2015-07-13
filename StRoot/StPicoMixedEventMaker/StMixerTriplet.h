@@ -28,8 +28,9 @@
 #include "TObject.h"
 #include "TClonesArray.h"
 
-#include "StLorentzVectorF.hh"
-#include "StThreeVectorF.hh"
+#include "StarClassLibrary/StLorentzVectorF.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
+
 #include "StMixerTrack.h"
 
 class StMixerTriplet

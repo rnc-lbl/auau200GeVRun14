@@ -9,23 +9,17 @@
  * **************************************************
  */
 
-#include "TObject.h"
-#include "StThreeVectorF.hh"
-#include "TH1F.h"
+#include "StarClassLibrary/StThreeVectorF.hh"
 #include "TH2F.h"
 
 #include "StMixerPair.h"
-class TH1F;
-class TH2F;
-class TH3F;
-class TFile;
-class TString;
 
-class StMixerHists: public TObject
+class StMixerHists
 {
  public:
   StMixerHists(char* fileBaseName);
-  virtual ~StMixerHists();
+  ~StMixerHists();
+
   void fillSameEvt(const StThreeVectorF& vtx);
   void fillMixedEvt(const StThreeVectorF& vtx);
   void fillSameEvtPair(StMixerPair const* const, int charge);
@@ -39,7 +33,6 @@ class StMixerHists: public TObject
   TH2F* mME_LS;
   TH2F* mME_US;
   
-  ClassDef(StMixerHists,1);
 };
 inline void StMixerHists::fillSameEvt(const StThreeVectorF& vtx)
 {
