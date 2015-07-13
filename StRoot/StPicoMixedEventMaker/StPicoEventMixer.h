@@ -11,7 +11,7 @@
  * 
  * Initial Authors:
  *          **Michael Lomnitz (mrlomnitz@lbl.gov)
- *          Musta Mustafa   (mmustafa@lbl.gov)
+ *          Mustafa Mustafa   (mmustafa@lbl.gov)
  *
  *  ** Code maintainer 
  *
