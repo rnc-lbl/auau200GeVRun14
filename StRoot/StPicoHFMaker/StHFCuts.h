@@ -25,10 +25,6 @@
 class StHFPair;
 class StHFTriplet;
 
-class StMixerPair;
-class StMixerTriplet;
-
-
 class StHFCuts : public StPicoCutsBase
 {
  public:
@@ -49,12 +45,6 @@ class StHFCuts : public StPicoCutsBase
   bool isGoodTertiaryVertexPair(StHFPair const & pair) const;
   bool isGoodSecondaryVertexTriplet(StHFTriplet const & triplet) const;
 
-  //  Event Mixer Cuts 
-
-  bool isGoodMixerPair(StMixerPair const & pair) const;
-  bool isGoodMixerTriplet(StMixerTriplet const & triplet) const;
-
-  // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- SETTER for CUTS
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
