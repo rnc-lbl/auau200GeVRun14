@@ -38,7 +38,6 @@ class StMixerTrack{
   StThreeVectorF mOrigin;
   StThreeVectorF mMom;
   short mTrackInfo;
-  //Removed origin, allt racks shoud me set to 0,0,0
 };
 inline short const StMixerTrack::getTrackInfo() const { return(mTrackInfo); }
 inline StThreeVectorF const & StMixerTrack::gMom() const { return(mMom) ;}

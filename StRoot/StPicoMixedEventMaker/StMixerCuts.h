@@ -1,9 +1,16 @@
 #ifndef StMixerCuts_H
 #define StMixerCuts_H
 /* **************************************************
- *  Cuts namespace.
+ * 
+ * Cuts namespace.
  *
- *  Authors:  Michael Lomnitz (mrlomnitz@lbl.gov)
+ * **************************************************
+ *
+ *  Initial Authors:  
+ *         ** Michael Lomnitz (mrlomnitz@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *
+ *  ** Code Maintainer
  *
  * **************************************************
  */

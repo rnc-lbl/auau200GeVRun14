@@ -13,6 +13,7 @@
  * 1) primVtx
  * 2) B-Field
  * 3) MixerTrack array
+ * 4) Arrays of indices pointing to pions and kaons in mixertrack
  *
  * **************************************************
  *

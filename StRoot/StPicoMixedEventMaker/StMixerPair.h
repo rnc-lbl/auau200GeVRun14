@@ -2,21 +2,16 @@
 #define StMixerPair_hh
 
 /* **************************************************
- *  Generic class calculating and storing pairs in HF analysis
+ *  Generic class calculating and storing pairs in Event Mixing
  *  Allows to combine:
  *  - two particles, using
  *      StMixerPair(StPicoTrack const * particle1, StPicoTrack const * particle2, ...
- *  - a particle and another pair, using
- *      StMixerPair(StPicoTrack const * particle1, StMixerPair * particle2, ...
- *    - in the current implementation the incoming pair is seen as having charge = 0
- *    - after determining the vertex of particle and incoming pair, the 
- *      decay vertex (tertiary vertex) of incoming particle can be updated
  *
  * **************************************************
  *
  *  Initial Authors: 
+ *         ** Michael Lomnitz (mrlomnitz@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
- *          **Michael Lomnitz (mrlomnitz@lbl.gov)
  *
  *  ** Code Maintainer 
  *
@@ -40,7 +35,6 @@ class StMixerPair : public TObject
 	   StThreeVectorF const& vtx1, StThreeVectorF const& vtx2,
 	   float bField);
 
-  //Need to implement situation when we will have 2 2body decays, i.e. Lambda_c
   ~StMixerPair() {;}
   
 

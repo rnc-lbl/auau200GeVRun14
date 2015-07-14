@@ -4,16 +4,17 @@
 #include "StMaker.h"
 
 /* **************************************************
+ *
  *  Base class for Mixed Event cosntructions
- *  
- *  - Usage: Implement specific decay in daughter, i.e. 2 or three body decay
+ *  Template implemented for D0 recosntruction. User should use a 
+ *  Mixer per category in Event Mixing and define event buffer size (10 by default).
+ *  For different decays changes must be made to StPicoEventMixer class
  * 
- *  - Methods from StHFCyts utility class can/should be used
  *
  * **************************************************
  *
  *  Initial Authors:
- *            Michael Lomnitz  (mrlomnitz@lbl.gov)
+ *        **  Michael Lomnitz  (mrlomnitz@lbl.gov)
  *            Mustafa Mustafa  (mmustafa@lbl.gov)
  *
  *  ** Code Maintainer
@@ -22,7 +23,7 @@
  * **************************************************  
  */
 
-class TTree; //Need tod ecide if will be saving TTree, NTuple or histos
+class TTree;
 class TFile;
 class TChain;
 
@@ -55,7 +56,7 @@ class StPicoMixedEventMaker : public StMaker
     StPicoEvent*    mPicoEvent;         
     StRefMultCorr* mGRefMultCorrUtil;
 
-    StPicoEventMixer* mPicoEventMixer[10][9]; //Needs to be generalized, have vz and centrality
+    StPicoEventMixer* mPicoEventMixer[10][9];
 
     TString         mOuputFileBaseName; 
     TString         mInputFileName;     

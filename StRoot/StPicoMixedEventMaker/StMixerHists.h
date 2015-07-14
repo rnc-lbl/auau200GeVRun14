@@ -2,9 +2,16 @@
 #define StMixerHists__h
 
 /* **************************************************
- *  A class to create and save my D0 analysis histograms.
  *
- *  Authors: Mustafa Mustafa (mmustafa@lbl.gov)
+ * Histogram manager
+ *
+ * **************************************************
+ *
+ *  Initial Authors:  
+ *         ** Michael Lomnitz (mrlomnitz@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *
+ *  ** Code Maintainer
  *
  * **************************************************
  */

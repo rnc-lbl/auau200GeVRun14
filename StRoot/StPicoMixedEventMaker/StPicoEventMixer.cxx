@@ -74,9 +74,6 @@ bool StPicoEventMixer::addPicoEvent(StPicoDst const* const picoDst)
     return false;
 }
 void StPicoEventMixer::mixEvents() {
-
-    //cout<<"Mixing events"<<endl;
-    //-------
     size_t const nEvent = mEvents.size();
     int const nTracksEvt1 = mEvents.at(0)->getNoPions();
     //Template for D0 studies

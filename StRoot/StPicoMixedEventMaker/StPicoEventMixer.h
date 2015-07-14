@@ -2,15 +2,16 @@
 #define StPicoEventMixer_hh
 
 /* **************************************************
+ *  
  * Class stores event buffer used in event mixing. Mixing
  * is done automatically once buffer reaches defined maximum.
- * User should rpesonalize mixEvent() method to cosntruct 
- * desired background.
+ * Template provided used for D0 reconstruction, user should personalize 
+ * mixEvent() method to cosntruct desired background.
  *
  * **************************************************
  * 
  * Initial Authors:
- *          **Michael Lomnitz (mrlomnitz@lbl.gov)
+ *       ** Michael Lomnitz (mrlomnitz@lbl.gov)
  *          Mustafa Mustafa   (mmustafa@lbl.gov)
  *
  *  ** Code maintainer 

@@ -41,13 +41,8 @@ StMixerPair::StMixerPair(StMixerTrack const& particle1, StMixerTrack const& part
 
     StThreeVectorF dVtx = vtx1 -vtx2;
 
-    //Move origin of second by difference between 2 event vertices
-    //StPhysicalHelixD p2Evt2Helix(particle2.gMom(), particle2.origin(), bField*kilogauss,  particle2.charge());
-    //p2Evt2Helix.moveOrigin(p2Evt2Helix.pathLength(vtx2));
-
     StPhysicalHelixD p1Helix(particle1.gMom(), particle1.origin(),bField*kilogauss, particle1.charge());
     StPhysicalHelixD p2Helix(particle2.gMom(), particle2.origin() + dVtx, bField*kilogauss,  particle2.charge());
-    //StPhysicalHelixD p2Helix(particle2.gMom(), p2Evt2Helix.origin() + dVtx, bField*kilogauss,  particle2.charge());
 
     // -- move origins of helices to the primary vertex origin
     p1Helix.moveOrigin(p1Helix.pathLength(vtx1));
@@ -56,8 +51,6 @@ StMixerPair::StMixerPair(StMixerTrack const& particle1, StMixerTrack const& part
     // -- use straight lines approximation to get point of DCA of particle1-particle2 pair
     StThreeVectorF const p1Mom = p1Helix.momentum(bField * kilogauss);
     StThreeVectorF const p2Mom = p2Helix.momentum(bField * kilogauss);
-    //StPhysicalHelixD const p1StraightLine = p1Helix;
-    //StPhysicalHelixD const p2StraightLine = p2Helix;
 
     StPhysicalHelixD const p1StraightLine(p1Mom, p1Helix.origin(), 0, particle1.charge());
     StPhysicalHelixD const p2StraightLine(p2Mom, p2Helix.origin(), 0, particle2.charge());
@@ -87,15 +80,11 @@ StMixerPair::StMixerPair(StMixerTrack const& particle1, StMixerTrack const& part
     mDecayVertex = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 ;
 
     // -- calculate pointing angle and decay length with respect to primary vertex
-    //    if decay vertex is a tertiary vertex
-    //    -> only rough estimate -> needs to be updated after secondary vertex is found
     StThreeVectorF const vtxToV0 = mDecayVertex - vtx1;
     mPointingAngle = vtxToV0.angle(mLorentzVector.vect());
     mDecayLength = vtxToV0.mag();
 
     // -- calculate DCA of tracks to primary vertex
-    //    if decay vertex is a tertiary vertex
-    //    -> only rough estimate -> needs to be updated after secondary vertex is found
     mParticle1Dca = (p1Helix.origin() - vtx1).mag();
     mParticle2Dca = (p2Helix.origin() - vtx1).mag();
 }
