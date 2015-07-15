@@ -11,13 +11,12 @@
 
 #include "StPicoD0Hists.h"
 
-ClassImp(StPicoD0Hists)
-
 //-----------------------------------------------------------------------
 StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(NULL),
   mh1TotalEventsInRun(NULL), mh1TotalHftTracksInRun(NULL), mh1TotalGRefMultInRun(NULL),
   mh1TotalD0CandidatesInRun(NULL), mh2KaonDcaVsPt(NULL), mh2PionDcaVsPt(NULL), 
-  mh2CosThetaVsPt(NULL), mh2DcaDaughtersVsPt(NULL), mh2InvariantMassVsPt(NULL)
+  mh2CosThetaVsPt(NULL), mh2DcaDaughtersVsPt(NULL),
+  mh2InvariantMassVsPtUnlike(NULL), mh2InvariantMassVsPtLike(NULL)
 {
   mPrescales = new StPicoPrescales(cuts::prescalesFilesDirectoryName);
 
@@ -36,7 +35,8 @@ StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(
   mh2PionDcaVsPt = new TH2F("mh2PionDcaVsPt","pionDcaVsPt;p_{T}(K#pi)(GeV/c);#pi DCA(cm)",120,0,12,50,0,0.05);
   mh2CosThetaVsPt = new TH2F("mh2CosThetaVsPt","cosThetaVsPt;p_{T}(K#pi)(GeV/c);cos(#theta)",120,0,12,500,0,1.0);
   mh2DcaDaughtersVsPt = new TH2F("mh2DcaDaughtersVsPt","dcaDaughtersVsPt;p_{T}(K#pi)(GeV/c);dcaDaughters(cm)",120,0,12,200,0,0.02);
-  mh2InvariantMassVsPt = new TH2F("mh2InvariantMassVsPt","invariantMassVsPt;p_{T}(K#pi)(GeV/c);m_{K#pi}(GeV/c^{2})",120,0,12,50,1.6,2.1);
+  mh2InvariantMassVsPtUnlike = new TH2F("mh2InvariantMassVsPtUnlike","invariantMassVsPtUnlike;p_{T}(K#pi)(GeV/c);m_{K#pi}(GeV/c^{2})",120,0,12,220,0,2.2);
+  mh2InvariantMassVsPtLike = new TH2F("mh2InvariantMassVsPtLike","invariantMassVsPtLike;p_{T}(K#pi)(GeV/c);m_{K#pi}(GeV/c^{2})",120,0,12,220,0,2.2);
 }
 StPicoD0Hists::~StPicoD0Hists()
 {
@@ -57,13 +57,21 @@ void StPicoD0Hists::addEvent(StPicoEvent const& picoEvent,StPicoD0Event const & 
   mh2NKaonsVsNPions->Fill(picoD0Event.nPions(),picoD0Event.nKaons());
 }
 //---------------------------------------------------------------------
-void StPicoD0Hists::addKaonPion(StKaonPion const* const kp, bool const fillMass)
+void StPicoD0Hists::addKaonPion(StKaonPion const* const kp, bool const fillMass, bool const unlike)
 {
-  mh2KaonDcaVsPt->Fill(kp->pt(),kp->kaonDca());
-  mh2PionDcaVsPt->Fill(kp->pt(),kp->pionDca());
-  mh2CosThetaVsPt->Fill(kp->pt(),cos(kp->pointingAngle()));
-  mh2DcaDaughtersVsPt->Fill(kp->pt(),kp->dcaDaughters());
-  if(fillMass) mh2InvariantMassVsPt->Fill(kp->pt(),kp->m());
+  if(unlike)
+  {
+    mh2KaonDcaVsPt->Fill(kp->pt(),kp->kaonDca());
+    mh2PionDcaVsPt->Fill(kp->pt(),kp->pionDca());
+    mh2CosThetaVsPt->Fill(kp->pt(),cos(kp->pointingAngle()));
+    mh2DcaDaughtersVsPt->Fill(kp->pt(),kp->dcaDaughters());
+  }
+
+  if(fillMass)
+  {
+    if(unlike) mh2InvariantMassVsPtUnlike->Fill(kp->pt(),kp->m());
+    else       mh2InvariantMassVsPtLike->Fill(kp->pt(),kp->m());
+  }
 }
 //---------------------------------------------------------------------
 void StPicoD0Hists::closeFile()
@@ -80,6 +88,7 @@ void StPicoD0Hists::closeFile()
   mh2PionDcaVsPt->Write();
   mh2CosThetaVsPt->Write();
   mh2DcaDaughtersVsPt->Write();
-  mh2InvariantMassVsPt->Write();
+  mh2InvariantMassVsPtUnlike->Write();
+  mh2InvariantMassVsPtLike->Write();
   mOutFile->Close();
 }

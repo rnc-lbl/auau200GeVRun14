@@ -49,7 +49,7 @@ class StPicoNpeEventMaker : public StMaker
     TTree* mTree;
     StPicoNpeEvent* mPicoNpeEvent;
 
-    ClassDef(StPicoNpeEventMaker, 2)
+    ClassDef(StPicoNpeEventMaker, 0)
 };
 
 #endif

@@ -80,6 +80,7 @@ class StPicoHFMaker : public StMaker
     void setHFBaseCuts(StHFCuts* cuts);
     void setMakerMode(unsigned short us);
     void setDecayMode(unsigned short us);
+    void setTreeName(const char* tName);
 
     // -- different modes to use the StPicoHFMaker class
     //    - kAnalyze - don't write candidate trees, just fill histograms
@@ -136,33 +137,36 @@ class StPicoHFMaker : public StMaker
 
     // -- private members ------------------------
 
-    unsigned int    mDecayMode;         // use enum of StPicoHFEvent::eHFEventMode
-    unsigned int    mMakerMode;         // use enum of StPicoEventMaker::eMakerMode
+    unsigned int    mDecayMode;          // use enum of StPicoHFEvent::eHFEventMode
+    unsigned int    mMakerMode;          // use enum of StPicoEventMaker::eMakerMode
 
-    TString         mOuputFileBaseName; // base name for output files
-                                        //   for tree     -> <mOuputFileBaseName>.picoHFtree.root
-                                        //   for histList -> <mOuputFileBaseName>.GetName().root
+    TString         mOutputTreeName;     // name for output trees
 
-    TString         mInputFileName;     // filename of input list of HF trees (needs to be in the 
-                                        // same order as the picoDstList
+    TString         mOutputFileBaseName; // base name for output files
+                                         //   for tree     -> <mOutputFileBaseName>.<mOutputTreeName>.root
+                                         //   for histList -> <mOutputFileBaseName>.GetName().root
 
-    StPicoDstMaker* mPicoDstMaker;      // ptr to picoDst maker
+    TString         mInputFileName;      // filename of input list of HF trees (needs to be in the 
+                                         // same order as the picoDstList
 
-    StPicoEvent*    mPicoEvent;         // ptr to picoDstEvent
+    StPicoDstMaker* mPicoDstMaker;       // ptr to picoDst maker
 
-    TTree*          mTree;              // tree holding "mPicoHFEvent" for writing only
+    StPicoEvent*    mPicoEvent;          // ptr to picoDstEvent
 
-    TChain*         mHFChain;           // chain to read in HF tree
-    int             mEventCounter;      // n Processed events in chain
+    TTree*          mTree;               // tree holding "mPicoHFEvent" for writing only
 
-    TFile*          mOutputFileTree;    // ptr to file saving the HFtree
-    TFile*          mOutputFileList;    // ptr to file saving the list of histograms
-    ClassDef(StPicoHFMaker, 1)
+    TChain*         mHFChain;            // chain to read in HF tree
+    int             mEventCounter;       // n Processed events in chain
+
+    TFile*          mOutputFileTree;     // ptr to file saving the HFtree
+    TFile*          mOutputFileList;     // ptr to file saving the list of histograms
+    ClassDef(StPicoHFMaker, 0)
 };
 
 inline void StPicoHFMaker::setHFBaseCuts(StHFCuts* cuts)   { mHFCuts = cuts; }
 inline void StPicoHFMaker::setMakerMode(unsigned short us) { mMakerMode = us; }
 inline void StPicoHFMaker::setDecayMode(unsigned short us) { mDecayMode = us; }
+inline void StPicoHFMaker::setTreeName(const char* tName)  { mOutputTreeName = tName; }
 
 inline unsigned int StPicoHFMaker::isDecayMode()           { return mDecayMode; }
 inline unsigned int StPicoHFMaker::isMakerMode()           { return mMakerMode; }

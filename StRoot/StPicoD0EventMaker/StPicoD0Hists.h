@@ -12,8 +12,6 @@
  * **************************************************
  */
 
-#include "TObject.h"
-
 class TH1F;
 class TH2F;
 class TFile;
@@ -24,13 +22,13 @@ class StPicoD0Event;
 class StKaonPion;
 
 
-class StPicoD0Hists: public TObject
+class StPicoD0Hists
 {
   public:
    StPicoD0Hists(TString fileBaseName);
    virtual ~StPicoD0Hists();
    void addEvent(StPicoEvent const &, StPicoD0Event const &,unsigned int const nHftTracks);
-   void addKaonPion(StKaonPion const*, bool fillMass);
+   void addKaonPion(StKaonPion const*, bool fillMass, bool unlike);
    void closeFile();
 
   private:
@@ -49,8 +47,7 @@ class StPicoD0Hists: public TObject
    TH2F* mh2PionDcaVsPt;
    TH2F* mh2CosThetaVsPt;
    TH2F* mh2DcaDaughtersVsPt;
-   TH2F* mh2InvariantMassVsPt;
-
-   ClassDef(StPicoD0Hists, 1)
+   TH2F* mh2InvariantMassVsPtUnlike;
+   TH2F* mh2InvariantMassVsPtLike;
 };
 #endif

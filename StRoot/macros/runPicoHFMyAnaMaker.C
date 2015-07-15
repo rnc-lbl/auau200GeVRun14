@@ -51,7 +51,9 @@ class StChain;
 StChain *chain;
 
 void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 0 /*kAnalyze*/, 
-			 const Char_t *badRunListFileName = "picoList_bad_MB.list") { 
+			 const Char_t *badRunListFileName = "picoList_bad_MB.list", const Char_t *treeName = "picoHFtree",
+			   const Char_t *productionBasePath = "/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/physics2/P15ic",
+			   unsigned int decayChannel = 0 /* kChannel0 */) { 
   // -- Check STAR Library. Please set SL_version to the original star library used in the production 
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL15c";
@@ -60,7 +62,7 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
       cout<<"Environment Star Library does not match the requested library in runPicoHFMyAnaMaker.C. Exiting..."<<endl;
       exit(1);
   }
-
+  
   Int_t nEvents = 10000000;
 
 #ifdef __CINT__
@@ -75,9 +77,13 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   // ========================================================================================
   
   cout << "Maker Mode    " << makerMode << endl;
+  cout << "TreeName      " << treeName << endl; 
+  cout << "Decay Channel " << decayChannel << endl; 
 
   TString sInputFile(inputFile);
   TString sInputListHF("");  
+  TString sProductionBasePath(productionBasePath);
+  TString sTreeName(treeName);
 
   if (makerMode == StPicoHFMaker::kAnalyze) {
     if (!sInputFile.Contains(".list") && !sInputFile.Contains("picoDst.root")) {
@@ -96,24 +102,27 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
       cout << "No input list provided! Exiting..." << endl;
       exit(1);
    }
-
-   // -- prepare filelist for picoDst from hfTrees
+   
+   // -- prepare filelist for picoDst from trees
    sInputListHF = sInputFile;
    sInputFile = "tmpPico.list";
-   TString command = "sed 's|^.*hfTree|/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/physics/P15ic|g' "
-     + sInputListHF + " > " + sInputFile;
+   TString command = "sed 's|^.*" + sTreeName + "|" + sProductionBasePath + "|g' " + sInputListHF + " > " + sInputFile;
+   cout << "COMMAND : " << command << endl; 
    gSystem->Exec(command.Data());
-   command = "sed -i 's|picoHFtree|picoDst|g' " + sInputFile;
+   command = "sed -i 's|" + sTreeName + "|picoDst|g' " + sInputFile;
+   cout << "COMMAND : " << command << endl; 
    gSystem->Exec(command.Data());
   }
   else {
     cout << "Unknown makerMode! Exiting..." << endl;
     exit(1);
   }
-  
+
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, sInputFile, "picoDstMaker");
   StPicoHFMyAnaMaker* picoHFMyAnaMaker = new StPicoHFMyAnaMaker("picoHFMyAnaMaker", picoDstMaker, outputFile, sInputListHF);
   picoHFMyAnaMaker->setMakerMode(makerMode);
+  picoHFMyAnaMaker->setDecayChannel(decayChannel);
+  picoHFMyAnaMaker->setTreeName(treeName);
 
   StHFCuts* hfCuts = new StHFCuts("hfBaseCuts");
   picoHFMyAnaMaker->setHFBaseCuts(hfCuts);
@@ -126,18 +135,18 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
 
   // -- ADD USER CUTS HERE ----------------------------
 
-  // hfCuts->setCutVzMax(6.);
-  // hfCuts->setCutVzVpdVzMax(3.);
-  // hfCuts->setCutTriggerWord(0x1F);
+  hfCuts->setCutVzMax(6.);
+  hfCuts->setCutVzVpdVzMax(3.);
+  hfCuts->setCutTriggerWord(0x1F);
 
-  // hfCuts->setCutNHitsFitMax(15); 
-  // hfCuts->setCutRequireHFT(true);
-  // hfCuts->setCutNHitsFitnHitsMax(0.52);
+  hfCuts->setCutNHitsFitMax(15); 
+  hfCuts->setCutRequireHFT(true);
+  hfCuts->setCutNHitsFitnHitsMax(0.52);
+ 
   // ---------------------------------------------------
 
-  // -- Channel1
+  // -- Channel0
   picoHFMyAnaMaker->setDecayMode(StPicoHFEvent::kTwoParticleDecay);
-  picoHFMyAnaMaker->setDecayChannel(StPicoHFMyAnaMaker::kChannel1);
 
   // -- ADD USER CUTS HERE ----------------------------
 

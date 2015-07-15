@@ -62,7 +62,7 @@ class StPicoD0AnaMaker : public StMaker
     // add your member variables here. 
     // Remember that ntuples size can be really big, use histograms where appropriate
 
-    ClassDef(StPicoD0AnaMaker, 1)
+    ClassDef(StPicoD0AnaMaker, 0)
 };
 
 inline int StPicoD0AnaMaker::getEntries() const 

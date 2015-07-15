@@ -102,7 +102,7 @@ class StPicoHFMyAnaMaker : public StPicoHFMaker
 
   // -- ADD USER MEMBERS HERE -------------------
 
-  ClassDef(StPicoHFMyAnaMaker, 1)
+  ClassDef(StPicoHFMyAnaMaker, 0)
 };
 
 #endif
