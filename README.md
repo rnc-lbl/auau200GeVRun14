@@ -21,7 +21,7 @@
 [PicoHfLib](https://drupal.star.bnl.gov/STAR/system/files/2016-06-01-Jochen-Mustafa_0.pdf)  
 [StPicoD0Maker](http://www.star.bnl.gov/protected/heavy/mstftsm/run14/talks/2015-04-02.pdf)  
 [StPicoHFMaker](http://www.star.bnl.gov/protected/heavy/mstftsm/run14/talks/PWG_HF_JMT_2015-04-02.pdf)  
-
+[StPicoMixedEventMaker](http://www.star.bnl.gov/protected/heavy/mlomnitz/PicoMixedEvent/PicoMixedEvent.pdf)
 ### Pico production monitors:
 [Pico production monitor](http://portal.nersc.gov/project/star/mustafa/picoProductionMonitor/)  
 [Pico D0 production monitor](http://www.star.bnl.gov/protected/heavy/mstftsm/run14/picoD0ProductionMonitor/)  
