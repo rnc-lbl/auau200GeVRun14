@@ -25,6 +25,7 @@ void runPicoD0AnaMaker(TString d0list, TString outFileName, TString badRunListFi
 
    gSystem->Load("StBTofUtil");
    gSystem->Load("StPicoDstMaker");
+   gSystem->Load("StRefMultCorr");
    gSystem->Load("StPicoPrescales");
    gSystem->Load("StPicoCutsBase");
    gSystem->Load("StPicoD0EventMaker");

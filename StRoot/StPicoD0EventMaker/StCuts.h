@@ -21,9 +21,14 @@ namespace cuts
    std::string const prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
 
    //event
+   int const centrality = 3; // StRefMultCorr::getCentralityBin9() < centrality; 0-3 bins are for 40-80%
    UShort_t const triggerWord = 0x1F; //first five bits see http://rnc.lbl.gov/~xdong/SoftHadron/picoDst.html
    float const vz = 6.0;// cm.
    float const vzVpdVz = 3.0; // 3 cm.
+
+   // vertex refit track quality
+   float const vtxDca = 3.0;
+   size_t const vtxNumberOfFitPoints = 20;
 
    //tracking
    int const nHitsFit = 15;
@@ -40,7 +45,7 @@ namespace cuts
    float const dcaDaughters = 0.0200; // maximum
    float const decayLength = 0.0030; // minimum
    float const minMass = 1.6;
-   float const maxMass = 2.1;
+   float const maxMass = 2.2;
 
    // histograms kaonPion pair cuts
    float const qaPt = 1.2;

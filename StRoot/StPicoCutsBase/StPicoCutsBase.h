@@ -29,7 +29,7 @@
 
 #include "TNamed.h"
 #include "TString.h"
-#include "StLorentzVectorF.hh" 
+#include "StarClassLibrary/StLorentzVectorF.hh"
 #include "StBTofUtil/StV0TofCorrection.h"
 
 class StPicoTrack;
