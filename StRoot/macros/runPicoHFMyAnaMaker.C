@@ -50,10 +50,11 @@ class StChain;
 
 StChain *chain;
 
-void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  unsigned int makerMode = 0 /*kAnalyze*/, 
+void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",  
+			 const unsigned int makerMode = 0 /*kAnalyze*/, const bool mcMode = true,
 			 const Char_t *badRunListFileName = "picoList_bad_MB.list", const Char_t *treeName = "picoHFtree",
-			   const Char_t *productionBasePath = "/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/physics2/P15ic",
-			   unsigned int decayChannel = 0 /* kChannel0 */) { 
+			 const Char_t *productionBasePath = "/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/physics2/P15ic",
+			 const unsigned int decayChannel = 0 /* kChannel0 */) { 
   // -- Check STAR Library. Please set SL_version to the original star library used in the production 
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL15c";
@@ -106,10 +107,12 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
    // -- prepare filelist for picoDst from trees
    sInputListHF = sInputFile;
    sInputFile = "tmpPico.list";
-   TString command = "sed 's|^.*" + sTreeName + "|" + sProductionBasePath + "|g' " + sInputListHF + " > " + sInputFile;
+
+   TString command = "sed 's|" + sTreeName + ".root|picoDst.root|g' " + sInputListHF + " > " + sInputFile;
    cout << "COMMAND : " << command << endl; 
    gSystem->Exec(command.Data());
-   command = "sed -i 's|" + sTreeName + "|picoDst|g' " + sInputFile;
+
+   command = "sed -i 's|^.*" + sTreeName + "|" + sProductionBasePath + "|g' " + sInputFile; // + " > " + sInputFile;
    cout << "COMMAND : " << command << endl; 
    gSystem->Exec(command.Data());
   }
@@ -123,7 +126,8 @@ void runPicoHFMyAnaMaker(const Char_t *inputFile="test.list", const Char_t *outp
   picoHFMyAnaMaker->setMakerMode(makerMode);
   picoHFMyAnaMaker->setDecayChannel(decayChannel);
   picoHFMyAnaMaker->setTreeName(treeName);
-
+  picoHFMyAnaMaker->setMcMode(mcMode);
+  
   StHFCuts* hfCuts = new StHFCuts("hfBaseCuts");
   picoHFMyAnaMaker->setHFBaseCuts(hfCuts);
 

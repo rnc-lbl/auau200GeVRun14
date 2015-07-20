@@ -26,7 +26,7 @@ ClassImp(StPicoHFMaker)
 StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
 			     char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
   StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
-  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), 
+  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), mMcMode(false),
   mOutputTreeName("picoHFtree"), mOutputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
   mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
   mOutputFileTree(NULL), mOutputFileList(NULL) {
@@ -206,6 +206,11 @@ Int_t StPicoHFMaker::Make() {
   
   Int_t iReturn = kStOK;
 
+  // cout << " nTracks   " <<  mPicoDst->numberOfTracks() << endl;
+  // if (mMcMode) {
+  //   cout << " nMcTracks " <<  mPicoDst->numberOfMcTracks() << endl;
+  // }
+  
   if (setupEvent()) {
     UInt_t nTracks = mPicoDst->numberOfTracks();
 
