@@ -78,9 +78,13 @@ class StPicoHFMaker : public StMaker
     virtual Int_t FinishHF()                { return kStOK; }
 
     void setHFBaseCuts(StHFCuts* cuts);
+
+    void setTreeName(const char* tName);
+
     void setMakerMode(unsigned short us);
     void setDecayMode(unsigned short us);
-    void setTreeName(const char* tName);
+    void setMcMode(bool b);
+
 
     // -- different modes to use the StPicoHFMaker class
     //    - kAnalyze - don't write candidate trees, just fill histograms
@@ -107,9 +111,10 @@ class StPicoHFMaker : public StMaker
     void  createTertiaryK0Shorts();
     void  createTertiaryLambdas();
 
-    unsigned int isDecayMode();
-    unsigned int isMakerMode();
-
+    unsigned int isDecayMode() const;
+    unsigned int isMakerMode() const;
+    bool         isMcMode() const;
+    
     // -- protected members ------------------------
 
     StPicoDst      *mPicoDst;
@@ -140,6 +145,8 @@ class StPicoHFMaker : public StMaker
     unsigned int    mDecayMode;          // use enum of StPicoHFEvent::eHFEventMode
     unsigned int    mMakerMode;          // use enum of StPicoEventMaker::eMakerMode
 
+    bool            mMcMode;             // use MC mode
+
     TString         mOutputTreeName;     // name for output trees
 
     TString         mOutputFileBaseName; // base name for output files
@@ -164,10 +171,13 @@ class StPicoHFMaker : public StMaker
 };
 
 inline void StPicoHFMaker::setHFBaseCuts(StHFCuts* cuts)   { mHFCuts = cuts; }
-inline void StPicoHFMaker::setMakerMode(unsigned short us) { mMakerMode = us; }
-inline void StPicoHFMaker::setDecayMode(unsigned short us) { mDecayMode = us; }
 inline void StPicoHFMaker::setTreeName(const char* tName)  { mOutputTreeName = tName; }
 
-inline unsigned int StPicoHFMaker::isDecayMode()           { return mDecayMode; }
-inline unsigned int StPicoHFMaker::isMakerMode()           { return mMakerMode; }
+inline void StPicoHFMaker::setMakerMode(unsigned short us) { mMakerMode = us; }
+inline void StPicoHFMaker::setDecayMode(unsigned short us) { mDecayMode = us; }
+inline void StPicoHFMaker::setMcMode(bool b)               { mMcMode = b; }
+
+inline unsigned int StPicoHFMaker::isDecayMode() const     { return mDecayMode; }
+inline unsigned int StPicoHFMaker::isMakerMode() const     { return mMakerMode; }
+inline bool StPicoHFMaker::isMcMode() const                { return mMcMode; }
 #endif
