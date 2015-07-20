@@ -4,8 +4,8 @@
 #include "TFile.h"
 #include "TChain.h"
 
-#include "StThreeVectorF.hh"
-#include "StLorentzVectorF.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
+#include "StarClassLibrary/StLorentzVectorF.hh"
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
 #include "StPicoDstMaker/StPicoEvent.h"
