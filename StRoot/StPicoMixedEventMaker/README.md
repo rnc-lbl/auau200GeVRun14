@@ -5,7 +5,7 @@ RHIC year 2014 Run, with Heavy Flavor Tracker
 ###Code Authors:  
 	**Michael Lomnitz (mrlomnitz@lbl.gov)
 	Mustafa Mustafa (mmustafa@lbl.gov)  
-        ** Code Maintainer
+	** Code Maintainer
 - - -
 ### Presentations:  
 #### STAR Protected:  
