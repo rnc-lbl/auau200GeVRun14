@@ -11,6 +11,7 @@
 #include "StPhysicalHelixD.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
+#include "StBTofUtil/tofPathLength.hh"
 
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoTrack.h"
