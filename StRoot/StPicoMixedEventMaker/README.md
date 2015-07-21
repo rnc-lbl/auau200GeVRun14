@@ -21,12 +21,6 @@ cd myMixedEvent
 # Replace address below with your own fork if you have one
 git clone https://github.com/rnc-lbl/auau200GeVRun14.git
 
-# Now you need to get StPicoDstMaker
-# If compiling at PDSF you need to get a klog token as below.
-# - You don't need this step at RCF - 
-# You will need to enter your RCF password.
-klog -principal YOURRCFUSERNAME
-
 # For pico production II
 # Clone picoDst maker from git repository
 # Replace address below with your own fork if you have one
@@ -38,7 +32,7 @@ git clone git@github.com:GuannanXie/Run14AuAu200GeV_StRefMultCorr.git
 # Link all needed code under one StRoot directory:
 mkdir StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoMixedEventMaker StRoot
-ln -s `pwd`/offline/users/dongx/pico/source/StPicoDstMaker StRoot
+ln -s `pwd`/star-picoDst/StPicoDstMaker StRoot/StPicoDstMaker
 ln -s `pwd`/Run14AuAu200GeV_StRefMultCorr/VPDMB5/StRefMultCorr StRoot
 
 # Compile
@@ -72,6 +66,5 @@ cp -p auau200GeVRun14/starSubmit/submitPicoMEMaker.xml .
 cp -p auau200GeVRun14/starSubmit/submitPicoMEMaker.csh .
 # Change the basefolder path in submitPicoMEMaker.csh to your local directory and the appropriate file list.
 # Submit the jobs with the following
-```bash
 csh submitPicoMEMaker.csh
 ```
