@@ -37,16 +37,9 @@ git clone git@github.com:GuannanXie/Run14AuAu200GeV_StRefMultCorr.git
 
 # Link all needed code under one StRoot directory:
 mkdir StRoot
-ln -s `pwd`/auau200GeVRun14/StRoot/StPicoD0AnaMaker StRoot
-ln -s `pwd`/auau200GeVRun14/StRoot/StPicoD0EventMaker StRoot
-ln -s `pwd`/auau200GeVRun14/StRoot/StPicoKFVertexFitter StRoot
-ln -s `pwd`/auau200GeVRun14/StRoot/StPicoPrescales StRoot
-ln -s `pwd`/auau200GeVRun14/StRoot/StPicoHFMaker StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoMixedEventMaker StRoot
-ln -s `pwd`/auau200GeVRun14/StRoot/StPicoCutsBase StRoot
 ln -s `pwd`/offline/users/dongx/pico/source/StPicoDstMaker StRoot
 ln -s `pwd`/Run14AuAu200GeV_StRefMultCorr/VPDMB5/StRefMultCorr StRoot
-cp -r -p auau200GeVRun14/run14AuAu200GeVPrescales/ .
 
 # Compile
 starver SL15c
