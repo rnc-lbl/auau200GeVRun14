@@ -55,16 +55,16 @@ void StPicoKfVertexEvent::addEvent(StPicoEvent const& picoEvent,StThreeVectorF c
 
   if(kfSubEvt1)
   {
-    mKfSub1Vx     = kfSubEvent1->x();
-    mKfSub1Vy     = kfSubEvent1->y();
-    mKfSub1Vz     = kfSubEvent1->z();
+    mKfSubEvt1Vx     = kfSubEvt1->x();
+    mKfSubEvt1Vy     = kfSubEvt1->y();
+    mKfSubEvt1Vz     = kfSubEvt1->z();
   }
 
   if(kfSubEvt2)
   {
-    mKfSub2Vx     = kfSubEvent2->x();
-    mKfSub2Vy     = kfSubEvent2->y();
-    mKfSub2Vz     = kfSubEvent2->z();
+    mKfSubEvt2Vx     = kfSubEvt2->x();
+    mKfSubEvt2Vy     = kfSubEvt2->y();
+    mKfSubEvt2Vz     = kfSubEvt2->z();
   }
 
   mTree->Fill();

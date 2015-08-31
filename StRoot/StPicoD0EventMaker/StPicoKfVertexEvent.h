@@ -22,7 +22,7 @@ class StPicoKfVertexEvent
 public:
    StPicoKfVertexEvent(char const*);
    void addEvent(StPicoEvent const&,StThreeVectorF const* kfFullEvent,
-       StThreeVectorF const* kfSubEvt1=NULL,StThreeVectorF const* kfSubEvt2=NULL
+       StThreeVectorF const* kfSubEvt1=NULL,StThreeVectorF const* kfSubEvt2=NULL,
        int nTracksSubEvt1=0,int nTracksSubEvt2=0);
    void closeFile();
 
