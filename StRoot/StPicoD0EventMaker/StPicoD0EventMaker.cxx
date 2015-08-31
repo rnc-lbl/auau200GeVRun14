@@ -131,11 +131,15 @@ Int_t StPicoD0EventMaker::Make()
         std::random_shuffle(allTracksForVtxFit.begin(),allTracksForVtxFit.end());
 
         int middleElement = static_cast<int>(allTracksForVtxFit.size()/2);
-        std::vector<int> idxTracksToRejectFromVtxSub1(middleElement+idxTracksToRejectFromVtx.size()+1);
-        std::vector<int> idxTracksToRejectFromVtxSub2(middleElement+idxTracksToRejectFromVtx.size()+1);
+        std::vector<int> idxTracksToRejectFromVtxSub1(allTracksForVtxFit.size()-middleElement);
+        std::vector<int> idxTracksToRejectFromVtxSub2(middleElement);
 
         std::copy(allTracksForVtxFit.begin(),allTracksForVtxFit.begin()+middleElement,idxTracksToRejectFromVtxSub2.begin());
         std::copy(allTracksForVtxFit.begin()+middleElement,allTracksForVtxFit.end(),idxTracksToRejectFromVtxSub1.begin());
+
+        nTracksFullEvt = allTracksForVtxFit.size();
+        nTracksSubEvt1 = allTracksForVtxFit.size() - idxTracksToRejectFromVtxSub1.size();
+        nTracksSubEvt2 = allTracksForVtxFit.size() - idxTracksToRejectFromVtxSub2.size();
 
         for(size_t ij=0;ij<idxTracksToRejectFromVtx.size();++ij)
         {
@@ -146,10 +150,6 @@ Int_t StPicoD0EventMaker::Make()
         kfVertex = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtx);
         kfVertexSubEvt1 = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtxSub1);
         kfVertexSubEvt2 = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtxSub2);
-
-        nTracksFullEvt = nTracks - idxTracksToRejectFromVtx.size();
-        nTracksSubEvt1 = nTracks - idxTracksToRejectFromVtxSub1.size();
-        nTracksSubEvt2 = nTracks - idxTracksToRejectFromVtxSub2.size();
       }
 
       if(kfVertex.z() > -100.)
