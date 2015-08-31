@@ -151,7 +151,7 @@ Int_t StPicoD0EventMaker::Make()
    } //.. end of good event fill
 
    mPicoD0Event->addPicoEvent(*mPicoEvent,&kfVertex);
-   mKfVertexEvent.addEvent(*mPicoEvent,kfVertex);
+   mKfVertexEvent.addEvent(*mPicoEvent,&kfVertex);
 
    // This should never be inside the good event block
    // because we want to save header information about all events, good or bad

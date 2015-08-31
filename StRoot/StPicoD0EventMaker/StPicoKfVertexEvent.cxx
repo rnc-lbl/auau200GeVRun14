@@ -33,18 +33,39 @@ void StPicoKfVertexEvent::closeFile()
   mOutputFile->Close();
 }
 
-void StPicoKfVertexEvent::addEvent(StPicoEvent const& picoEvent,StThreeVectorF const& kfVertex)
+void StPicoKfVertexEvent::addEvent(StPicoEvent const& picoEvent,StThreeVectorF const* const kfFullEvent,
+                                   StThreeVectorF const* const kfSubEvt1,StThreeVectorF const* const kfSubEvt2,
+                                   int const nTracksSubEvt1,int const nTracksSubEvt2)
 {
   mRunId    = picoEvent.runId();
   mEventId  = picoEvent.eventId();
   mRefMult  = picoEvent.refMult();
   mGRefMult = picoEvent.grefMult();
+
+  mNTracksSubEvt1 = nTracksSubEvt1;
+  mNTracksSubEvt2 = nTracksSubEvt2;
+
   mVx       = picoEvent.primaryVertex().x();
   mVy       = picoEvent.primaryVertex().y();
   mVz       = picoEvent.primaryVertex().z();
-  mKfVx     = kfVertex.x();
-  mKfVy     = kfVertex.y();
-  mKfVz     = kfVertex.z();
+
+  mKfVx     = kfFullEvent->x();
+  mKfVy     = kfFullEvent->y();
+  mKfVz     = kfFullEvent->z();
+
+  if(kfSubEvt1)
+  {
+    mKfSub1Vx     = kfSubEvent1->x();
+    mKfSub1Vy     = kfSubEvent1->y();
+    mKfSub1Vz     = kfSubEvent1->z();
+  }
+
+  if(kfSubEvt2)
+  {
+    mKfSub2Vx     = kfSubEvent2->x();
+    mKfSub2Vy     = kfSubEvent2->y();
+    mKfSub2Vz     = kfSubEvent2->z();
+  }
 
   mTree->Fill();
 }
