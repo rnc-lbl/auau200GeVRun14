@@ -1,5 +1,6 @@
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 #include "TTree.h"
 #include "TFile.h"
@@ -84,6 +85,11 @@ Int_t StPicoD0EventMaker::Make()
    mPicoEvent = picoDst->event();
 
    StThreeVectorF kfVertex(-999.,-999.,-999.);
+   StThreeVectorF kfVertexSubEvt1(-999.,-999.,-999.);
+   StThreeVectorF kfVertexSubEvt2(-999.,-999.,-999.);
+   int nTracksFullEvt = 0;
+   int nTracksSubEvt1 = 0;
+   int nTracksSubEvt2 = 0;
    
    if (isGoodEvent())
    {
@@ -93,6 +99,8 @@ Int_t StPicoD0EventMaker::Make()
       std::vector<unsigned short> idxPicoPions;
       std::vector<int> idxTracksToRejectFromVtx;
 
+      std::vector<int> allTracksForVtxFit;
+
       StThreeVectorF const pVtx = mPicoEvent->primaryVertex();
       unsigned int nHftTracks = 0;
 
@@ -101,7 +109,14 @@ Int_t StPicoD0EventMaker::Make()
          StPicoTrack* trk = picoDst->track(iTrack);
          if(!trk) continue;
 
-         if(!isGoodForVertexFit(trk,pVtx)) idxTracksToRejectFromVtx.push_back(iTrack);
+         if(!isGoodForVertexFit(trk,pVtx))
+         {
+           idxTracksToRejectFromVtx.push_back(iTrack);
+         }
+         else
+         {
+           allTracksForVtxFit.push_back(iTrack);
+         }
 
          if (!isGoodTrack(trk)) continue;
          ++nHftTracks;
@@ -111,7 +126,31 @@ Int_t StPicoD0EventMaker::Make()
 
       } // .. end tracks loop
 
-      kfVertex = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtx);
+      if(allTracksForVtxFit.size())
+      {
+        std::random_shuffle(allTracksForVtxFit.begin(),allTracksForVtxFit.end());
+
+        int middleElement = static_cast<int>(allTracksForVtxFit.size()/2);
+        std::vector<int> idxTracksToRejectFromVtxSub1(middleElement+idxTracksToRejectFromVtx.size()+1);
+        std::vector<int> idxTracksToRejectFromVtxSub2(middleElement+idxTracksToRejectFromVtx.size()+1);
+
+        std::copy(allTracksForVtxFit.begin(),allTracksForVtxFit.begin()+middleElement,idxTracksToRejectFromVtxSub2.begin());
+        std::copy(allTracksForVtxFit.begin()+middleElement,allTracksForVtxFit.end(),idxTracksToRejectFromVtxSub1.begin());
+
+        for(size_t ij=0;ij<idxTracksToRejectFromVtx.size();++ij)
+        {
+          idxTracksToRejectFromVtxSub1.push_back(idxTracksToRejectFromVtx[ij]);
+          idxTracksToRejectFromVtxSub2.push_back(idxTracksToRejectFromVtx[ij]);
+        }
+
+        kfVertex = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtx);
+        kfVertexSubEvt1 = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtxSub1);
+        kfVertexSubEvt2 = mKfVertexFitter.primaryVertexRefit(picoDst,idxTracksToRejectFromVtxSub2);
+
+        nTracksFullEvt = nTracks - idxTracksToRejectFromVtx.size();
+        nTracksSubEvt1 = nTracks - idxTracksToRejectFromVtxSub1.size();
+        nTracksSubEvt2 = nTracks - idxTracksToRejectFromVtxSub2.size();
+      }
 
       if(kfVertex.z() > -100.)
       {
@@ -146,12 +185,11 @@ Int_t StPicoD0EventMaker::Make()
       }
 
       mPicoD0Hists->addEvent(*mPicoEvent,*mPicoD0Event,nHftTracks);
-      idxPicoKaons.clear();
-      idxPicoPions.clear();
    } //.. end of good event fill
 
    mPicoD0Event->addPicoEvent(*mPicoEvent,&kfVertex);
-   mKfVertexEvent.addEvent(*mPicoEvent,&kfVertex);
+   mKfVertexEvent.addEvent(*mPicoEvent,&kfVertex,&kfVertexSubEvt1,&kfVertexSubEvt2,
+                            nTracksFullEvt,nTracksSubEvt1,nTracksSubEvt2);
 
    // This should never be inside the good event block
    // because we want to save header information about all events, good or bad
