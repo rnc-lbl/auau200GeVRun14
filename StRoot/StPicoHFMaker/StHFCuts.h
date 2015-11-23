@@ -29,7 +29,7 @@ class StHFCuts : public StPicoCutsBase
 {
  public:
   
-  StHFCuts();
+  StHFCuts():mPDcaCut(0),mKDcaCut(0),mPiDcaCut(0);
   StHFCuts(const Char_t *name);
   ~StHFCuts();
   
@@ -86,6 +86,14 @@ class StHFCuts : public StPicoCutsBase
   const float&    cutSecondaryTripletMassMin()            const;
   const float&    cutSecondaryTripletMassMax()            const;
 
+  void setPDcaCut(float pDcaCut = 0.) {mPDcaCut = pDcaCut; }
+  void setKDcaCut(float kDcaCut = 0.) {mKDcaCut = kDcaCut; }
+  void setPiDcaCut(float piDcaCut = 0.) {mPiDcaCut = piDcaCut; }
+
+  float PDcaCut() {return mPDcaCut; }
+  float KDcaCut() {return mKDcaCut; }
+  float PiDcaCut() {return mPiDcaCut; }
+
  private:
   
   StHFCuts(StHFCuts const &);       
@@ -122,6 +130,13 @@ class StHFCuts : public StPicoCutsBase
   float mSecondaryTripletCosThetaMin;
   float mSecondaryTripletMassMin;
   float mSecondaryTripletMassMax;
+
+  // ------------------------------------------
+  // -- DCA cuts for particles
+  // ------------------------------------------
+  float mPDcaCut;
+  float mKDcaCut;
+  float mPiDcaCut;
 
   ClassDef(StHFCuts,1)
 };

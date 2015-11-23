@@ -267,6 +267,9 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
 				mIdxPicoPions[idxPion1], mIdxPicoPions[idxPion2], 
 				mPrimVtx, mBField, false);
 
+      if ( candidateK0Short->particle1Dca() < mHFCuts->PiDcaCut() || candidateK0Short->particle2Dca() < mHFCuts->PiDcaCut() )
+	continue;
+
       if (!mHFCuts->isGoodTertiaryVertexPair(candidateK0Short)) 
 	continue;
 
