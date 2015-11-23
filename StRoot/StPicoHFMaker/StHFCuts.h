@@ -29,7 +29,7 @@ class StHFCuts : public StPicoCutsBase
 {
  public:
   
-  StHFCuts():mPDcaCut(0),mKDcaCut(0),mPiDcaCut(0);
+  StHFCuts() ;
   StHFCuts(const Char_t *name);
   ~StHFCuts();
   

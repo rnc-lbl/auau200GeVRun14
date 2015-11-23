@@ -23,7 +23,8 @@ StHFCuts::StHFCuts() : StPicoCutsBase("HFCutsBase"),
   mSecondaryTripletDcaDaughters31Max(std::numeric_limits<float>::max()), 
   mSecondaryTripletDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryTripletDecayLengthMax(std::numeric_limits<float>::max()), 
   mSecondaryTripletCosThetaMin(std::numeric_limits<float>::min()), 
-  mSecondaryTripletMassMin(std::numeric_limits<float>::min()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()) {
+  mSecondaryTripletMassMin(std::numeric_limits<float>::min()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()),
+  mPiDcaCut( 0 ), mPDcaCut( 0 ), mKDcaCut( 0 ) {
   // -- default constructor
 }
 
