@@ -59,6 +59,8 @@ class StHFCuts : public StPicoCutsBase
 			      float decayLengthMin, float decayLengthMax, 
 			      float cosThetaMin, float massMin, float massMax);
 
+  void setSecondaryDcaToPvMax(float DcaToPvMax){  mSecondaryDcaToPvMax = DcaToPvMax; }
+  void setTertiaryDcaToPvMax(float DcaToPvMax) {  mTertiaryDcaToPvMax = DcaToPvMax;  }
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- GETTER for single CUTS
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
@@ -69,6 +71,7 @@ class StHFCuts : public StPicoCutsBase
   const float&    cutSecondaryPairCosThetaMin()           const;
   const float&    cutSecondaryPairMassMin()               const;
   const float&    cutSecondaryPairMassMax()               const;
+  const float&    cutSecondaryDcaToPvMax()		  const;
 
   const float&    cutTertiaryPairDcaDaughtersMax()        const;
   const float&    cutTertiaryPairDecayLengthMin()         const;
@@ -76,6 +79,7 @@ class StHFCuts : public StPicoCutsBase
   const float&    cutTertiaryPairCosThetaMin()            const;
   const float&    cutTertiaryPairMassMin()                const;
   const float&    cutTertiaryPairMassMax()                const;
+  const float&    cutTertiaryDcaToPvMax()		  const;
 
   const float&    cutSecondaryTripletDcaDaughters12Max()  const;
   const float&    cutSecondaryTripletDcaDaughters23Max()  const;
@@ -108,6 +112,7 @@ class StHFCuts : public StPicoCutsBase
   float mSecondaryPairCosThetaMin;
   float mSecondaryPairMassMin;
   float mSecondaryPairMassMax;
+  float mSecondaryDcaToPvMax;
 
   // ------------------------------------------
   // -- Pair cuts tertiary pair
@@ -118,6 +123,7 @@ class StHFCuts : public StPicoCutsBase
   float mTertiaryPairCosThetaMin;
   float mTertiaryPairMassMin;
   float mTertiaryPairMassMax;
+  float mTertiaryDcaToPvMax;
 
   // ------------------------------------------
   // -- Cuts of secondary triplet
@@ -170,6 +176,7 @@ inline const float&    StHFCuts::cutSecondaryPairDecayLengthMax()        const {
 inline const float&    StHFCuts::cutSecondaryPairCosThetaMin()           const { return mSecondaryPairCosThetaMin; }
 inline const float&    StHFCuts::cutSecondaryPairMassMin()               const { return mSecondaryPairMassMin; }
 inline const float&    StHFCuts::cutSecondaryPairMassMax()               const { return mSecondaryPairMassMax; }
+inline const float&    StHFCuts::cutSecondaryDcaToPvMax()                const { return mSecondaryDcaToPvMax; }
 
 inline const float&    StHFCuts::cutTertiaryPairDcaDaughtersMax()        const { return mTertiaryPairDcaDaughtersMax; }
 inline const float&    StHFCuts::cutTertiaryPairDecayLengthMin()         const { return mTertiaryPairDecayLengthMin; }
@@ -177,6 +184,7 @@ inline const float&    StHFCuts::cutTertiaryPairDecayLengthMax()         const {
 inline const float&    StHFCuts::cutTertiaryPairCosThetaMin()            const { return mTertiaryPairCosThetaMin; }
 inline const float&    StHFCuts::cutTertiaryPairMassMin()                const { return mTertiaryPairMassMin; }
 inline const float&    StHFCuts::cutTertiaryPairMassMax()                const { return mTertiaryPairMassMax; }
+inline const float&    StHFCuts::cutTertiaryDcaToPvMax()                 const { return mTertiaryDcaToPvMax; }
 
 inline const float&    StHFCuts::cutSecondaryTripletDcaDaughters12Max()  const { return mSecondaryTripletDcaDaughters12Max; }
 inline const float&    StHFCuts::cutSecondaryTripletDcaDaughters23Max()  const { return mSecondaryTripletDcaDaughters23Max; }
