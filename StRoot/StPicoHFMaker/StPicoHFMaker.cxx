@@ -257,7 +257,7 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
     StPicoTrack const * pion1 = mPicoDst->track(mIdxPicoPions[idxPion1]);
     
     // daughter pi DCA cut  
-    StPhysicalHelixD *p1Helix = &( pion1->dcaGeometry()->helix() );
+    StPhysicalHelixD *p1Helix = &( pion1->dcaGeometry().helix() );
     p1Helix->moveOrigin(p1Helix->pathLength(mPrimVtx));
     double particle1Dca = ( mPrimVtx - p1Helix->origin() ).mag();
     if ( particle1Dca < mHFCuts->PiDcaCut() )
@@ -270,7 +270,7 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
 	continue;
 
       // daughter pi DCA cut  
-      StPhysicalHelixD *p2Helix = &( pion2->dcaGeometry()->helix() );      
+      StPhysicalHelixD *p2Helix = &( pion2->dcaGeometry().helix() );      
       p2Helix->moveOrigin( p2Helix->pathLength(mPrimVtx) );
       double particle2Dca = ( p2Helix->origin() - mPrimVtx ).mag();
       if ( particle2Dca < mHFCuts->PiDcaCut() )
