@@ -255,6 +255,13 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
 
   for (unsigned short idxPion1 = 0; idxPion1 < mIdxPicoPions.size(); ++idxPion1) {
     StPicoTrack const * pion1 = mPicoDst->track(mIdxPicoPions[idxPion1]);
+    
+    // daughter pi DCA cut  
+    StPhysicalHelixD *p1Helix = &( pion1->dcaGeometry()->helix() );
+    p1Helix->moveOrigin(p1Helix->pathLength(mPrimVtx));
+    double particle1Dca = ( mPrimVtx - p1Helix->origin() ).mag();
+    if ( particle1Dca < mHFCuts->PiDcaCut() )
+      continue;
 
     for (unsigned short idxPion2 = idxPion1+1 ; idxPion2 < mIdxPicoPions.size(); ++idxPion2) {
       StPicoTrack const * pion2 = mPicoDst->track(mIdxPicoPions[idxPion2]);      
@@ -262,14 +269,17 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
       if (mIdxPicoPions[idxPion1] == mIdxPicoPions[idxPion2]) 
 	continue;
 
+      // daughter pi DCA cut  
+      StPhysicalHelixD *p2Helix = &( pion2->dcaGeometry()->helix() );      
+      p2Helix->moveOrigin( p2Helix->pathLength(mPrimVtx) );
+      double particle2Dca = ( p2Helix->origin() - mPrimVtx ).mag();
+      if ( particle2Dca < mHFCuts->PiDcaCut() )
+	continue;
+
       StHFPair candidateK0Short(pion1, pion2, 
 				mHFCuts->getHypotheticalMass(StHFCuts::kPion), mHFCuts->getHypotheticalMass(StHFCuts::kPion),
 				mIdxPicoPions[idxPion1], mIdxPicoPions[idxPion2], 
 				mPrimVtx, mBField, false);
-
-      // daughter pi DCA cut  
-      if ( candidateK0Short.particle1Dca() < mHFCuts->PiDcaCut() || candidateK0Short.particle2Dca() < mHFCuts->PiDcaCut() )
-	continue;
 
       if (!mHFCuts->isGoodTertiaryVertexPair(candidateK0Short)) 
 	continue;
