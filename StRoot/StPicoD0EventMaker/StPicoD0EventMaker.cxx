@@ -90,6 +90,7 @@ Int_t StPicoD0EventMaker::Make()
    int nTracksFullEvt = 0;
    int nTracksSubEvt1 = 0;
    int nTracksSubEvt2 = 0;
+   unsigned int nHftTracks = 0;
    
    if (isGoodEvent())
    {
@@ -102,7 +103,6 @@ Int_t StPicoD0EventMaker::Make()
       std::vector<int> allTracksForVtxFit;
 
       StThreeVectorF const pVtx = mPicoEvent->primaryVertex();
-      unsigned int nHftTracks = 0;
 
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
       {
@@ -183,13 +183,12 @@ Int_t StPicoD0EventMaker::Make()
           } // .. end make Kπ pairs
         } // .. end of kaons loop
       }
-
-      mPicoD0Hists->addEvent(*mPicoEvent,*mPicoD0Event,nHftTracks);
    } //.. end of good event fill
 
    mPicoD0Event->addPicoEvent(*mPicoEvent,&kfVertex);
    mKfVertexEvent.addEvent(*mPicoEvent,&kfVertex,&kfVertexSubEvt1,&kfVertexSubEvt2,
                             nTracksFullEvt,nTracksSubEvt1,nTracksSubEvt2);
+   mPicoD0Hists->addEvent(*mPicoEvent,*mPicoD0Event,nHftTracks);
 
    // This should never be inside the good event block
    // because we want to save header information about all events, good or bad
