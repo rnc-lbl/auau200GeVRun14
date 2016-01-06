@@ -20,6 +20,9 @@
 #include "StHFPair.h"
 #include "StHFTriplet.h"
 
+#include <iostream>
+using namespace std;
+
 ClassImp(StPicoHFMaker)
 
 // _________________________________________________________
@@ -262,6 +265,7 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
     double particle1Dca = ( mPrimVtx - p1Helix->origin() ).mag();
     if ( particle1Dca < mHFCuts->PiDcaCut() )
       continue;
+    cout << "pion with sufficient DCA found, looking for a pair..." << endl;
 
     for (unsigned short idxPion2 = idxPion1+1 ; idxPion2 < mIdxPicoPions.size(); ++idxPion2) {
       StPicoTrack const * pion2 = mPicoDst->track(mIdxPicoPions[idxPion2]);      
@@ -288,6 +292,7 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
 
       // -- fill tertiary pair histograms
       mHFHists->fillTertiaryPairHists(&candidateK0Short, kTRUE);
+      cout << "tertiary pi+pi pair accepted" << endl;
     }
   }
 }
