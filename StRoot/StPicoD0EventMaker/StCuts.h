@@ -13,6 +13,7 @@
  * **************************************************
  */
 
+#include <vector>
 
 namespace cuts
 {
@@ -22,7 +23,11 @@ namespace cuts
 
    //event
    int const centrality = 3; // StRefMultCorr::getCentralityBin9() < centrality; 0-3 bins are for 40-80%
-   UShort_t const triggerWord = 0x1F; //first five bits see http://rnc.lbl.gov/~xdong/SoftHadron/picoDst.html
+   std::vector<int> triggers const = { 450050,    // vpdmb-5-p-nobsmd-hlt 
+                                       450060,    // vpdmb-5-p-nobsmd-hlt 
+                                       450005,    // vpdmb-5-p-nobsmd 
+                                       450015,    // vpdmb-5-p-nobsmd 
+                                       450025};    // vpdmb-5-p-nobsmd 
    float const vz = 6.0;// cm.
    float const vzVpdVz = 3.0; // 3 cm.
 
