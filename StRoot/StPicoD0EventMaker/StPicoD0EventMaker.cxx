@@ -92,7 +92,7 @@ Int_t StPicoD0EventMaker::Make()
    int nTracksSubEvt2 = 0;
    unsigned int nHftTracks = 0;
    
-   if (isGoodEvent())
+   if (isGoodTrigger() && isGoodEvent())
    {
       UInt_t nTracks = picoDst->numberOfTracks();
 
@@ -198,11 +198,20 @@ Int_t StPicoD0EventMaker::Make()
    return kStOK;
 }
 
-bool StPicoD0EventMaker::isGoodEvent()
+bool StPicoD0EventMaker::isGoodEvent() const
 {
-   return (mPicoEvent->triggerWord() & cuts::triggerWord) &&
-          fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
+   return fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
           fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz;
+}
+
+bool StPicoD0EventMaker::isGoodTrigger() const
+{
+  for(auto trg: cuts::triggers)
+  {
+    if(mPicoEvent->isTrigger(trg)) return true;
+  }
+
+  return false;
 }
 
 bool StPicoD0EventMaker::isGoodForVertexFit(StPicoTrack const* const trk, StThreeVectorF const& vtx) const
