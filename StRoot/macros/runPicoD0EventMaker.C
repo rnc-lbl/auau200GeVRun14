@@ -20,7 +20,7 @@ StChain *chain;
 void runPicoD0EventMaker(const Char_t *inputFile, const Char_t *outputFile="test.root")
 { 
   //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
-  string SL_version = "SL15c";
+  string SL_version = "SL16d";
   string env_SL = getenv ("STAR");
   if(env_SL.find(SL_version)==string::npos)
   {
@@ -28,7 +28,7 @@ void runPicoD0EventMaker(const Char_t *inputFile, const Char_t *outputFile="test
       exit(1);
   }
 
-  Int_t nEvents = 10000000;
+  Int_t nEvents = 1e5;
 	
   gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
 	loadSharedLibraries();
