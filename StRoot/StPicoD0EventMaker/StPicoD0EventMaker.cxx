@@ -259,10 +259,10 @@ int StPicoD0EventMaker::getD0PtIndex(StKaonPion const& kp) const
 {
    for (int i = 0; i < cuts::nPtBins; i++)
    {
-      if ((kp->pt() >= cuts::PtBinsEdge[i]) && (kp->pt() < cuts::PtBinsEdge[i + 1]))
+      if ((kp.pt() >= cuts::PtBinsEdge[i]) && (kp.pt() < cuts::PtBinsEdge[i + 1]))
          return i;
    }
-   return anaCuts::nPtBins - 1;
+   return cuts::nPtBins - 1;
 }
 
 bool  StPicoD0EventMaker::isGoodQaPair(StKaonPion const& kp, StPicoTrack const& kaon,StPicoTrack const& pion)
