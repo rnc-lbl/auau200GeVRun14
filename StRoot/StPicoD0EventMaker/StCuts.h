@@ -53,12 +53,17 @@ namespace cuts
    float const maxMass = 2.2;
 
    // histograms kaonPion pair cuts
+   int   const nPtBins = 5;
+   float const PtBinsEdge[nPtBins+1] = {0., 1., 2., 3., 5., 15.};//this is for optimaized cut
    float const qaPt = 1.2;
    float const qaNHitsFit = 20;
    float const qaNSigmaKaon = 2.0;
-   float const qaCosTheta = 0.995;
-   float const qaDcaDaughters = 0.0050;
-   float const qaKDca = 0.008; // minimum
-   float const qaPDca = 0.008;
+   float const qaRapidityCut = 1.0;
+   float const qaDcaV0ToPv[nPtBins] = {0.0061, 0.0049, 0.0038, 0.0038, 0.0040};
+   float const qaDecayLength[nPtBins] = {0.0145, 0.0181, 0.0212, 0.0247, 0.0259};
+   float const qaCosTheta[nPtBins] = {0.0000, 0.0000, 0.0000, 0.0000, 0.0000};//0.995
+   float const qaDcaDaughters[nPtBins] = {0.0084, 0.0066, 0.0057, 0.0050, 0.0060}; //0.0050;
+   float const qaKDca[nPtBins] = {0.0103, 0.0091, 0.0095, 0.0079, 0.0058};//0.008, // minimum
+   float const qaPDca[nPtBins] = {0.0110, 0.0111, 0.0086, 0.0081, 0.0062};//0.008
 }
 #endif

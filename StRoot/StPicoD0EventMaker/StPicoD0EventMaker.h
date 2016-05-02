@@ -51,6 +51,7 @@ class StPicoD0EventMaker : public StMaker
     bool  isKaon(StPicoTrack const*) const;
     bool  isGoodPair(StKaonPion const &) const;
     bool  isGoodMass(StKaonPion const &) const;
+    int   getD0PtIndex(StKaonPion const& kp) const;
     bool  isGoodQaPair(StKaonPion const&, StPicoTrack const&,StPicoTrack const&);
     size_t popcount(size_t) const;
 

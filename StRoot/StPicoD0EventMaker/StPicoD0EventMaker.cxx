@@ -255,12 +255,26 @@ bool StPicoD0EventMaker::isGoodMass(StKaonPion const & kp) const
    return kp.m() > cuts::minMass && kp.m() < cuts::maxMass;
 }
 
+int StPicoD0EventMaker::getD0PtIndex(StKaonPion const& kp) const
+{
+   for (int i = 0; i < cuts::nPtBins; i++)
+   {
+      if ((kp->pt() >= cuts::PtBinsEdge[i]) && (kp->pt() < cuts::PtBinsEdge[i + 1]))
+         return i;
+   }
+   return anaCuts::nPtBins - 1;
+}
+
 bool  StPicoD0EventMaker::isGoodQaPair(StKaonPion const& kp, StPicoTrack const& kaon,StPicoTrack const& pion)
 {
-  return pion.gPt() >= cuts::qaPt && kaon.gPt() >= cuts::qaPt && 
-         pion.nHitsFit() >= cuts::qaNHitsFit && kaon.nHitsFit() >= cuts::qaNHitsFit &&
+  int tmpIndex = getD0PtIndex(kp);
+
+  return pion.nHitsFit() >= cuts::qaNHitsFit && kaon.nHitsFit() >= cuts::qaNHitsFit &&
          fabs(kaon.nSigmaKaon()) < cuts::qaNSigmaKaon && 
-         cos(kp.pointingAngle()) > cuts::qaCosTheta &&
-         kp.pionDca() > cuts::qaPDca && kp.kaonDca() > cuts::qaKDca &&
-         kp.dcaDaughters() < cuts::qaDcaDaughters;
+         cos(kp.pointingAngle()) > cuts::qaCosTheta[tmpIndex] &&
+         kp.pionDca() > cuts::qaPDca[tmpIndex] && kp.kaonDca() > cuts::qaKDca[tmpIndex] &&
+         kp.dcaDaughters() < cuts::qaDcaDaughters[tmpIndex] &&
+         kp.decayLength() > cuts::qaDecayLength[tmpIndex] &&
+         fabs(kp.lorentzVector().rapidity()) < cuts::qaRapidityCut &&
+         ((kp.decayLength()) * sin(kp.pointingAngle())) < cuts::qaDcaV0ToPv[tmpIndex];
 }
