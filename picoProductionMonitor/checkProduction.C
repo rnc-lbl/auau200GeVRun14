@@ -115,7 +115,7 @@ int getNumberOfEvents(TString filename, TString treeName, ofstream& logOs)
 
    if (tree)
    {
-      int nEvents = tree->GetEntriesFast();
+      int nEvents = tree->GetEntries();
       file->Close();
       return nEvents;
    }
