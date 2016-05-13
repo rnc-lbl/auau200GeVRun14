@@ -17,7 +17,7 @@
 #include "StPicoCharmContainers/StPicoD0Event.h"
 #include "StPicoCharmContainers/StKaonPion.h"
 
-#include "StPicoD0Hists.h"
+#include "StPicoCharmContainers/StPicoD0QaHists.h"
 #include "StCuts.h"
 
 #include "StPicoD0EventMaker.h"
@@ -39,7 +39,7 @@ StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* pi
    mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
    mTree->Branch("dEvent", "StPicoD0Event", &mPicoD0Event, BufSize, Split);
 
-   mPicoD0Hists = new StPicoD0Hists(fileBaseName);
+   mPicoD0Hists = new StPicoD0QaHists(fileBaseName, cuts::prescalesFilesDirectoryName);
 }
 
 StPicoD0EventMaker::~StPicoD0EventMaker()

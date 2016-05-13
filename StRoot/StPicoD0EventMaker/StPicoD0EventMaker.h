@@ -29,7 +29,7 @@ class StPicoEvent;
 class StPicoTrack;
 class StPicoD0Event;
 class StKaonPion;
-class StPicoD0Hists;
+class StPicoD0QaHists;
 
 class StPicoD0EventMaker : public StMaker 
 {
@@ -57,7 +57,7 @@ class StPicoD0EventMaker : public StMaker
 
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
-    StPicoD0Hists*  mPicoD0Hists;
+    StPicoD0QaHists*  mPicoD0Hists;
     StPicoKFVertexFitter mKfVertexFitter;
     StPicoKfVertexEvent mKfVertexEvent;
 

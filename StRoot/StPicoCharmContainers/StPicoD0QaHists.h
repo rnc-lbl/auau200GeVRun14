@@ -1,5 +1,5 @@
-#ifndef StPicoD0Hists__h
-#define StPicoD0Hists__h
+#ifndef StPicoD0QaHists__h
+#define StPicoD0QaHists__h
 
 /* **************************************************
  *  A class to create and save D0 production QA
@@ -12,6 +12,8 @@
  * **************************************************
  */
 
+#include <string>
+
 class TH1F;
 class TH2F;
 class TFile;
@@ -22,17 +24,17 @@ class StPicoD0Event;
 class StKaonPion;
 
 
-class StPicoD0Hists
+class StPicoD0QaHists
 {
   public:
-   StPicoD0Hists(TString fileBaseName);
-   virtual ~StPicoD0Hists();
+   StPicoD0QaHists(std::string fileBaseName, std::string prescalesDirectory);
+   virtual ~StPicoD0QaHists();
    void addEvent(StPicoEvent const &, StPicoD0Event const &,unsigned int const nHftTracks);
    void addKaonPion(StKaonPion const*, bool fillMass, bool unlike);
    void closeFile();
 
   private:
-   StPicoD0Hists(){}
+   StPicoD0QaHists(){}
 
    StPicoPrescales* mPrescales;
    TFile* mOutFile;
