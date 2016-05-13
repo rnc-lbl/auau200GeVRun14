@@ -20,9 +20,6 @@
 #include "StHFPair.h"
 #include "StHFTriplet.h"
 
-#include <iostream>
-using namespace std;
-
 ClassImp(StPicoHFMaker)
 
 // _________________________________________________________
