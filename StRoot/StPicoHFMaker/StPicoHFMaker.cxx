@@ -383,7 +383,7 @@ void StPicoHFMaker::fillEventStats(int *aEventStat) {
 //________________________________________________________________________
 Float_t StPicoHFMaker::dcaToPV(StPicoTrack const * const trk)
 {
-    StPhysicalHelixD helix = pion1->dcaGeometry().helix();
+    StPhysicalHelixD helix = trk->dcaGeometry().helix();
     helix.moveOrigin(helix.pathLength(mPrimVtx));
     return ( mPrimVtx - helix.origin() ).mag();
 }
