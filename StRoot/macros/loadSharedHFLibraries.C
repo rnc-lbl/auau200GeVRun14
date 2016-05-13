@@ -23,5 +23,4 @@ void loadSharedHFLibraries() {
 
   // -->>> ADD your own library/class HERE 
 
-  gSystem->Load("StPicoHFLambdaCMaker");
  }
