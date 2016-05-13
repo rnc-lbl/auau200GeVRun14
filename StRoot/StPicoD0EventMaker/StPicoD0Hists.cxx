@@ -5,8 +5,8 @@
 #include "TString.h"
 #include "../StPicoDstMaker/StPicoEvent.h"
 #include "../StPicoPrescales/StPicoPrescales.h"
-#include "StPicoD0Event.h"
-#include "StKaonPion.h"
+#include "StPicoCharmContainers/StPicoD0Event.h"
+#include "StPicoCharmContainers/StKaonPion.h"
 #include "StCuts.h"
 
 #include "StPicoD0Hists.h"
