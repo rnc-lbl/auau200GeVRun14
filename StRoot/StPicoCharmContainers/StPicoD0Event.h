@@ -13,8 +13,6 @@
  * **************************************************
  */
 
-#include <cstddef>
-
 class StPicoEvent;
 
 #include "TObject.h"
