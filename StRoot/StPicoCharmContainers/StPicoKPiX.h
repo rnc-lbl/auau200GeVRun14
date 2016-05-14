@@ -26,7 +26,7 @@ class StPicoKPiX : public TObject
 {
  public:
   StPicoKPiX();
-  StPicoKPiX(StPicoTrack const* kaon, StPicoTrack const* pion, StPicoTrack const* xaon,
+  StPicoKPiX(StPicoTrack const& kaon, StPicoTrack const& pion, StPicoTrack const& xaon,
              unsigned short kIdx,unsigned short pIdx, unsigned short xIdx,
              StThreeVectorF const& vtx, float bField);
   ~StPicoKPiX() {}// please keep this non-virtual and NEVER inherit from this class 

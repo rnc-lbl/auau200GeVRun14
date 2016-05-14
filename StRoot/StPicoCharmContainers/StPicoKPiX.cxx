@@ -27,14 +27,13 @@ StPicoKPiX::StPicoKPiX(): mKaonMomAtDca{}, mPionMomAtDca{}, mXaonMomAtDca{},
 }
 
 //------------------------------------
-StPicoKPiX::StPicoKPiX(StPicoTrack const* const kaon, StPicoTrack const* const pion, StPicoTrack const* const xaon,
+StPicoKPiX::StPicoKPiX(StPicoTrack const& kaon, StPicoTrack const& pion, StPicoTrack const& xaon,
                        unsigned short const kIdx, unsigned short const pIdx, unsigned short xIdx,
                        StThreeVectorF const& vtx, float const bField) : StPicoKPiX()
 {
-   if (!kaon || !pion || !xaon ||
-       kaon->id() == pion->id() || 
-       kaon->id() == xaon->id() ||
-       pion->id() == xaon->id())
+   if (kaon.id() == pion.id() || 
+       kaon.id() == xaon.id() ||
+       pion.id() == xaon.id())
    {
       return;
    }
@@ -48,9 +47,9 @@ StPicoKPiX::StPicoKPiX(StPicoTrack const* const kaon, StPicoTrack const* const p
    ///   p is for pion
    ///   x is for xaon
 
-   StPhysicalHelixD kHelix = kaon->dcaGeometry().helix();
-   StPhysicalHelixD pHelix = pion->dcaGeometry().helix();
-   StPhysicalHelixD xHelix = xaon->dcaGeometry().helix();
+   StPhysicalHelixD kHelix = kaon.dcaGeometry().helix();
+   StPhysicalHelixD pHelix = pion.dcaGeometry().helix();
+   StPhysicalHelixD xHelix = xaon.dcaGeometry().helix();
 
    // move origins of helices to the primary vertex origin
    kHelix.moveOrigin(kHelix.pathLength(vtx));
@@ -58,9 +57,9 @@ StPicoKPiX::StPicoKPiX(StPicoTrack const* const kaon, StPicoTrack const* const p
    xHelix.moveOrigin(xHelix.pathLength(vtx));
 
    // use straight lines approximation to get point of DCA
-   StPhysicalHelixD const kStraightLine(kHelix.momentum(bField * kilogauss), kHelix.origin(), 0, kaon->charge());
-   StPhysicalHelixD const pStraightLine(pHelix.momentum(bField * kilogauss), pHelix.origin(), 0, pion->charge());
-   StPhysicalHelixD const xStraightLine(xHelix.momentum(bField * kilogauss), xHelix.origin(), 0, xaon->charge());
+   StPhysicalHelixD const kStraightLine(kHelix.momentum(bField * kilogauss), kHelix.origin(), 0, kaon.charge());
+   StPhysicalHelixD const pStraightLine(pHelix.momentum(bField * kilogauss), pHelix.origin(), 0, pion.charge());
+   StPhysicalHelixD const xStraightLine(xHelix.momentum(bField * kilogauss), xHelix.origin(), 0, xaon.charge());
 
    pair<double, double> const sskp = kStraightLine.pathLengths(pStraightLine);
    pair<double, double> const sskx = kStraightLine.pathLengths(xStraightLine);
