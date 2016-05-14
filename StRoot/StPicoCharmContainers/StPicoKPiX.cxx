@@ -12,46 +12,46 @@
 
 ClassImp(StPicoKPiX)
 
-StPicoKPiX::StPicoKPiX(): mKaonMomAtDca{}, mPionMomAtDca{}, mXMomAtDca{},
+StPicoKPiX::StPicoKPiX(): mKaonMomAtDca{}, mPionMomAtDca{}, mXaonMomAtDca{},
                           mKaonPionDca{std::numeric_limits<float>::max()},
-                          mKaonXDca{std::numeric_limits<float>::max()},
-                          mPionXDca{std::numeric_limits<float>::max()},
-                          mPointingAngle(std::numeric_limits<float>::max()), 
-                          mDecayLength(std::numeric_limits<float>::min()),
+                          mKaonXaonDca{std::numeric_limits<float>::max()},
+                          mPionXaonDca{std::numeric_limits<float>::max()},
                           mKaonDca(std::numeric_limits<float>::min()), 
                           mPionDca(std::numeric_limits<float>::min()),
-                          mXDca(std::numeric_limits<float>::min()),
+                          mXaonDca(std::numeric_limits<float>::min()),
+                          mPointingAngle(std::numeric_limits<float>::max()), 
+                          mDecayLength(std::numeric_limits<float>::min()),
                           mKaonIdx(std::numeric_limits<unsigned short>::max()), 
                           mPionIdx(std::numeric_limits<unsigned short>::max()),
-                          mXIdx(std::numeric_limits<unsigned short>::max())
+                          mXaonIdx(std::numeric_limits<unsigned short>::max())
 {
 }
 
 //------------------------------------
-StPicoKPiX::StPicoKPiX(StPicoTrack const* const kaon, StPicoTrack const* const pion, StPicoTrack const* const x,
+StPicoKPiX::StPicoKPiX(StPicoTrack const* const kaon, StPicoTrack const* const pion, StPicoTrack const* const xaon,
                        unsigned short const kIdx, unsigned short const pIdx, unsigned short xIdx,
                        StThreeVectorF const& vtx, float const bField) : StPicoKPiX()
 {
-   if (!kaon || !pion || !x ||
+   if (!kaon || !pion || !xaon ||
        kaon->id() == pion->id() || 
-       kaon->id() == x->id() ||
-       pion->id() == x->id())
+       kaon->id() == xaon->id() ||
+       pion->id() == xaon->id())
    {
       return;
    }
 
    mKaonIdx = kIdx;
    mPionIdx = pIdx;
-   mXIdx    = xIdx;
+   mXaonIdx = xIdx;
 
    /// local variables prefixes:
    ///   k is for kaon
    ///   p is for pion
-   ///   x is for the third particle
+   ///   x is for xaon
 
    StPhysicalHelixD kHelix = kaon->dcaGeometry().helix();
    StPhysicalHelixD pHelix = pion->dcaGeometry().helix();
-   StPhysicalHelixD xHelix = x->dcaGeometry().helix();
+   StPhysicalHelixD xHelix = xaon->dcaGeometry().helix();
 
    // move origins of helices to the primary vertex origin
    kHelix.moveOrigin(kHelix.pathLength(vtx));
@@ -61,7 +61,7 @@ StPicoKPiX::StPicoKPiX(StPicoTrack const* const kaon, StPicoTrack const* const p
    // use straight lines approximation to get point of DCA
    StPhysicalHelixD const kStraightLine(kHelix.momentum(bField * kilogauss), kHelix.origin(), 0, kaon->charge());
    StPhysicalHelixD const pStraightLine(pHelix.momentum(bField * kilogauss), pHelix.origin(), 0, pion->charge());
-   StPhysicalHelixD const xStraightLine(xHelix.momentum(bField * kilogauss), xHelix.origin(), 0, x->charge());
+   StPhysicalHelixD const xStraightLine(xHelix.momentum(bField * kilogauss), xHelix.origin(), 0, xaon->charge());
 
    pair<double, double> const sskp = kStraightLine.pathLengths(pStraightLine);
    pair<double, double> const sskx = kStraightLine.pathLengths(xStraightLine);
@@ -77,29 +77,29 @@ StPicoKPiX::StPicoKPiX(StPicoTrack const* const kaon, StPicoTrack const* const p
    StThreeVectorF const v0 = ( kAtDcaToP + pAtDcaToK + kAtDcaToX + xAtDcaToK + pAtDcaToX + xAtDcaToK ) / 6.;
    mKaonMomAtDca  = kHelix.momentumAt(kHelix.pathLength(v0), bField * kilogauss);
    mPionMomAtDca  = pHelix.momentumAt(pHelix.pathLength(v0), bField * kilogauss);
-   mXMomAtDca     = xHelix.momentumAt(xHelix.pathLength(v0), bField * kilogauss);
+   mXaonMomAtDca  = xHelix.momentumAt(xHelix.pathLength(v0), bField * kilogauss);
 
    mKaonPionDca = (kAtDcaToP - pAtDcaToK).mag();
-   mKaonXDca    = (kAtDcaToX - xAtDcaToK).mag();
-   mPionXDca    = (pAtDcaToX - xAtDcaToP).mag();
+   mKaonXaonDca = (kAtDcaToX - xAtDcaToK).mag();
+   mPionXaonDca = (pAtDcaToX - xAtDcaToP).mag();
 
    // calculate pointing angle and decay length
    StThreeVectorF const vtxToV0 = v0 - vtx;
-   mPointingAngle = vtxToV0.angle(mKaonMomAtDca + mPionMomAtDca + mXMomAtDca);
+   mPointingAngle = vtxToV0.angle(mKaonMomAtDca + mPionMomAtDca + mXaonMomAtDca);
    mDecayLength = vtxToV0.mag();
 
    // calculate DCA of tracks to primary vertex
    mKaonDca = (kHelix.origin() - vtx).mag();
    mPionDca = (pHelix.origin() - vtx).mag();
-   mXDca    = (xHelix.origin() - vtx).mag();
+   mXaonDca = (xHelix.origin() - vtx).mag();
 }
 
 StLorentzVectorF StPicoKPiX::fourMom(double const xMassHypothesis) const
 {
-  return {mKaonMomAtDca+mPionMomAtDca+mXMomAtDca,
+  return {mKaonMomAtDca+mPionMomAtDca+mXaonMomAtDca,
           mKaonMomAtDca.massHypothesis(M_KAON_MINUS)+
           mPionMomAtDca.massHypothesis(M_PION_PLUS)+
-          mXMomAtDca.massHypothesis(xMassHypothesis)};
+          mXaonMomAtDca.massHypothesis(xMassHypothesis)};
 }
 
 StLorentzVectorF StPicoKPiX::kaonPionFourMom() const
@@ -109,23 +109,23 @@ StLorentzVectorF StPicoKPiX::kaonPionFourMom() const
           mPionMomAtDca.massHypothesis(M_PION_PLUS)};
 }
 
-StLorentzVectorF StPicoKPiX::kaonXFourMom(double const xMassHypothesis) const
+StLorentzVectorF StPicoKPiX::kaonXaonFourMom(double const xMassHypothesis) const
 {
-  return {mKaonMomAtDca+mXMomAtDca, 
+  return {mKaonMomAtDca+mXaonMomAtDca, 
           mKaonMomAtDca.massHypothesis(M_KAON_MINUS)+
-          mXMomAtDca.massHypothesis(xMassHypothesis)};
+          mXaonMomAtDca.massHypothesis(xMassHypothesis)};
 }
 
-StLorentzVectorF StPicoKPiX::pionXFourMom(double const xMassHypothesis) const
+StLorentzVectorF StPicoKPiX::pionXaonFourMom(double const xMassHypothesis) const
 {
-  return {mPionMomAtDca+mXMomAtDca, 
+  return {mPionMomAtDca+mXaonMomAtDca, 
           mPionMomAtDca.massHypothesis(M_KAON_MINUS)+
-          mXMomAtDca.massHypothesis(xMassHypothesis)};
+          mXaonMomAtDca.massHypothesis(xMassHypothesis)};
 }
 
 float StPicoKPiX::dcaDaughters() const
 {
-  return std::max({mKaonPionDca,mKaonXDca,mPionXDca});
+  return std::max({mKaonPionDca,mKaonXaonDca,mPionXaonDca});
 }
 
 #endif // __ROOT__

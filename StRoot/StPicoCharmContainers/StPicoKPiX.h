@@ -26,32 +26,34 @@ class StPicoKPiX : public TObject
 {
  public:
   StPicoKPiX();
-  StPicoKPiX(StPicoTrack const* kaon, StPicoTrack const* pion, StPicoTrack const* x,
+  StPicoKPiX(StPicoTrack const* kaon, StPicoTrack const* pion, StPicoTrack const* xaon,
              unsigned short kIdx,unsigned short pIdx, unsigned short xIdx,
              StThreeVectorF const& vtx, float bField);
   ~StPicoKPiX() {}// please keep this non-virtual and NEVER inherit from this class 
 
   StLorentzVectorF fourMom(double xMassHypothesis) const;
   StLorentzVectorF kaonPionFourMom() const;
-  StLorentzVectorF kaonXFourMom(double xMassHypothesis) const;
-  StLorentzVectorF pionXFourMom(double xMassHypothesis) const;
+  StLorentzVectorF kaonXaonFourMom(double xMassHypothesis) const;
+  StLorentzVectorF pionXaonFourMom(double xMassHypothesis) const;
 
   StThreeVectorF const& kaonMomAtDca() const;
   StThreeVectorF const& pionMomAtDca() const;
-  StThreeVectorF const& xMomAtDca()    const;
+  StThreeVectorF const& xaonMomAtDca() const;
 
   float kaonPionDca() const;
-  float kaonXDca()    const;
-  float pionXDca()    const;
-  float pointingAngle() const;
-  float decayLength()   const;
+  float kaonXaonDca() const;
+  float pionXaonDca() const;
+
   float kaonDca() const;
   float pionDca() const;
-  float xDca()    const;
+  float xaonDca() const;
+
+  float pointingAngle() const;
+  float decayLength()   const;
 
   unsigned short   kaonIdx() const;
   unsigned short   pionIdx() const;
-  unsigned short   xIdx() const;
+  unsigned short   xaonIdx() const;
 
   float dcaDaughters() const;
   float perpDcaToVtx() const;
@@ -63,38 +65,39 @@ class StPicoKPiX : public TObject
 
   StThreeVectorF mKaonMomAtDca;
   StThreeVectorF mPionMomAtDca;
-  StThreeVectorF mXMomAtDca;
+  StThreeVectorF mXaonMomAtDca;
 
   float mKaonPionDca;
-  float mKaonXDca;
-  float mPionXDca;
-  float mPointingAngle;
-  float mDecayLength;
+  float mKaonXaonDca;
+  float mPionXaonDca;
 
   float mKaonDca;
   float mPionDca;
-  float mXDca;
+  float mXaonDca;
+
+  float mPointingAngle;
+  float mDecayLength;
 
   unsigned short  mKaonIdx; // index of track in StPicoDstEvent
   unsigned short  mPionIdx;
-  unsigned short  mXIdx;
+  unsigned short  mXaonIdx;
 
   ClassDef(StPicoKPiX,1)
 };
 inline StThreeVectorF const& StPicoKPiX::kaonMomAtDca() const { return mKaonMomAtDca;}
 inline StThreeVectorF const& StPicoKPiX::pionMomAtDca() const { return mPionMomAtDca;}
-inline StThreeVectorF const& StPicoKPiX::xMomAtDca()    const { return mXMomAtDca;}
+inline StThreeVectorF const& StPicoKPiX::xaonMomAtDca() const { return mXaonMomAtDca;}
 inline float StPicoKPiX::kaonPionDca()   const { return mKaonPionDca;}
-inline float StPicoKPiX::kaonXDca()      const { return mKaonXDca;}
-inline float StPicoKPiX::pionXDca()      const { return mPionXDca;}
-inline float StPicoKPiX::pointingAngle() const { return mPointingAngle;}
-inline float StPicoKPiX::decayLength()   const { return mDecayLength;}
+inline float StPicoKPiX::kaonXaonDca()   const { return mKaonXaonDca;}
+inline float StPicoKPiX::pionXaonDca()   const { return mPionXaonDca;}
 inline float StPicoKPiX::kaonDca() const { return mKaonDca;}
 inline float StPicoKPiX::pionDca() const { return mPionDca;}
-inline float StPicoKPiX::xDca()    const { return mXDca;}
+inline float StPicoKPiX::xaonDca() const { return mXaonDca;}
+inline float StPicoKPiX::pointingAngle() const { return mPointingAngle;}
+inline float StPicoKPiX::decayLength()   const { return mDecayLength;}
 inline unsigned short   StPicoKPiX::kaonIdx() const { return mKaonIdx;}
 inline unsigned short   StPicoKPiX::pionIdx() const { return mPionIdx;}
-inline unsigned short   StPicoKPiX::xIdx()    const { return mXIdx;}
+inline unsigned short   StPicoKPiX::xaonIdx() const { return mXaonIdx;}
 inline float StPicoKPiX::perpDcaToVtx() const { return mDecayLength*std::sin(mPointingAngle);}
 #endif
 #endif
