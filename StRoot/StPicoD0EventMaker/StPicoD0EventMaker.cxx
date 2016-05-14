@@ -175,9 +175,9 @@ Int_t StPicoD0EventMaker::Make()
 
             if (!isGoodPair(kaonPion)) continue;
 
-            if(isGoodMass(kaonPion)) mPicoD0Event->addKaonPion(&kaonPion);
+            if(isGoodMass(kaonPion)) mPicoD0Event->addKaonPion(kaonPion);
 
-            bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
+            bool fillMass = isGoodQaPair(kaonPion,*kaon,*pion);
             bool unlike = kaon->charge() * pion->charge() < 0 ? true : false;
 
             if(fillMass || unlike) mPicoD0Hists->addKaonPion(&kaonPion,fillMass, unlike);

@@ -29,14 +29,14 @@ public:
    StPicoD0Event();
    ~StPicoD0Event(){ clear("C");}
    void    clear(char const *option = "");
-   void    addPicoEvent(StPicoEvent const & picoEvent, StThreeVectorF const* kfVertex = NULL);
-   void    addKaonPion(StKaonPion const*);
+   void    addPicoEvent(StPicoEvent const& picoEvent, StThreeVectorF const* kfVertex = NULL);
+   void    addKaonPion(StKaonPion const&);
    void    nKaons(int);
    void    nPions(int);
 
    Int_t   runId()   const;
    Int_t   eventId() const;
-   TClonesArray const * kaonPionArray()   const;
+   TClonesArray const* kaonPionArray()   const;
    int     nKaonPion()  const;
    int     nKaons() const;
    int     nPions() const;
