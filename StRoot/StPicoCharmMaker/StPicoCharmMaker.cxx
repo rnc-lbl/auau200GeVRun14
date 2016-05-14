@@ -124,7 +124,7 @@ Int_t StPicoCharmMaker::Make()
 
           StPicoTrack const * pion = picoDst->track(idxPicoPions[ip]);
 
-          StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
+          StKaonPion kaonPion(*kaon, *pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
 
           if (!isGoodPair(kaonPion)) continue;
 
