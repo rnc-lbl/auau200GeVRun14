@@ -1,6 +1,5 @@
 #include <limits>
 #include <algorithm>
-#include <iostream>
 
 #ifdef __ROOT__
 #include "StPicoKPiX.h"
