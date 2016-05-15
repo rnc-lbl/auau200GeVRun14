@@ -13,33 +13,25 @@
 #include "StPicoDstMaker/StPicoEvent.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
+#include "phys_constants.h"
 
 #include "StPicoCharmContainers/StPicoD0Event.h"
 #include "StPicoCharmContainers/StKaonPion.h"
 #include "StPicoCharmContainers/StPicoD0QaHists.h"
-#include "StPicoCharmMakerCuts.h"
+#include "StPicoCharmContainers/StPicoKPiXEvent.h"
+#include "StPicoCharmContainers/StPicoKPiX.h"
 
+#include "StPicoCharmMakerCuts.h"
 #include "StPicoCharmMaker.h"
 
 ClassImp(StPicoCharmMaker)
 
 StPicoCharmMaker::StPicoCharmMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
-   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(nullptr), mPicoD0Hists(nullptr),
-     mD0File(nullptr), mD0Tree(nullptr), mPicoD0Event(nullptr) 
+   : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(nullptr), mPicoD0Hists(nullptr), mBaseName(fileBaseName),
+     mD0File(nullptr), mD0Tree(nullptr), mPicoD0Event(nullptr),
+     mKPiXFile(nullptr), mKPiXTree(nullptr), mPicoKPiXEvent(nullptr)
 {
-   TString baseName(fileBaseName);
-
-   baseName.ReplaceAll(".root","");
-   mD0File = new TFile(Form("%s.picoD0.root",baseName.Data()), "RECREATE");
-   mD0File->SetCompressionLevel(1);
-   int BufSize = (int)pow(2., 16.);
-   int Split = 1;
-   mD0Tree = new TTree("T", "T", BufSize);
-   mD0Tree->SetAutoSave(1000000); // autosave every 1 Mbytes
-   mPicoD0Event = new StPicoD0Event();
-   mD0Tree->Branch("dEvent", "StPicoD0Event", &mPicoD0Event, BufSize, Split);
-
-   mPicoD0Hists = new StPicoD0QaHists(baseName.Data(), charmMakerCuts::prescalesFilesDirectoryName);
+   mBaseName.ReplaceAll(".root","");
 }
 
 StPicoCharmMaker::~StPicoCharmMaker()
@@ -51,21 +43,56 @@ StPicoCharmMaker::~StPicoCharmMaker()
 
 Int_t StPicoCharmMaker::Init()
 {
-   return kStOK;
+  int const BufSize = (int)pow(2., 16.);
+  int const Split = 1;
+
+  if(mMakeD0)
+  {
+    mD0File = new TFile(Form("%s.picoD0.root", mBaseName.Data()), "RECREATE");
+    mD0File->SetCompressionLevel(1);
+    mD0Tree = new TTree("T", "T", BufSize);
+    mD0Tree->SetAutoSave(1000000); // autosave every 1 Mbytes
+    mPicoD0Event = new StPicoD0Event();
+    mD0Tree->Branch("dEvent", "StPicoD0Event", &mPicoD0Event, BufSize, Split);
+
+    mPicoD0Hists = new StPicoD0QaHists(mBaseName.Data(), charmMakerCuts::prescalesFilesDirectoryName);
+  }
+
+  if(mMakeKaonPionPion || mMakeKaonPionKaon || mMakeKaonPionProton)
+  {
+    mKPiXFile = new TFile(Form("%s.picoKPiX.root", mBaseName.Data()), "RECREATE");
+    mKPiXFile->SetCompressionLevel(1);
+    mKPiXTree = new TTree("KPiXTree", "T", BufSize);
+    mKPiXTree->SetAutoSave(1000000); // autosave every 1 Mbytes
+    mPicoKPiXEvent = new StPicoKPiXEvent();
+    mKPiXTree->Branch("kPiXEvent", "StPicoKPiXEvent", &mPicoKPiXEvent, BufSize, Split);
+  }
+
+  return kStOK;
 }
 
 Int_t StPicoCharmMaker::Finish()
 {
-   mD0File->cd();
-   mD0File->Write();
-   mD0File->Close();
-   mPicoD0Hists->closeFile();
+  if(mMakeD0)
+  {
+    mD0File->Write();
+    mD0File->Close();
+    mPicoD0Hists->closeFile();
+  }
+
+  if(mKPiXFile)
+  {
+   mKPiXFile->Write();
+   mKPiXFile->Close();
+  }
+
    return kStOK;
 }
 
 void StPicoCharmMaker::Clear(Option_t *opt)
 {
-   mPicoD0Event->clear("C");
+  if(mMakeD0) mPicoD0Event->clear("C");
+  if(mKPiXFile) mPicoKPiXEvent->clear("C");
 }
 
 Int_t StPicoCharmMaker::Make()
@@ -93,6 +120,7 @@ Int_t StPicoCharmMaker::Make()
 
       std::vector<unsigned short> idxPicoKaons;
       std::vector<unsigned short> idxPicoPions;
+      std::vector<unsigned short> idxPicoProtons;
 
       StThreeVectorF const pVtx = mPicoEvent->primaryVertex();
 
@@ -106,47 +134,100 @@ Int_t StPicoCharmMaker::Make()
 
          if (isPion(*trk)) idxPicoPions.push_back(iTrack);
          if (isKaon(*trk)) idxPicoKaons.push_back(iTrack);
+         if (isProton(*trk)) idxPicoProtons.push_back(iTrack);
 
       } // .. end tracks loop
 
-      mPicoD0Event->nKaons(idxPicoKaons.size());
-      mPicoD0Event->nPions(idxPicoPions.size());
+      if(mMakeD0)
+      {
+        mPicoD0Event->nKaons(idxPicoKaons.size());
+        mPicoD0Event->nPions(idxPicoPions.size());
+      }
 
       float const bField = mPicoEvent->bField();
-      for (unsigned short ik = 0; ik < idxPicoKaons.size(); ++ik)
+      for (size_t iK0 = 0; iK0 < idxPicoKaons.size(); ++iK0)
       {
-        StPicoTrack const * kaon = picoDst->track(idxPicoKaons[ik]);
+        StPicoTrack const* kaon0 = picoDst->track(idxPicoKaons[iK0]);
 
-        // make Kπ pairs
-        for (unsigned short ip = 0; ip < idxPicoPions.size(); ++ip)
+        for (size_t iPi0 = 0; iPi0 < idxPicoPions.size(); ++iPi0)
         {
-          if (idxPicoKaons[ik] == idxPicoPions[ip]) continue;
+          if (idxPicoKaons[iK0] == idxPicoPions[iPi0]) continue;
+          StPicoTrack const* pion0 = picoDst->track(idxPicoPions[iPi0]);
 
-          StPicoTrack const * pion = picoDst->track(idxPicoPions[ip]);
+          // make Kπ pairs
+          StKaonPion kaonPion(*kaon0, *pion0, idxPicoKaons[iK0], idxPicoPions[iPi0], pVtx, bField);
 
-          StKaonPion kaonPion(*kaon, *pion, idxPicoKaons[ik], idxPicoPions[ip], pVtx, bField);
+          if (mMakeD0 && isGoodD0Pair(kaonPion))
+          {
+            if(isGoodD0Mass(kaonPion)) mPicoD0Event->addKaonPion(kaonPion);
 
-          if (!isGoodPair(kaonPion)) continue;
+            bool const fillMass = isGoodQaPair(kaonPion,*kaon0,*pion0);
+            bool const unlike = kaon0->charge() * pion0->charge() < 0 ? true : false;
 
-          if(isGoodMass(kaonPion)) mPicoD0Event->addKaonPion(kaonPion);
+            if(fillMass || unlike) mPicoD0Hists->addKaonPion(&kaonPion,fillMass, unlike);
+          }
 
-          bool fillMass = isGoodQaPair(kaonPion,*kaon,*pion);
-          // bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
-          bool unlike = kaon->charge() * pion->charge() < 0 ? true : false;
+          if(kaonPion.dcaDaughters() > charmMakerCuts::dcaDaughters) continue;
 
-          if(fillMass || unlike) mPicoD0Hists->addKaonPion(&kaonPion,fillMass, unlike);
+          // make Kππ
+          if(mMakeKaonPionPion)
+          {
+            for(size_t iPi1 = iPi0+1; iPi1 < idxPicoPions.size(); ++iPi1)
+            {
+              if (idxPicoKaons[iK0] == idxPicoPions[iPi1]) continue;
+              StPicoTrack const* pion1 = picoDst->track(idxPicoPions[iPi1]);
 
+              StPicoKPiX kaonPionPion(*kaon0, *pion0, *pion1, idxPicoKaons[iK0], idxPicoPions[iPi0], idxPicoPions[iPi1], pVtx, bField);
+
+              if(isGoodKPiX(kaonPionPion) && isGoodKPiXMass(kaonPionPion.fourMom(M_PION_PLUS).m())) mPicoKPiXEvent->addKPiX(kaonPionPion);
+            }
+          }
+
+          // make KπK
+          if(mMakeKaonPionKaon)
+          {
+            for(size_t iK1 = iK0+1; iK1 < idxPicoKaons.size(); ++iK1)
+            {
+              if (idxPicoKaons[iK1] == idxPicoPions[iPi0]) continue;
+              StPicoTrack const* kaon1 = picoDst->track(idxPicoKaons[iK1]);
+
+              StPicoKPiX kaonPionKaon(*kaon0, *pion0, *kaon1, idxPicoKaons[iK0], idxPicoPions[iPi0], idxPicoKaons[iK1], pVtx, bField);
+
+              if(isGoodKPiX(kaonPionKaon) && isGoodKPiXMass(kaonPionKaon.fourMom(M_KAON_MINUS).m())) mPicoKPiXEvent->addKPiX(kaonPionKaon);
+            }
+          }
+
+          // make KπP
+          if(mMakeKaonPionProton)
+          {
+            for(size_t iP = 0; iP < idxPicoProtons.size(); ++iP)
+            {
+              if (idxPicoProtons[iP] == idxPicoPions[iPi0]) continue;
+              StPicoTrack const* proton = picoDst->track(idxPicoProtons[iP]);
+
+              StPicoKPiX kaonPionProton(*kaon0, *pion0, *proton, idxPicoKaons[iK0], idxPicoPions[iPi0], idxPicoProtons[iP], pVtx, bField);
+
+              if(isGoodKPiX(kaonPionProton) && isGoodKPiXMass(kaonPionProton.fourMom(M_PROTON).m())) mPicoKPiXEvent->addKPiX(kaonPionProton);
+            }
+          }
         } // .. end make Kπ pairs
       } // .. end of kaons loop
    } //.. end of good event fill
 
-   mPicoD0Event->addPicoEvent(*mPicoEvent);
-   mPicoD0Hists->addEvent(*mPicoEvent,*mPicoD0Event,nHftTracks);
+   if(mMakeD0)
+   {
+     mPicoD0Event->addPicoEvent(*mPicoEvent);
+     mPicoD0Hists->addEvent(*mPicoEvent,*mPicoD0Event,nHftTracks);
+     mD0Tree->Fill();
+     mPicoD0Event->clear("C");
+   }
 
-   // This should never be inside the good event block
-   // because we want to save header information about all events, good or bad
-   mD0Tree->Fill();
-   mPicoD0Event->clear("C");
+   if(mKPiXFile)
+   {
+     mPicoKPiXEvent->addPicoEvent(*mPicoEvent);
+     mKPiXTree->Fill();
+     mPicoKPiXEvent->clear("C");
+   }
 
    return kStOK;
 }
@@ -170,27 +251,49 @@ bool StPicoCharmMaker::isGoodTrigger() const
 bool StPicoCharmMaker::isGoodTrack(StPicoTrack const& trk, StThreeVectorF const& pVtx) const
 {
    return (!charmMakerCuts::requireHFT || trk.isHFTTrack()) &&
+          trk.gPt()      >= charmMakerCuts::minPt  &&
+          trk.dca(pVtx)  >  charmMakerCuts::minDca &&
           trk.nHitsFit() >= charmMakerCuts::nHitsFit &&
-          trk.dca(pVtx)  >  charmMakerCuts::minDca;
+          fabs(trk.gMom(pVtx, mPicoEvent->bField()).pseudoRapidity()) <= charmMakerCuts::eta;
 }
+
 bool StPicoCharmMaker::isPion(StPicoTrack const& trk) const
 {
    return fabs(trk.nSigmaPion()) < charmMakerCuts::nSigmaPion;
 }
+
 bool StPicoCharmMaker::isKaon(StPicoTrack const& trk) const
 {
    return fabs(trk.nSigmaKaon()) < charmMakerCuts::nSigmaKaon;
 }
-bool StPicoCharmMaker::isGoodPair(StKaonPion const& kp) const
+
+bool StPicoCharmMaker::isProton(StPicoTrack const& trk) const
+{
+  return fabs(trk.nSigmaProton()) < charmMakerCuts::nSigmaProton;
+}
+
+bool StPicoCharmMaker::isGoodD0Pair(StKaonPion const& kp) const
 {
    return std::cos(kp.pointingAngle()) > charmMakerCuts::cosTheta &&
           kp.decayLength() > charmMakerCuts::decayLength &&
           kp.dcaDaughters() < charmMakerCuts::dcaDaughters;
 }
 
-bool StPicoCharmMaker::isGoodMass(StKaonPion const& kp) const
+bool StPicoCharmMaker::isGoodKPiX(StPicoKPiX const& kpx) const
 {
-   return kp.m() > charmMakerCuts::minMass && kp.m() < charmMakerCuts::maxMass;
+   return std::cos(kpx.pointingAngle()) > charmMakerCuts::cosTheta &&
+          kpx.decayLength() > charmMakerCuts::decayLength &&
+          kpx.dcaDaughters() < charmMakerCuts::dcaDaughters;
+}
+
+bool StPicoCharmMaker::isGoodD0Mass(StKaonPion const& kp) const
+{
+   return kp.m() > charmMakerCuts::minD0Mass && kp.m() < charmMakerCuts::maxD0Mass;
+}
+
+bool StPicoCharmMaker::isGoodKPiXMass(double const mass) const
+{
+   return mass > charmMakerCuts::minKPiXMass && mass < charmMakerCuts::maxKPiXMass;
 }
 
 int StPicoCharmMaker::getD0PtIndex(StKaonPion const& kp) const

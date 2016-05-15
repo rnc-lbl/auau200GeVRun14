@@ -26,30 +26,30 @@ namespace charmMakerCuts
                                                   450005,    // vpdmb-5-p-nobsmd 
                                                   450015,    // vpdmb-5-p-nobsmd 
                                                   450025};    // vpdmb-5-p-nobsmd 
-   float const vz = 6.0;// cm.
-   float const vzVpdVz = 3.0; // 3 cm.
-
-   // vertex refit track quality
-   float const vtxDca = 3.0;
-   size_t const vtxNumberOfFitPoints = 20;
+   // event
+   float const vz = 6.0;
+   float const vzVpdVz = 3.0;
 
    //tracking
-   int  const nHitsFit = 15;
+   int  const nHitsFit = 20;
    bool const requireHFT = true;
    float const minDca = 0.0030;
+   float const minPt = 0.3;
+   float const eta   = 1.0;
 
-   //pions
+   // PID
    float const nSigmaPion = 3.0;
+   float const nSigmaKaon = 2.0;
+   float const nSigmaProton = 3.0;
 
-   //kaons
-   float const nSigmaKaon = 2.5;
-
-   // tree kaonPion pair cuts
-   float const cosTheta = 0; // minimum
-   float const dcaDaughters = 0.0200; // maximum
+   //
+   float const cosTheta = 0.9; // minimum
+   float const dcaDaughters = 0.0100; // maximum
    float const decayLength = 0.0030; // minimum
-   float const minMass = 1.6;
-   float const maxMass = 2.2;
+   float const minD0Mass = 1.6;
+   float const maxD0Mass = 2.2;
+   float const minKPiXMass = 1.6;
+   float const maxKPiXMass = 2.6;
 
    // histograms kaonPion pair cuts
    int   const nPtBins = 5;
