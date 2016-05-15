@@ -33,7 +33,7 @@ namespace charmMakerCuts
    //tracking
    int  const nHitsFit = 20;
    bool const requireHFT = true;
-   float const minDca = 0.0030;
+   float const minDca = 0.0040;
    float const minPt = 0.3;
    float const eta   = 1.0;
 
@@ -43,9 +43,9 @@ namespace charmMakerCuts
    float const nSigmaProton = 3.0;
 
    //
-   float const cosTheta = 0.9; // minimum
+   float const cosTheta = 0.95; // minimum
    float const dcaDaughters = 0.0100; // maximum
-   float const decayLength = 0.0030; // minimum
+   float const decayLength = 0.0040; // minimum
    float const minD0Mass = 1.6;
    float const maxD0Mass = 2.2;
    float const minKPiXMass = 1.6;
