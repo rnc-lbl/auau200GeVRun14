@@ -34,8 +34,9 @@ namespace charmMakerCuts
    size_t const vtxNumberOfFitPoints = 20;
 
    //tracking
-   int const nHitsFit = 15;
+   int  const nHitsFit = 15;
    bool const requireHFT = true;
+   float const minDca = 0.0030;
 
    //pions
    float const nSigmaPion = 3.0;

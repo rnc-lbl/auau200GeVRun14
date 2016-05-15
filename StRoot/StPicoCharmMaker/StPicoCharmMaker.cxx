@@ -101,11 +101,11 @@ Int_t StPicoCharmMaker::Make()
          StPicoTrack* trk = picoDst->track(iTrack);
          if(!trk) continue;
 
-         if (!isGoodTrack(trk)) continue;
+         if (!isGoodTrack(*trk, pVtx)) continue;
          ++nHftTracks;
 
-         if (isPion(trk)) idxPicoPions.push_back(iTrack);
-         if (isKaon(trk)) idxPicoKaons.push_back(iTrack);
+         if (isPion(*trk)) idxPicoPions.push_back(iTrack);
+         if (isKaon(*trk)) idxPicoKaons.push_back(iTrack);
 
       } // .. end tracks loop
 
@@ -167,27 +167,28 @@ bool StPicoCharmMaker::isGoodTrigger() const
   return false;
 }
 
-bool StPicoCharmMaker::isGoodTrack(StPicoTrack const * const trk) const
+bool StPicoCharmMaker::isGoodTrack(StPicoTrack const& trk, StThreeVectorF const& pVtx) const
 {
-   return (!charmMakerCuts::requireHFT || trk->isHFTTrack()) && 
-          trk->nHitsFit() >= charmMakerCuts::nHitsFit;
+   return (!charmMakerCuts::requireHFT || trk.isHFTTrack()) &&
+          trk.nHitsFit() >= charmMakerCuts::nHitsFit &&
+          trk.dca(pVtx)  >  charmMakerCuts::minDca;
 }
-bool StPicoCharmMaker::isPion(StPicoTrack const * const trk) const
+bool StPicoCharmMaker::isPion(StPicoTrack const& trk) const
 {
-   return fabs(trk->nSigmaPion()) < charmMakerCuts::nSigmaPion;
+   return fabs(trk.nSigmaPion()) < charmMakerCuts::nSigmaPion;
 }
-bool StPicoCharmMaker::isKaon(StPicoTrack const * const trk) const
+bool StPicoCharmMaker::isKaon(StPicoTrack const& trk) const
 {
-   return fabs(trk->nSigmaKaon()) < charmMakerCuts::nSigmaKaon;
+   return fabs(trk.nSigmaKaon()) < charmMakerCuts::nSigmaKaon;
 }
-bool StPicoCharmMaker::isGoodPair(StKaonPion const & kp) const
+bool StPicoCharmMaker::isGoodPair(StKaonPion const& kp) const
 {
    return std::cos(kp.pointingAngle()) > charmMakerCuts::cosTheta &&
           kp.decayLength() > charmMakerCuts::decayLength &&
           kp.dcaDaughters() < charmMakerCuts::dcaDaughters;
 }
 
-bool StPicoCharmMaker::isGoodMass(StKaonPion const & kp) const
+bool StPicoCharmMaker::isGoodMass(StKaonPion const& kp) const
 {
    return kp.m() > charmMakerCuts::minMass && kp.m() < charmMakerCuts::maxMass;
 }

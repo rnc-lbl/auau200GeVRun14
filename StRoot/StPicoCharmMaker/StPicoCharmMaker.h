@@ -14,6 +14,7 @@
  */
 
 #include "StMaker.h"
+#include "StarClassLibrary/StThreeVectorF.hh"
 
 class TTree;
 class TFile;
@@ -38,9 +39,10 @@ class StPicoCharmMaker : public StMaker
   private:
     bool  isGoodEvent() const;
     bool  isGoodTrigger() const;
-    bool  isGoodTrack(StPicoTrack const*) const;
-    bool  isPion(StPicoTrack const*) const;
-    bool  isKaon(StPicoTrack const*) const;
+    bool  isGoodTrack(StPicoTrack const&, StThreeVectorF const& pVtx) const;
+    bool  isPion(StPicoTrack const&) const;
+    bool  isKaon(StPicoTrack const&) const;
+    bool  isProton(StPicoTrack const&) const;
     bool  isGoodPair(StKaonPion const&) const;
     bool  isGoodMass(StKaonPion const&) const;
     int   getD0PtIndex(StKaonPion const& kp) const;
