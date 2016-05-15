@@ -31,6 +31,7 @@ class StPicoKPiX : public TObject
              StThreeVectorF const& vtx, float bField);
   ~StPicoKPiX() {}// please keep this non-virtual and NEVER inherit from this class 
 
+  StThreeVectorF   threeMom() const;
   StLorentzVectorF fourMom(double xMassHypothesis) const;
   StLorentzVectorF kaonPionFourMom() const;
   StLorentzVectorF kaonXaonFourMom(double xMassHypothesis) const;
@@ -84,6 +85,7 @@ class StPicoKPiX : public TObject
 
   ClassDef(StPicoKPiX,1)
 };
+inline StThreeVectorF StPicoKPiX::threeMom() const { return mKaonMomAtDca + mPionMomAtDca + mXaonMomAtDca; }
 inline StThreeVectorF const& StPicoKPiX::kaonMomAtDca() const { return mKaonMomAtDca;}
 inline StThreeVectorF const& StPicoKPiX::pionMomAtDca() const { return mPionMomAtDca;}
 inline StThreeVectorF const& StPicoKPiX::xaonMomAtDca() const { return mXaonMomAtDca;}
