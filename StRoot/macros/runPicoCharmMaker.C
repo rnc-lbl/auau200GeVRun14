@@ -27,8 +27,8 @@ void runPicoCharmMaker(const Char_t *inputFile, const Char_t *outputFile="test.r
       exit(1);
   }
 
-  Int_t nEvents = 1000;
-  // Int_t nEvents = 1e5;
+  // Int_t nEvents = 1000;
+  Int_t nEvents = 1e5;
 	
   gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
 	loadSharedLibraries();
