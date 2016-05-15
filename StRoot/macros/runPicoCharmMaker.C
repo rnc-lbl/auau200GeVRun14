@@ -27,7 +27,8 @@ void runPicoCharmMaker(const Char_t *inputFile, const Char_t *outputFile="test.r
       exit(1);
   }
 
-  Int_t nEvents = 1e5;
+  Int_t nEvents = 1000;
+  // Int_t nEvents = 1e5;
 	
   gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
 	loadSharedLibraries();
@@ -52,9 +53,9 @@ void runPicoCharmMaker(const Char_t *inputFile, const Char_t *outputFile="test.r
 
 	StPicoDstMaker*   picoDstMaker   = new StPicoDstMaker(0,inputFile,"picoDstMaker");
   StPicoCharmMaker* picoCharmMaker = new StPicoCharmMaker("picoCharmEvent",picoDstMaker,outputFile);
-  picoCharmMaker->makeD0(false);
-  picoCharmMaker->makeKaonPionPion(false);
-  picoCharmMaker->makeKaonPionKaon(false);
+  picoCharmMaker->makeD0(true);
+  picoCharmMaker->makeKaonPionPion(true);
+  picoCharmMaker->makeKaonPionKaon(true);
   picoCharmMaker->makeKaonPionProton(true);
 
 	chain->Init();
