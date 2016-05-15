@@ -52,6 +52,10 @@ void runPicoCharmMaker(const Char_t *inputFile, const Char_t *outputFile="test.r
 
 	StPicoDstMaker*   picoDstMaker   = new StPicoDstMaker(0,inputFile,"picoDstMaker");
   StPicoCharmMaker* picoCharmMaker = new StPicoCharmMaker("picoCharmEvent",picoDstMaker,outputFile);
+  picoCharmMaker->makeD0(false);
+  picoCharmMaker->makeKaonPionPion(false);
+  picoCharmMaker->makeKaonPionKaon(false);
+  picoCharmMaker->makeKaonPionProton(true);
 
 	chain->Init();
 	cout<<"chain->Init();"<<endl;
