@@ -252,7 +252,7 @@ bool StPicoCharmMaker::isGoodTrack(StPicoTrack const& trk, StThreeVectorF const&
 {
    return (!charmMakerCuts::requireHFT || trk.isHFTTrack()) &&
           trk.gPt()      >= charmMakerCuts::minPt  &&
-          trk.dca(pVtx)  >  charmMakerCuts::minDca &&
+          fabs(trk.dca(pVtx))  >  charmMakerCuts::minDca &&
           trk.nHitsFit() >= charmMakerCuts::nHitsFit &&
           fabs(trk.gMom(pVtx, mPicoEvent->bField()).pseudoRapidity()) <= charmMakerCuts::eta;
 }
