@@ -54,7 +54,6 @@ namespace charmMakerCuts
    // histograms kaonPion pair cuts
    int   const nPtBins = 5;
    float const PtBinsEdge[nPtBins+1] = {0., 1., 2., 3., 5., 15.};//this is for optimaized cut
-   float const qaPt = 1.2;
    float const qaNHitsFit = 20;
    float const qaNSigmaKaon = 2.0;
    float const qaRapidityCut = 1.0;
