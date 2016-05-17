@@ -257,8 +257,8 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
     StPicoTrack const * pion1 = mPicoDst->track(mIdxPicoPions[idxPion1]);
     
     // daughter pi DCA cut  
-    Float_t particle1Dca = dcaToPV(pion1);
-    if ( particle1Dca < mHFCuts->PiDcaCut() )
+    Float_t particle1Dca = dcaToPV(pion1);     // replace with medthod in StPicoCutsbase
+    if ( particle1Dca < mHFCuts->PiDcaCut() )  // replace with medthod in StPicoCutsbase
       continue;
 
     for (unsigned short idxPion2 = idxPion1+1 ; idxPion2 < mIdxPicoPions.size(); ++idxPion2) {
@@ -268,8 +268,8 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
 	continue;
 
       // daughter pi DCA cut  
-      Float_t particle2Dca = dcaToPV(pion2);
-      if ( particle2Dca < mHFCuts->PiDcaCut() )
+      Float_t particle2Dca = dcaToPV(pion2);    // replace with medthod in StPicoCutsbase
+      if ( particle2Dca < mHFCuts->PiDcaCut() ) // replace with medthod in StPicoCutsbase
 	continue;
 
       StHFPair candidateK0Short(pion1, pion2, 
@@ -380,8 +380,10 @@ void StPicoHFMaker::fillEventStats(int *aEventStat) {
 //________________________________________________________________________
 Float_t StPicoHFMaker::dcaToPV(StPicoTrack const * const trk)
 {
-    StPhysicalHelixD helix = trk->dcaGeometry().helix();
-    helix.moveOrigin(helix.pathLength(mPrimVtx));
-    return ( mPrimVtx - helix.origin() ).mag();
+  // -- will be replaced by general pico method
+  
+  StPhysicalHelixD helix = trk->dcaGeometry().helix();
+  helix.moveOrigin(helix.pathLength(mPrimVtx));
+  return ( mPrimVtx - helix.origin() ).mag();
 }
 

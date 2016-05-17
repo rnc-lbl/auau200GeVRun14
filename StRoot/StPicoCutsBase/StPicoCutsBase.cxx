@@ -32,6 +32,7 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
   for (Int_t idx = 0; idx < kPicoPIDMax; ++idx) {
     mPtRange[idx][0] = std::numeric_limits<float>::min();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
+    mDcaMin[idx] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][1] = std::numeric_limits<float>::max();
     mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::min();
@@ -67,6 +68,7 @@ StPicoCutsBase::StPicoCutsBase(const Char_t *name) : TNamed(name, name),
   for (Int_t idx = 0; idx < kPicoPIDMax; ++idx) {
     mPtRange[idx][0] = std::numeric_limits<float>::min();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
+    mDcaMin[idx] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][1] = std::numeric_limits<float>::max();
     mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::min();
