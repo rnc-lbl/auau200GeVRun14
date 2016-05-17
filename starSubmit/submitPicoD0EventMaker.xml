@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job fileListSyntax="paths" maxFilesPerProcess="25" simulateSubmission="false">
+
+        <stdout URL="file:./log/$JOBID.log" />
+        <stderr URL="file:./err/$JOBID.err" />
+                
+        <Generator>
+        <Location>./report/</Location>
+        <ScriptLocation>./csh/</ScriptLocation>
+        <ListLocation>./list/</ListLocation>
+        </Generator>
+                                                
+<command>
+starver SL16d
+
+./runPicoD0EventMaker.py ${FILELIST}
+</command>
+
+<input URL="filelist:/global/project/projectdirs/starprod/rnc/mustafa/d0tree/Run14/AuAu/200GeV/kfProd2/P16id/&listOfFiles;" />
+
+<SandBox installer="ZIP">
+    <Package name="LocalLibraries">
+        <File>file:./StRoot/</File>
+        <File>file:./run14AuAu200GeVPrescales</File>
+        <File>file:./runPicoD0EventMaker.C</File>
+        <File>file:./runPicoD0EventMaker.py</File>
+        <File>file:./.sl64_gcc482/</File>
+    </Package>
+</SandBox>
+
+</job>

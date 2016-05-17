@@ -39,6 +39,8 @@ void runPicoD0AnaMaker(TString d0list, TString outFileName, TString badRunListFi
    gSystem->Exec(command.Data());
    command = "sed -i 's/picoD0/picoDst/g' correspondingPico.list";
    gSystem->Exec(command.Data());
+   command = "sed -i 's/kfProd2/physics2/g' correspondingPico.list";
+   gSystem->Exec(command.Data());
    StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, "correspondingPico.list", "picoDstMaker");
    StPicoD0AnaMaker*  picoD0AnaMaker = new StPicoD0AnaMaker("picoD0AnaMaker", d0list, outFileName.Data(), picoDstMaker);
 
