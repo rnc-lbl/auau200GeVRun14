@@ -10,7 +10,6 @@
 #include "StPicoDstMaker/StPicoEvent.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
-#include "StPicoPrescales/StPicoPrescales.h"
 #include "StPicoMixedEventMaker.h"
 #include "StPicoEventMixer.h"
 #include "StRoot/StRefMultCorr/StRefMultCorr.h"

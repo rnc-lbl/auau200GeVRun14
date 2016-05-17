@@ -34,6 +34,8 @@ def main():
         else:
             print f
 
+    print "totalPicoEvents/totalMuDstEvents = ",totalPicoEvents/float(totalMuDstEvents)
+
     plotNumberOfEventsVsDay(nEventsVsDay.items())
     makeIndexFile(totalMuDstEvents,totalPicoEvents)
 
@@ -45,6 +47,7 @@ def makeIndexFile(nMuDstEvents,nPicoEvents):
     os.system('echo \#\#Total number of produced picoDst events = %i >> index2.md'%nPicoEvents)
     os.system('echo ![]\(%s\) >> index2.md'%gTotalNumberOfEventsVsDayFileName)
     os.system('echo ![]\(%s\) >> index2.md'%gNumberOfEventsVsDayFileName)
+    os.system('echo \#\#\#\#Number of Produced PicoDst Events/Number of Processed MuDst Events = %1.10f >> index2.md'%(nPicoEvents/float(nMuDstEvents)))
     os.system('echo \ \ >> index2.md')
     os.system('echo \ \ *Fit is for last 7 days only.>> index2.md')
     os.system('echo \ \ >> index2.md')
@@ -84,7 +87,7 @@ def plotNumberOfEventsVsDay(nEventsVsDay):
     xx = np.linspace(xNum.min(),projectionDate,300)
     dd = mdates.num2date(xx)
 
-    plotText = '                              *Average is %1.2fM events per day'%fit[0]
+    plotText = '                                                                                                   *Average is %1.2fM events per day'%fit[0]
     plotTextX = datetime.datetime.strptime('04/01/2015','%m/%d/%Y').date()
 
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
