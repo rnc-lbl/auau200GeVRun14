@@ -56,9 +56,9 @@ class StPicoCutsBase : public TNamed
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
-  bool isGoodRun(StPicoEvent const *picoEvent) const;
-
-  bool isGoodTrack(StPicoTrack const *trk) const;
+  bool isGoodRun(StPicoEvent const * const picoEvent) const;
+  bool isGoodTrigger(StPicoEvent const * const picoEvent) const;
+  bool isGoodTrack(StPicoTrack const * const trk) const;
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- DCA to Primary vertex
@@ -126,10 +126,10 @@ class StPicoCutsBase : public TNamed
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
   void setBadRunListFileName(const char* fileName);
+  void addTriggerId(unsigned int triggerId);
 
   void setCutVzMax(float f);
   void setCutVzVpdVzMax(float f);
-  void setCutTriggerWord(UShort_t us);
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
@@ -210,10 +210,13 @@ class StPicoCutsBase : public TNamed
   TString mBadRunListFileName;
   std::vector<int> mVecBadRunList;
 
+  // -- trigger id list
+  std::vector<unsigned int> mVecTriggerIdList;
+
   // -- event cuts
   float mVzMax;
   float mVzVpdVzMax;
-  UShort_t mTriggerWord;             // first five bits see http://rnc.lbl.gov/~xdong/SoftHadron/picoDst.html
+
 
   // -- tracking
   int   mNHitsFitMax;
@@ -242,10 +245,10 @@ class StPicoCutsBase : public TNamed
 };
 
 inline void StPicoCutsBase::setBadRunListFileName(const char* fileName) { mBadRunListFileName = fileName; }
+inline void StPicoCutsBase::addTriggerId(unsigned int triggerId) {mVecTriggerIdList.push_back(triggerId);}
 
 inline void StPicoCutsBase::setCutVzMax(float f)              { mVzMax            = f; }
 inline void StPicoCutsBase::setCutVzVpdVzMax(float f)         { mVzVpdVzMax       = f; }
-inline void StPicoCutsBase::setCutTriggerWord(UShort_t us)    { mTriggerWord      = us; }
 
 inline void StPicoCutsBase::setCutNHitsFitMax(int i)          { mNHitsFitMax      = i; }
 inline void StPicoCutsBase::setCutRequireHFT(bool b)          { mRequireHFT       = b; }
