@@ -24,7 +24,7 @@ ClassImp(StPicoCutsBase)
 StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"), 
   mTOFCorr(new StV0TofCorrection), mPicoDst(NULL), mEventStatMax(6), mTOFResolution(0.013),
   mBadRunListFileName("picoList_bad_MB.list"), mVzMax(6.), mVzVpdVzMax(3.), 
-  mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0) {
+  mNHitsFitMin(20), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0) {
   
   // -- default constructor
   
@@ -60,7 +60,7 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
 StPicoCutsBase::StPicoCutsBase(const Char_t *name) : TNamed(name, name), 
   mTOFCorr(new StV0TofCorrection), mPicoDst(NULL), mEventStatMax(7), mTOFResolution(0.013),
   mBadRunListFileName("picoList_bad_MB.list"), mVzMax(6.), mVzVpdVzMax(3.),
-  mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0) {
+  mNHitsFitMin(20), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0) {
   // -- constructor
 
   for (Int_t idx = 0; idx < kPicoPIDMax; ++idx) {
@@ -218,7 +218,7 @@ bool StPicoCutsBase::isGoodTrigger(StPicoEvent const * const picoEvent) const {
 bool StPicoCutsBase::isGoodTrack(StPicoTrack const * const trk) const {
   // -- require at least one hit on every layer of PXL and IST.
   return ((!mRequireHFT || trk->isHFTTrack()) && 
-	  trk->nHitsFit() >= mNHitsFitMax);
+	  trk->nHitsFit() >= mNHitsFitMin);
 }
 
 // =======================================================================

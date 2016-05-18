@@ -133,7 +133,7 @@ class StPicoCutsBase : public TNamed
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
-  void setCutNHitsFitMax(int i);
+  void setCutNHitsFitMin(int i);
   void setCutRequireHFT(bool b);
   void setCutNHitsFitnHitsMax(float f);
 
@@ -219,7 +219,7 @@ class StPicoCutsBase : public TNamed
 
 
   // -- tracking
-  int   mNHitsFitMax;
+  int   mNHitsFitMin;
   bool  mRequireHFT;
   float mNHitsFitnHitsMax;           
 
@@ -250,7 +250,7 @@ inline void StPicoCutsBase::addTriggerId(unsigned int triggerId) {mVecTriggerIdL
 inline void StPicoCutsBase::setCutVzMax(float f)              { mVzMax            = f; }
 inline void StPicoCutsBase::setCutVzVpdVzMax(float f)         { mVzVpdVzMax       = f; }
 
-inline void StPicoCutsBase::setCutNHitsFitMax(int i)          { mNHitsFitMax      = i; }
+inline void StPicoCutsBase::setCutNHitsFitMin(int i)          { mNHitsFitMin      = i; }
 inline void StPicoCutsBase::setCutRequireHFT(bool b)          { mRequireHFT       = b; }
 inline void StPicoCutsBase::setCutNHitsFitnHitsMax(float f)   { mNHitsFitnHitsMax = f; }
 
