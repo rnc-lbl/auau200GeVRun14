@@ -23,8 +23,7 @@ ClassImp(StPicoCutsBase)
 // _________________________________________________________
 StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"), 
   mTOFCorr(new StV0TofCorrection), mPicoDst(NULL), mEventStatMax(6), mTOFResolution(0.013),
-  mBadRunListFileName("picoList_bad_MB.list"), 
-  mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
+  mBadRunListFileName("picoList_bad_MB.list"), mVzMax(6.), mVzVpdVzMax(3.), 
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0) {
   
   // -- default constructor
@@ -32,6 +31,7 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
   for (Int_t idx = 0; idx < kPicoPIDMax; ++idx) {
     mPtRange[idx][0] = std::numeric_limits<float>::min();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
+    mDcaMin[idx] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][1] = std::numeric_limits<float>::max();
     mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::min();
@@ -59,14 +59,14 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
 // _________________________________________________________
 StPicoCutsBase::StPicoCutsBase(const Char_t *name) : TNamed(name, name), 
   mTOFCorr(new StV0TofCorrection), mPicoDst(NULL), mEventStatMax(7), mTOFResolution(0.013),
-  mBadRunListFileName("picoList_bad_MB.list"), 
-  mVzMax(6.), mVzVpdVzMax(3.), mTriggerWord(0x1F),
+  mBadRunListFileName("picoList_bad_MB.list"), mVzMax(6.), mVzVpdVzMax(3.),
   mNHitsFitMax(15), mRequireHFT(true), mNHitsFitnHitsMax(0.52), mPrimaryDCAtoVtxMax(1.0) {
   // -- constructor
 
   for (Int_t idx = 0; idx < kPicoPIDMax; ++idx) {
     mPtRange[idx][0] = std::numeric_limits<float>::min();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
+    mDcaMin[idx] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][1] = std::numeric_limits<float>::max();
     mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::min();
@@ -149,7 +149,7 @@ bool StPicoCutsBase::isGoodEvent(StPicoDst const * const picoDst, int *aEventCut
 
   // -- quick method without providing stats
   if (!aEventCuts) {
-    return (isGoodRun(picoEvent) && (picoEvent->triggerWord() & mTriggerWord) &&
+    return (isGoodRun(picoEvent) && isGoodTrigger(picoEvent) &&
 	    fabs(picoEvent->primaryVertex().z()) < mVzMax &&
 	    fabs(picoEvent->primaryVertex().z() - picoEvent->vzVpd()) < mVzVpdVzMax);
   }
@@ -170,7 +170,7 @@ bool StPicoCutsBase::isGoodEvent(StPicoDst const * const picoDst, int *aEventCut
 
   // -- 2 - No Trigger fired
   ++iCut;
-  if (!(picoEvent->triggerWord() & mTriggerWord))
+  if (!isGoodTrigger(picoEvent))
     aEventCuts[iCut] = 1;
 
   // -- 3 - Vertex z outside cut window
@@ -201,6 +201,17 @@ bool StPicoCutsBase::isGoodRun(StPicoEvent const * const picoEvent) const {
   // -- is good run (not in bad runlist)
 
   return (!(std::binary_search(mVecBadRunList.begin(), mVecBadRunList.end(), picoEvent->runId())));
+}
+
+// _________________________________________________________
+bool StPicoCutsBase::isGoodTrigger(StPicoEvent const * const picoEvent) const {
+  // -- is good trigger in list of good triggerIds
+
+  for(std::vector<unsigned int>::const_iterator iter = mVecTriggerIdList.begin(); iter != mVecTriggerIdList.end(); ++iter)
+    if(picoEvent->isTrigger(*iter)) 
+      return true;
+
+  return false;
 }
 
 // _________________________________________________________

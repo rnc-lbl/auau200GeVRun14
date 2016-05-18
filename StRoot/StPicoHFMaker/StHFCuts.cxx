@@ -13,11 +13,13 @@ StHFCuts::StHFCuts() : StPicoCutsBase("HFCutsBase"),
   mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
   mSecondaryPairCosThetaMin(std::numeric_limits<float>::min()), 
   mSecondaryPairMassMin(std::numeric_limits<float>::min()), mSecondaryPairMassMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairDcaToPvMax(std::numeric_limits<float>::max()),
 
   mTertiaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
   mTertiaryPairDecayLengthMin(std::numeric_limits<float>::min()), mTertiaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
   mTertiaryPairCosThetaMin(std::numeric_limits<float>::min()), 
   mTertiaryPairMassMin(std::numeric_limits<float>::min()), mTertiaryPairMassMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairDcaToPvMax(std::numeric_limits<float>::max()),
 
   mSecondaryTripletDcaDaughters12Max(std::numeric_limits<float>::max()), mSecondaryTripletDcaDaughters23Max(std::numeric_limits<float>::max()), 
   mSecondaryTripletDcaDaughters31Max(std::numeric_limits<float>::max()), 
@@ -33,11 +35,13 @@ StHFCuts::StHFCuts(const Char_t *name) : StPicoCutsBase(name),
   mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
   mSecondaryPairCosThetaMin(std::numeric_limits<float>::min()), 
   mSecondaryPairMassMin(std::numeric_limits<float>::min()), mSecondaryPairMassMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairDcaToPvMax(std::numeric_limits<float>::max()),
 
   mTertiaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
   mTertiaryPairDecayLengthMin(std::numeric_limits<float>::min()), mTertiaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
   mTertiaryPairCosThetaMin(std::numeric_limits<float>::min()), 
   mTertiaryPairMassMin(std::numeric_limits<float>::min()), mTertiaryPairMassMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairDcaToPvMax(std::numeric_limits<float>::max()),
 
   mSecondaryTripletDcaDaughters12Max(std::numeric_limits<float>::max()), mSecondaryTripletDcaDaughters23Max(std::numeric_limits<float>::max()), 
   mSecondaryTripletDcaDaughters31Max(std::numeric_limits<float>::max()), 
@@ -62,7 +66,6 @@ bool StHFCuts::isClosePair(StHFPair const & pair) const {
   return ( std::cos(pair.pointingAngle()) > mSecondaryPairCosThetaMin &&
 	   pair.decayLength() > mSecondaryPairDecayLengthMin && pair.decayLength() < mSecondaryPairDecayLengthMax &&
 	   pair.dcaDaughters() < mSecondaryPairDcaDaughtersMax);
-
 }
 
 // _________________________________________________________
@@ -72,7 +75,8 @@ bool StHFCuts::isGoodSecondaryVertexPair(StHFPair const & pair) const {
   return ( pair.m() > mSecondaryPairMassMin && pair.m() < mSecondaryPairMassMax &&
 	   std::cos(pair.pointingAngle()) > mSecondaryPairCosThetaMin &&
 	   pair.decayLength() > mSecondaryPairDecayLengthMin && pair.decayLength() < mSecondaryPairDecayLengthMax &&
-	   pair.dcaDaughters() < mSecondaryPairDcaDaughtersMax);
+	   pair.dcaDaughters() < mSecondaryPairDcaDaughtersMax &&
+	   pair.DcaToPrimaryVertex() < mSecondaryPairDcaToPvMax);
 }
 
 // _________________________________________________________
@@ -82,7 +86,8 @@ bool StHFCuts::isGoodTertiaryVertexPair(StHFPair const & pair) const {
   return ( pair.m() > mTertiaryPairMassMin && pair.m() < mTertiaryPairMassMax &&
 	   std::cos(pair.pointingAngle()) > mTertiaryPairCosThetaMin &&
 	   pair.decayLength() > mTertiaryPairDecayLengthMin && pair.decayLength() < mTertiaryPairDecayLengthMax &&
-	   pair.dcaDaughters() < mTertiaryPairDcaDaughtersMax);
+	   pair.dcaDaughters() < mTertiaryPairDcaDaughtersMax &&
+	   pair.DcaToPrimaryVertex() < mTertiaryPairDcaToPvMax);
 }
 
 // _________________________________________________________

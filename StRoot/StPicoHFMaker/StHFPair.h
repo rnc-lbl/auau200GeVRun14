@@ -77,6 +77,7 @@ class StHFPair : public TObject
   float px() const;
   float py() const;
   float pz() const;
+  float DcaToPrimaryVertex() const;
 
  private:
   StHFPair(StHFPair const &);
@@ -88,6 +89,7 @@ class StHFPair : public TObject
   float mDecayLength;
   float mParticle1Dca;
   float mParticle2Dca;
+  float mDcaToPrimaryVertex;
 
   unsigned short  mParticle1Idx; // index of track in StPicoDstEvent 
   unsigned short  mParticle2Idx; // index of track in StPicoDstEvent for particle, idx in tertiary vertex array for pair 
@@ -117,5 +119,6 @@ inline StThreeVectorF const & StHFPair::decayVertex() const { return mDecayVerte
 inline float StHFPair::v0x() const { return mDecayVertex.x();}
 inline float StHFPair::v0y() const { return mDecayVertex.y();}
 inline float StHFPair::v0z() const { return mDecayVertex.z();}
+inline float StHFPair::DcaToPrimaryVertex() const { return mDcaToPrimaryVertex; }
 #endif
 

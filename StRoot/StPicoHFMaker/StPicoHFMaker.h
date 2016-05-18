@@ -133,6 +133,8 @@ class StPicoHFMaker : public StMaker
     std::vector<unsigned short> mIdxPicoKaons;
     std::vector<unsigned short> mIdxPicoProtons;
 
+    Float_t dcaToPV(StPicoTrack const * const trk);
+
   private:
     void  resetEvent();
     bool  setupEvent();
