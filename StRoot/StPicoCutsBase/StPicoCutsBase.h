@@ -64,8 +64,8 @@ class StPicoCutsBase : public TNamed
   // -- DCA to Primary vertex
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   
-  //  bool cutDcaMin(StPicoTrack const * const trk, int pidFlag) const;
-  float PiDcaCut() { return mDcaMin[StPicoCutsBase::kPion]; }
+  bool cutMinDcaToPrimVertex(StPicoTrack const * const trk, int pidFlag) const;
+  bool cutMinDcaToPrimVertexTertiary(StPicoTrack const * const trk, int pidFlag) const;
    
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- PID
@@ -143,6 +143,7 @@ class StPicoCutsBase : public TNamed
 
   void setCutPtRange(float min, float max, int pidFlag);
   void setCutDcaMin(float min, int pidFlag);
+  void setCutDcaMinTertiary(float min, int pidFlag);
   void setCutTPCNSigma(float f, int pidFlag);
   void setCutTOFNSigma(float f, int pidFlag);
   void setCutTOFDeltaOneOverBeta(float f, int pidFlag);
@@ -151,6 +152,7 @@ class StPicoCutsBase : public TNamed
 
   void setCutPionPtRange(float min, float max);
   void setCutPionDcaMin(float min);
+  void setCutPionDcaMinTertiary(float min);
   void setCutTPCNSigmaPion(float f);
   void setCutTOFNSigmaPion(float f);
   void setCutTOFDeltaOneOverBetaPion(float f);
@@ -159,6 +161,7 @@ class StPicoCutsBase : public TNamed
 
   void setCutKaonPtRange(float min, float max);
   void setCutKaonDcaMin(float min);
+  void setCutKaonDcaMinTertiary(float min);
   void setCutTPCNSigmaKaon(float f);
   void setCutTOFNSigmaKaon(float f);
   void setCutTOFDeltaOneOverBetaKaon(float f);
@@ -167,6 +170,7 @@ class StPicoCutsBase : public TNamed
 
   void setCutProtonPtRange(float min, float max);
   void setCutProtonDcaMin(float min);
+  void setCutProtonDcaMinTertiary(float min);
   void setCutTPCNSigmaProton(float f);
   void setCutTOFNSigmaProton(float f);
   void setCutTOFDeltaOneOverBetaProton(float f);
@@ -230,6 +234,7 @@ class StPicoCutsBase : public TNamed
 
   // -- dca to primary vertex - per particle type [ePicoPID]
   float mDcaMin[kPicoPIDMax];
+  float mDcaMinTertiary[kPicoPIDMax];
 
   // -- PID cuts - per particle type [ePicoPID]
   float mHypotheticalMass[kPicoPIDMax];        // hypothetical mass
@@ -258,7 +263,9 @@ inline void StPicoCutsBase::setCutPrimaryDCAtoVtxMax(float f) { mPrimaryDCAtoVtx
 
 inline void StPicoCutsBase::setCutPtRange(float min, float max, int pidFlag)            { mPtRange[pidFlag][0] = min; 
                                                                                           mPtRange[pidFlag][1] = max; }
+
 inline void StPicoCutsBase::setCutDcaMin(float min, int pidFlag)                        { mDcaMin[pidFlag] = min; } 
+inline void StPicoCutsBase::setCutDcaMinTertiary(float min, int pidFlag)                { mDcaMinTertiary[pidFlag] = min; } 
 
 inline void StPicoCutsBase::setCutTPCNSigma(float f, int pidFlag)                       { mTPCNSigmaMax[pidFlag] = f; }
 inline void StPicoCutsBase::setCutTOFNSigma(float f, int pidFlag)                       { mTOFDeltaOneOverBetaMax[pidFlag] = f*mTOFResolution;}
@@ -270,6 +277,7 @@ inline void StPicoCutsBase::setCutPtotRangeHybridTOF(float min, float max, int p
 
 inline void StPicoCutsBase::setCutPionPtRange(float min, float max)              { setCutPtRange(min, max, StPicoCutsBase::kPion); }
 inline void StPicoCutsBase::setCutPionDcaMin(float min)                          { setCutDcaMin(min, StPicoCutsBase::kPion); }
+inline void StPicoCutsBase::setCutPionDcaMinTertiary(float min)                  { setCutDcaMinTertiary(min, StPicoCutsBase::kPion); }
 inline void StPicoCutsBase::setCutTPCNSigmaPion(float f)                         { setCutTPCNSigma(f, StPicoCutsBase::kPion); }
 inline void StPicoCutsBase::setCutTOFNSigmaPion(float f)                         { setCutTOFNSigma(f, StPicoCutsBase::kPion); }
 inline void StPicoCutsBase::setCutTOFDeltaOneOverBetaPion(float f)               { setCutTOFDeltaOneOverBeta(f, StPicoCutsBase::kPion); }
@@ -278,6 +286,7 @@ inline void StPicoCutsBase::setCutPionPtotRangeHybridTOF(float min, float max)  
 
 inline void StPicoCutsBase::setCutKaonPtRange(float min, float max)              { setCutPtRange(min, max, StPicoCutsBase::kKaon); }
 inline void StPicoCutsBase::setCutKaonDcaMin(float min)                          { setCutDcaMin(min, StPicoCutsBase::kKaon); }
+inline void StPicoCutsBase::setCutKaonDcaMinTertiary(float min)                  { setCutDcaMinTertiary(min, StPicoCutsBase::kKaon); }
 inline void StPicoCutsBase::setCutTPCNSigmaKaon(float f)                         { setCutTPCNSigma(f, StPicoCutsBase::kKaon); }
 inline void StPicoCutsBase::setCutTOFNSigmaKaon(float f)                         { setCutTOFNSigma(f, StPicoCutsBase::kKaon); }
 inline void StPicoCutsBase::setCutTOFDeltaOneOverBetaKaon(float f)               { setCutTOFDeltaOneOverBeta(f, StPicoCutsBase::kKaon); }
@@ -286,6 +295,7 @@ inline void StPicoCutsBase::setCutKaonPtotRangeHybridTOF(float min, float max)  
 
 inline void StPicoCutsBase::setCutProtonPtRange(float min, float max)            { setCutPtRange(min, max, StPicoCutsBase::kProton); }
 inline void StPicoCutsBase::setCutProtonDcaMin(float min)                        { setCutDcaMin(min, StPicoCutsBase::kProton); }
+inline void StPicoCutsBase::setCutProtonDcaMinTertiary(float min)                { setCutDcaMinTertiary(min, StPicoCutsBase::kProton); }
 inline void StPicoCutsBase::setCutTPCNSigmaProton(float f)                       { setCutTPCNSigma(f, StPicoCutsBase::kProton); }
 inline void StPicoCutsBase::setCutTOFNSigmaProton(float f)                       { setCutTOFNSigma(f, StPicoCutsBase::kProton); }
 inline void StPicoCutsBase::setCutTOFDeltaOneOverBetaProton(float f)             { setCutTOFDeltaOneOverBeta(f, StPicoCutsBase::kProton); }

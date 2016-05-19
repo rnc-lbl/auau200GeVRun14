@@ -85,7 +85,6 @@ class StPicoHFMaker : public StMaker
     void setDecayMode(unsigned short us);
     void setMcMode(bool b);
 
-
     // -- different modes to use the StPicoHFMaker class
     //    - kAnalyze - don't write candidate trees, just fill histograms
     //    - kWrite   - write candidate trees
@@ -132,8 +131,6 @@ class StPicoHFMaker : public StMaker
     std::vector<unsigned short> mIdxPicoPions;
     std::vector<unsigned short> mIdxPicoKaons;
     std::vector<unsigned short> mIdxPicoProtons;
-
-    Float_t dcaToPV(StPicoTrack const * const trk);
 
   private:
     void  resetEvent();

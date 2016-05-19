@@ -32,12 +32,13 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
     mPtRange[idx][0] = std::numeric_limits<float>::min();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
     mDcaMin[idx] = std::numeric_limits<float>::min();
+    mDcaMinTertiary[idx] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][1] = std::numeric_limits<float>::max();
     mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::min();
     mPtotRangeHybridTOF[idx][1] = std::numeric_limits<float>::max();
-    mTPCNSigmaMax[idx] = 2.5;
-    mTOFDeltaOneOverBetaMax[idx] = 0.04;
+    mTPCNSigmaMax[idx] = std::numeric_limits<float>::max();
+    mTOFDeltaOneOverBetaMax[idx] = std::numeric_limits<float>::max();
   }
   
   mHypotheticalMass[kPion]      = M_PION_PLUS;
@@ -67,12 +68,13 @@ StPicoCutsBase::StPicoCutsBase(const Char_t *name) : TNamed(name, name),
     mPtRange[idx][0] = std::numeric_limits<float>::min();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
     mDcaMin[idx] = std::numeric_limits<float>::min();
+    mDcaMinTertiary[idx] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
     mPtotRangeTOF[idx][1] = std::numeric_limits<float>::max();
     mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::min();
     mPtotRangeHybridTOF[idx][1] = std::numeric_limits<float>::max();
-    mTPCNSigmaMax[idx] = 2.5;
-    mTOFDeltaOneOverBetaMax[idx] = 0.04;
+    mTPCNSigmaMax[idx] = std::numeric_limits<float>::max();
+    mTOFDeltaOneOverBetaMax[idx] = std::numeric_limits<float>::max();
   }
 
   mHypotheticalMass[kPion]      = M_PION_PLUS;
@@ -219,6 +221,30 @@ bool StPicoCutsBase::isGoodTrack(StPicoTrack const * const trk) const {
   // -- require at least one hit on every layer of PXL and IST.
   return ((!mRequireHFT || trk->isHFTTrack()) && 
 	  trk->nHitsFit() >= mNHitsFitMin);
+}
+
+// =======================================================================
+
+// _________________________________________________________
+bool StPicoCutsBase::cutMinDcaToPrimVertex(StPicoTrack const * const trk, int pidFlag) const {
+  // -- check on min dca for identified particle
+
+  StPhysicalHelixD helix = trk->dcaGeometry().helix();
+  helix.moveOrigin(helix.pathLength(mPrimVtx));
+  float dca = (mPrimVtx - helix.origin()).mag();
+
+  return (dca >= mDcaMin[pidFlag]);
+}
+
+// _________________________________________________________
+bool StPicoCutsBase::cutMinDcaToPrimVertexTertiary(StPicoTrack const * const trk, int pidFlag) const {
+  // -- check on min dca for identified particle - used for tertiary particles only
+
+  StPhysicalHelixD helix = trk->dcaGeometry().helix();
+  helix.moveOrigin(helix.pathLength(mPrimVtx));
+  float dca = (mPrimVtx - helix.origin()).mag();
+
+  return (dca >= mDcaMinTertiary[pidFlag]);
 }
 
 // =======================================================================
