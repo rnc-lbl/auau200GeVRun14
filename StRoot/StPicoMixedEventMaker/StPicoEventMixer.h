@@ -42,6 +42,7 @@ class StPicoEventMixer {
   void setEventBuffer(int buffer);
   void mixEvents();
   bool isGoodEvent(StPicoDst const * const picoDst);
+  bool isMinBiasTrigger(StPicoEvent const * const) const;
   bool isGoodTrack(StPicoTrack const * const trk);
   bool isCloseTrack(StPicoTrack const& trk, StThreeVectorF const& pVtx);
   bool isTpcPion(StPicoTrack const * const);
