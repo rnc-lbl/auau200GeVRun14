@@ -92,6 +92,7 @@ class StPicoHFMaker : public StMaker
     enum eMakerMode {kAnalyze, kWrite, kRead};
 
     // -- TO BE IMPLEMENTED BY DAUGHTER CLASS
+    virtual bool  isHadron(StPicoTrack const*, int pidFlag)   const { return true; }
     virtual bool  isPion(StPicoTrack const*)   const { return true; }
     virtual bool  isKaon(StPicoTrack const*)   const { return true; }
     virtual bool  isProton(StPicoTrack const*) const { return true; }
