@@ -29,7 +29,10 @@ namespace mxeCuts
   float const pidMass[3] = { M_KAON_PLUS, M_PION_PLUS, M_PROTON};
   
   //Event
-  UShort_t const triggerWord = 0x1F; //first five bits see http://rnc.lbl.gov/~xdong/SoftHadron/picoDst.html
+   int const nTrig = 5;
+   int const mTriggerId[nTrig] = {450050, 450060,
+				  450005, 450015,
+				  450025 }; //MinBias triggers
   float const maxVz = 6.0;// cm.
   float const vzVpdVz = 3.0; // 3 cm.
   float const Verror = 1.0e-5; // 

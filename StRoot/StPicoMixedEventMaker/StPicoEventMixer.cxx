@@ -128,7 +128,7 @@ bool StPicoEventMixer::isMixerKaon(StMixerTrack const& track) {
 bool StPicoEventMixer::isGoodEvent(StPicoDst const * const picoDst)
 {
     StPicoEvent* picoEvent = picoDst->event();
-    return ((picoEvent->triggerWord() & mxeCuts::triggerWord) &&
+    return (isGoodTrigger(picoEvent) &&
             fabs(picoEvent->primaryVertex().z()) < mxeCuts::maxVz &&
             fabs(picoEvent->primaryVertex().z() - picoEvent->vzVpd()) < mxeCuts::vzVpdVz);
 }
@@ -169,4 +169,12 @@ int StPicoEventMixer::getD0PtIndex(StMixerPair const& pair) const
     if( (pair.pt() >= mxeCuts::PtEdge[i]) && (pair.pt() < mxeCuts::PtEdge[i+1]) )
      return i; 
   }
+}
+bool StPicoEventMixer::isGoodTrigger(StPicoEvent const * const mPicoEvent) const 
+{
+  for(int ii = 0; ii<mxeCuts::nTrig; ++ii){
+    if( mPicoEvent->isTrigger(mxeCuts::mTriggerId[ii]) )
+      return true;
+  }
+  return false;
 }
