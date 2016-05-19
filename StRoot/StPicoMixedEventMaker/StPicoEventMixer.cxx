@@ -128,7 +128,7 @@ bool StPicoEventMixer::isMixerKaon(StMixerTrack const& track) {
 bool StPicoEventMixer::isGoodEvent(StPicoDst const * const picoDst)
 {
     StPicoEvent* picoEvent = picoDst->event();
-    return (isMinBiasTrigger(picoEvent) &&
+    return (isGoodTrigger(picoEvent) &&
             fabs(picoEvent->primaryVertex().z()) < mxeCuts::maxVz &&
             fabs(picoEvent->primaryVertex().z() - picoEvent->vzVpd()) < mxeCuts::vzVpdVz);
 }
@@ -170,7 +170,7 @@ int StPicoEventMixer::getD0PtIndex(StMixerPair const& pair) const
      return i; 
   }
 }
-bool StPicoEventMixer::isMinBiasTrigger(StPicoEvent const * const mPicoEvent) const 
+bool StPicoEventMixer::isGoodTrigger(StPicoEvent const * const mPicoEvent) const 
 {
   for(int ii = 0; ii<mxeCuts::nTrig; ++ii){
     if( mPicoEvent->isTrigger(mxeCuts::mTriggerId[ii]) )
