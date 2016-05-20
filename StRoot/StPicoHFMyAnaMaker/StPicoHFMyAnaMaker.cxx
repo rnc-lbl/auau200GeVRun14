@@ -131,7 +131,9 @@ int StPicoHFMyAnaMaker::analyzeCandidates() {
       StHFPair const* pair = static_cast<StHFPair*>(aCandidates->At(idx));
 
       StPicoTrack const* kaon = mPicoDst->track(pair->particle1Idx());
+      kaon->gPt();
       StPicoTrack const* pion = mPicoDst->track(pair->particle2Idx());
+      pion->gPt();
 
     } // for (unsigned int idx = 0; idx <  mPicoHFEvent->nHFSecondaryVertices(); ++idx) {
   } // else  if (mDecayChannel == StPicoHFMyAnaMaker::kChannel1) {
@@ -154,6 +156,6 @@ bool StPicoHFMyAnaMaker::isKaon(StPicoTrack const * const trk) const {
 // _________________________________________________________
 bool StPicoHFMyAnaMaker::isProton(StPicoTrack const * const trk) const {
   // -- good proton
-  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kProton) && mHFCuts->isTOFHadron(trk, StPicoCutsBase::kKaon));
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kProton));
 }
 

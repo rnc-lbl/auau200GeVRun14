@@ -83,11 +83,12 @@ class StPicoHFMyAnaMaker : public StPicoHFMaker
   enum eDecayChannel {kChannel1, kChannel2, kChannel3};
 
  protected:
+  virtual bool isHadron(StPicoTrack const*, int pidFlag) const;
   virtual bool isPion(StPicoTrack const*) const;
   virtual bool isKaon(StPicoTrack const*) const;
   virtual bool isProton(StPicoTrack const*) const;
-  
- private:
+
+private:
   int createCandidates();
   int analyzeCandidates();
 
