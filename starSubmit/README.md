@@ -12,7 +12,7 @@ star-submit-template -template submitPicoD0AnaMaker.xml -entities listOfFiles=fi
 
 1- in your work directory "/path/to/your/directory/" the following folder
 are expected as links or actual directories
-   - .sl64_gcc447
+   - .sl64_gcc482
    - StRoot                     ( from the git repo )
    - run14AuAu200GeVPrescales   ( from the git repo )
    - starSubmit                 ( from the git repo )

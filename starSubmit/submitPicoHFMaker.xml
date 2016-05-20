@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job fileListSyntax="paths" minFilesPerProcess="150" maxFilesPerProcess="400" simulateSubmission="false">
-  <stdout URL="file:&basePath;/jobs/log/$JOBID.out"/>
-  <stderr URL="file:&basePath;/jobs/err/$JOBID.err"/>
+<job fileListSyntax="paths" minFilesPerProcess="100" maxFilesPerProcess="200" simulateSubmission="false">
+  <stdout URL="file:&basePath;/jobs/&prodId;/log/$JOBID.out"/>
+  <stderr URL="file:&basePath;/jobs/&prodId;/err/$JOBID.err"/>
 
   <input URL="filelist:&listOfFiles;" />
   
@@ -12,17 +12,17 @@
   </Generator>
   
   <command>
-    starver SL15c
+    starver &starVersion;
     
     setenv PRODPATH &basePath;/production/&prodId;
-    setenv LOGPATH  &basePath;/jobs/log/&prodId;
+    setenv LOGPATH  &basePath;/jobs/&prodId;/log
     
     mkdir -p ${PRODPATH} ${LOGPATH}
 
     if ("&mMode;" == "1") then
-        &basePath;/jobs/starSubmit/parseFileList.csh ${FILELIST} &basePath; &prodId; &mMode; &treeName; ${JOBID} &rootMacro; picoList_badRuns.list &productionBasePath; &decayChannel;
+         &basePath;/jobs/&prodId;/starSubmit/parseFileList.csh ${FILELIST} &basePath; &prodId; &mMode; &treeName; ${JOBID} &rootMacro; picoList_badRuns.list &productionBasePath; &decayChannel; &starVersion;
     else
-        root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/&rootMacro;++\(\"$FILELIST\",\"&prodId;_$JOBINDEX\",&mMode;,\"picoList_badRuns.list\",\"&treeName;\",\"&productionBasePath;\",\"&decayChannel;\"\) &gt;&amp; ${JOBID}.log
+        root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/&rootMacro;++\(\"$FILELIST\",\"&prodId;_$JOBINDEX\",&mMode;,\"picoList_badRuns.list\",\"&treeName;\",\"&productionBasePath;\",&decayChannel;\) &gt;&amp; ${JOBID}.log
         tar -zcvf ${JOBID}.log.tgz ${JOBID}.log
     endif
 
@@ -30,13 +30,15 @@
 
   <output fromScratch="*.root"    toURL="$PRODPATH/" />
   <output fromScratch="*.log.tgz" toURL="$LOGPATH/" />
+  <output fromScratch="*.log"     toURL="$LOGPATH/" />
   
   <SandBox installer="ZIP">
     <Package name="LocalLibraries">
       <File>file:./StRoot/</File>
       <File>file:./run14AuAu200GeVPrescales/</File>
-      <File>file:./.sl64_gcc447/</File>
+      <File>file:./.sl64_gcc482/</File>
       <File>file:./picoList_badRuns.list</File>
+      <File>file:./starSubmit/parseFileList.csh</File>
     </Package>
   </SandBox>
 </job>

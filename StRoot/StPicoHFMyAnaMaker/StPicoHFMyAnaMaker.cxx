@@ -22,7 +22,7 @@ ClassImp(StPicoHFMyAnaMaker)
 
 // _________________________________________________________
 StPicoHFMyAnaMaker::StPicoHFMyAnaMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
-					   char const* inputHFListHFtree = "") :
+				       char const* inputHFListHFtree = "") :
   StPicoHFMaker(name, picoMaker, outputBaseFileName, inputHFListHFtree),
   mDecayChannel(kChannel1) {
   // constructor
@@ -148,12 +148,12 @@ bool StPicoHFMyAnaMaker::isPion(StPicoTrack const * const trk) const {
 // _________________________________________________________
 bool StPicoHFMyAnaMaker::isKaon(StPicoTrack const * const trk) const {
   // -- good kaon
-  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCKaon(trk));
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kKaon));
 } 
 
 // _________________________________________________________
 bool StPicoHFMyAnaMaker::isProton(StPicoTrack const * const trk) const {
   // -- good proton
-  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCProton(trk) && mHFCuts->isTOFProton(trk));
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kProton) && mHFCuts->isTOFHadron(trk, StPicoCutsBase::kKaon));
 }
 

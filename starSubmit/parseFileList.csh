@@ -1,14 +1,12 @@
 #!/bin/csh
 #  
 #  Script to split up a fileList of picoDst.root files
-#  and process them in individual root4star sessions
+#  and process them in individual root sessions
 #  
 #  - Used in makerMode = 1 (kWrite), to always have a 
 #    corresponding ${treeName}.root file for each picoDst.root file
 #
 # ###############################################
-
-starver SL15c
 
 set fileList=$1
 set basePath=$2
@@ -20,6 +18,9 @@ set rootMacro=$7
 set badRunListFileName=$8
 set productionBasePath=$9
 set decayChannel=$10
+set starVersion=$11
+
+starver $starVersion
 
 echo FILELIST $fileList
 

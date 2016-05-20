@@ -85,7 +85,6 @@ class StPicoHFMaker : public StMaker
     void setDecayMode(unsigned short us);
     void setMcMode(bool b);
 
-
     // -- different modes to use the StPicoHFMaker class
     //    - kAnalyze - don't write candidate trees, just fill histograms
     //    - kWrite   - write candidate trees
@@ -93,6 +92,7 @@ class StPicoHFMaker : public StMaker
     enum eMakerMode {kAnalyze, kWrite, kRead};
 
     // -- TO BE IMPLEMENTED BY DAUGHTER CLASS
+    virtual bool  isHadron(StPicoTrack const*, int pidFlag)   const { return true; }
     virtual bool  isPion(StPicoTrack const*)   const { return true; }
     virtual bool  isKaon(StPicoTrack const*)   const { return true; }
     virtual bool  isProton(StPicoTrack const*) const { return true; }
@@ -132,8 +132,6 @@ class StPicoHFMaker : public StMaker
     std::vector<unsigned short> mIdxPicoPions;
     std::vector<unsigned short> mIdxPicoKaons;
     std::vector<unsigned short> mIdxPicoProtons;
-
-    Float_t dcaToPV(StPicoTrack const * const trk);
 
   private:
     void  resetEvent();
