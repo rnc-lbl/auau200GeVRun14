@@ -31,13 +31,13 @@ foreach line ( `cat $fileList` )
 
     set outDirTree=${basePath}/production/${treeName}/${day}/${run}
     set outDirList=${basePath}/production/${prodId}/${day}/${run}
-    set logDir=${basePath}/jobs/log/${prodId}/${day}/${run}
+    set logDir=${basePath}/jobs/${prodId}/log/${day}/${run}
 
     mkdir -p $outDirTree $outDirList $logDir
 
     set outName=`echo $fileBaseName | awk -F ".picoDst.root" '{ print $1 }'`
 
-    root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/${rootMacro}++'("'${line}'","'${outName}'", '${mMode}', "'${badRunListFileName}'", "'${treeName}'", "'${productionBasePath}'", '${decayChannel}')' > ${jobId}_${day}_${run}.log
+    root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/${rootMacro}++'("'${line}'","'${outName}'", '${mMode}', "'${badRunListFileName}'", "'${treeName}'", "'${productionBasePath}'", '${decayChannel}')' >& ${jobId}_${day}_${run}.log
 
     mv *.${treeName}.root $outDirTree
     mv *.root  $outDirList
