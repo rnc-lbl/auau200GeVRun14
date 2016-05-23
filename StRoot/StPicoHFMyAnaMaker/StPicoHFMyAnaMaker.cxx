@@ -142,6 +142,12 @@ int StPicoHFMyAnaMaker::analyzeCandidates() {
 }
 
 // _________________________________________________________
+bool StPicoHFMyAnaMaker::isHadron(StPicoTrack const * const trk, int pidFlag) const {
+  // -- good hadron
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, pidFlag));
+}
+
+// _________________________________________________________
 bool StPicoHFMyAnaMaker::isPion(StPicoTrack const * const trk) const {
   // -- good pion
   return true;
