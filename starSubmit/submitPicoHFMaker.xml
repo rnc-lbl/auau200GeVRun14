@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job fileListSyntax="paths" minFilesPerProcess="100" maxFilesPerProcess="200" simulateSubmission="false">
+<job fileListSyntax="paths" minFilesPerProcess="&minNFiles;" maxFilesPerProcess="&maxNFiles;" simulateSubmission="false">
   <stdout URL="file:&basePath;/jobs/&prodId;/log/$JOBID.out"/>
   <stderr URL="file:&basePath;/jobs/&prodId;/err/$JOBID.err"/>
 
@@ -16,7 +16,7 @@
     
     setenv PRODPATH &basePath;/production/&prodId;
     setenv LOGPATH  &basePath;/jobs/&prodId;/log
-    
+
     mkdir -p ${PRODPATH} ${LOGPATH}
 
     if ("&mMode;" == "1") then
