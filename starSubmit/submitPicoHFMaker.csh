@@ -64,6 +64,10 @@ set productionbasePath=/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/
 # -- submission xml file 
 set xmlFile=submitPicoHFMaker.xml
 
+# -- set min and mx number of files
+set minNFiles=200
+set maxNFiles=400
+
 # ###############################################
 # -- DON'T CHANGE BELOW THAT LINE
 # ###############################################
@@ -219,12 +223,13 @@ echo '<\!ENTITY basePath "'${baseFolder}'">'  		       >> $hackTemplate
 echo '<\!ENTITY listOfFiles "'${input}'">'                     >> $hackTemplate
 echo '<\!ENTITY productionBasePath "'${productionbasePath}'">' >> $hackTemplate
 echo '<\!ENTITY starVersion "'${starVersion}'">'               >> $hackTemplate
+echo '<\!ENTITY minNFiles "'${minNFiles}'">'                   >> $hackTemplate
+echo '<\!ENTITY maxNFiles "'${maxNFiles}'">'                   >> $hackTemplate
 echo ']>'					       	       >> $hackTemplate
 
 tail -n +2 ${xmlFile} >> $hackTemplate
 
 star-submit -u ie $hackTemplate
 
-#star-submit-template -template ${xmlFile} -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},decayChannel=${decayChannel},productionBasePath=${productionbasePath},rootMacro=${rootMacro},starVersion=${starVersion}
-
+#star-submit-template -template ${xmlFile} -entities listOfFiles=${input},basePath=${baseFolder},prodId=${productionId},mMode=${makerMode},treeName=${treeName},decayChannel=${decayChannel},productionBasePath=${productionbasePath},rootMacro=${rootMacro},starVersion=${starVersion},minNFiles=${minNFiles},maxNFiles=${maxNFiles}
 popd > /dev/null
