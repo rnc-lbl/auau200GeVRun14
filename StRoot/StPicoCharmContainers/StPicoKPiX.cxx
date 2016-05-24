@@ -72,7 +72,7 @@ StPicoKPiX::StPicoKPiX(StPicoTrack const& kaon, StPicoTrack const& pion, StPicoT
    StThreeVectorF const pAtDcaToX = pStraightLine.at(sspx.first);
    StThreeVectorF const xAtDcaToP = xStraightLine.at(sspx.second);
 
-   StThreeVectorF const v0 = ( kAtDcaToP + pAtDcaToK + kAtDcaToX + xAtDcaToK + pAtDcaToX + xAtDcaToK ) / 6.;
+   StThreeVectorF const v0 = ( kAtDcaToP + pAtDcaToK + kAtDcaToX + xAtDcaToK + pAtDcaToX + xAtDcaToP ) / 6.;
    mKaonMomAtDca  = kHelix.momentumAt(kHelix.pathLength(v0), bField * kilogauss);
    mPionMomAtDca  = pHelix.momentumAt(pHelix.pathLength(v0), bField * kilogauss);
    mXaonMomAtDca  = xHelix.momentumAt(xHelix.pathLength(v0), bField * kilogauss);
