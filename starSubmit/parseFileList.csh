@@ -29,21 +29,23 @@ foreach line ( `cat $fileList` )
     set day=`perl $STAR/StRoot/macros/embedding/getYearDayFromFile.pl -d ${fileBaseName}`
     set run=`perl $STAR/StRoot/macros/embedding/getYearDayFromFile.pl -r ${fileBaseName}`
 
+    set outName=`echo $fileBaseName | awk -F ".picoDst.root" '{ print $1 }'`
     set outDirTree=${basePath}/production/${treeName}/${day}/${run}
     set outDirList=${basePath}/production/${prodId}/${day}/${run}
+
+    set logName="${jobId}_${outName}"
     set logDir=${basePath}/jobs/${prodId}/log/${day}/${run}
 
     mkdir -p $outDirTree $outDirList $logDir
 
-    set outName=`echo $fileBaseName | awk -F ".picoDst.root" '{ print $1 }'`
-
-    root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/${rootMacro}++'("'${line}'","'${outName}'", '${mMode}', "'${badRunListFileName}'", "'${treeName}'", "'${productionBasePath}'", '${decayChannel}')' >& ${jobId}_${day}_${run}.log
+    root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/${rootMacro}++'("'${line}'","'${outName}'", '${mMode}', "'${badRunListFileName}'", "'${treeName}'", "'${productionBasePath}'", '${decayChannel}')' >& ${logName}.log
 
     mv *.${treeName}.root $outDirTree
     mv *.root  $outDirList
 
-    tar -zcvf ${jobId}.log.tgz ${jobId}_${day}_${run}.log
+    tar -zcvf ${logName}.log.tgz ${logName}.log
     mv *.log.tgz   $logDir
-    rm  ${jobId}_${day}_${run}.log
+    mv *.log       $logDir
+    rm -f  ${logName}.log
 end
     
