@@ -140,23 +140,34 @@ inline void StHFCuts::setCutSecondaryPair(float dcaDaughtersMax, float decayLeng
   mSecondaryPairDcaDaughtersMax = dcaDaughtersMax;
   mSecondaryPairDecayLengthMin = decayLengthMin; mSecondaryPairDecayLengthMax = decayLengthMax;
   mSecondaryPairCosThetaMin = cosThetaMin;
-  mSecondaryPairMassMin = massMin; mSecondaryPairMassMax = massMax; }
+  mSecondaryPairMassMin = massMin; mSecondaryPairMassMax = massMax; 
+}
 
 inline void StHFCuts::setCutTertiaryPair(float dcaDaughtersMax, float decayLengthMin, float decayLengthMax, 
 					 float cosThetaMin, float massMin, float massMax)  {
   mTertiaryPairDcaDaughtersMax = dcaDaughtersMax;
   mTertiaryPairDecayLengthMin = decayLengthMin; mTertiaryPairDecayLengthMax = decayLengthMax;
   mTertiaryPairCosThetaMin = cosThetaMin;
-  mTertiaryPairMassMin = massMin; mTertiaryPairMassMax = massMax; }
+  mTertiaryPairMassMin = massMin; mTertiaryPairMassMax = massMax; 
+}
   
 inline void StHFCuts::setCutSecondaryTriplet(float dcaDaughters12Max, float dcaDaughters23Max, float dcaDaughters31Max, 
 					     float decayLengthMin, float decayLengthMax, 
 					     float cosThetaMin, float massMin, float massMax)  {
+  // setting up the triplet
   mSecondaryTripletDcaDaughters12Max = dcaDaughters12Max; mSecondaryTripletDcaDaughters23Max = dcaDaughters23Max; 
   mSecondaryTripletDcaDaughters31Max = dcaDaughters31Max; 
   mSecondaryTripletDecayLengthMin = decayLengthMin; mSecondaryTripletDecayLengthMax = decayLengthMax; 
   mSecondaryTripletCosThetaMin = cosThetaMin;
-  mSecondaryTripletMassMin = massMin; mSecondaryTripletMassMax = massMax; }
+  mSecondaryTripletMassMin = massMin; mSecondaryTripletMassMax = massMax; 
+
+  // setting up the doublet
+  mSecondaryPairDcaDaughtersMax = mSecondaryTripletDcaDaughters12Max;
+  mSecondaryPairDecayLengthMin = mSecondaryTripletDecayLengthMin;
+  mSecondaryPairDcaDaughtersMax = mSecondaryTripletDecayLengthMax;
+}
+
+
 
 inline const float&    StHFCuts::cutSecondaryPairDcaDaughtersMax()       const { return mSecondaryPairDcaDaughtersMax; }
 inline const float&    StHFCuts::cutSecondaryPairDecayLengthMin()        const { return mSecondaryPairDecayLengthMin; }

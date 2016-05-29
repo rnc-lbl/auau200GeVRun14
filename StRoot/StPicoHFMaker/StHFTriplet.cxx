@@ -86,6 +86,7 @@ StHFTriplet::StHFTriplet(StPicoTrack const * const particle1, StPicoTrack const 
   StThreeVectorF const p3AtDcaToP2 = p3StraightLine.at(ss23.second);
   
   pair<double, double> const ss31 = p3StraightLine.pathLengths(p1StraightLine);
+
   StThreeVectorF const p3AtDcaToP1 = p3StraightLine.at(ss31.first);
   StThreeVectorF const p1AtDcaToP3 = p1StraightLine.at(ss31.second);
   
