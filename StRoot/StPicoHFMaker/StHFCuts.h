@@ -167,8 +167,6 @@ inline void StHFCuts::setCutSecondaryTriplet(float dcaDaughters12Max, float dcaD
   mSecondaryPairDcaDaughtersMax = mSecondaryTripletDecayLengthMax;
 }
 
-
-
 inline const float&    StHFCuts::cutSecondaryPairDcaDaughtersMax()       const { return mSecondaryPairDcaDaughtersMax; }
 inline const float&    StHFCuts::cutSecondaryPairDecayLengthMin()        const { return mSecondaryPairDecayLengthMin; }
 inline const float&    StHFCuts::cutSecondaryPairDecayLengthMax()        const { return mSecondaryPairDecayLengthMax; }

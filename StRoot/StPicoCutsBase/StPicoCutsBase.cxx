@@ -33,10 +33,10 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
     mPtRange[idx][1] = std::numeric_limits<float>::max();
     mDcaMin[idx] = std::numeric_limits<float>::lowest();
     mDcaMinTertiary[idx] = std::numeric_limits<float>::lowest();
-    mPtotRangeTOF[idx][0] = std::numeric_limits<float>::max();
-    mPtotRangeTOF[idx][1] = std::numeric_limits<float>::lowest();
-    mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::max();
-    mPtotRangeHybridTOF[idx][1] = std::numeric_limits<float>::lowest();
+    mPtotRangeTOF[idx][0] = std::numeric_limits<float>::lowest();
+    mPtotRangeTOF[idx][1] = std::numeric_limits<float>::max();
+    mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::lowest();
+    mPtotRangeHybridTOF[idx][1] = std::numeric_limits<float>::max();
     mTPCNSigmaMax[idx] = std::numeric_limits<float>::max();
     mTOFDeltaOneOverBetaMax[idx] = std::numeric_limits<float>::max();
   }
@@ -281,7 +281,6 @@ bool StPicoCutsBase::isTOFHadronPID(StPicoTrack const *trk, float const & tofBet
   
   float ptot    = trk->dcaGeometry().momentum().mag();
   float betaInv = sqrt(ptot*ptot + mHypotheticalMass2[pidFlag]) / ptot;
-
   return ( fabs(1/tofBeta - betaInv) < mTOFDeltaOneOverBetaMax[pidFlag] );
 }
 
