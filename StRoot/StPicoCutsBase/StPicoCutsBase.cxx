@@ -29,14 +29,14 @@ StPicoCutsBase::StPicoCutsBase() : TNamed("PicoCutsBase", "PicoCutsBase"),
   // -- default constructor
   
   for (Int_t idx = 0; idx < kPicoPIDMax; ++idx) {
-    mPtRange[idx][0] = std::numeric_limits<float>::min();
+    mPtRange[idx][0] = std::numeric_limits<float>::lowest();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
-    mDcaMin[idx] = std::numeric_limits<float>::min();
-    mDcaMinTertiary[idx] = std::numeric_limits<float>::min();
-    mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
-    mPtotRangeTOF[idx][1] = std::numeric_limits<float>::max();
-    mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::min();
-    mPtotRangeHybridTOF[idx][1] = std::numeric_limits<float>::max();
+    mDcaMin[idx] = std::numeric_limits<float>::lowest();
+    mDcaMinTertiary[idx] = std::numeric_limits<float>::lowest();
+    mPtotRangeTOF[idx][0] = std::numeric_limits<float>::max();
+    mPtotRangeTOF[idx][1] = std::numeric_limits<float>::lowest();
+    mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::max();
+    mPtotRangeHybridTOF[idx][1] = std::numeric_limits<float>::lowest();
     mTPCNSigmaMax[idx] = std::numeric_limits<float>::max();
     mTOFDeltaOneOverBetaMax[idx] = std::numeric_limits<float>::max();
   }
@@ -65,13 +65,13 @@ StPicoCutsBase::StPicoCutsBase(const Char_t *name) : TNamed(name, name),
   // -- constructor
 
   for (Int_t idx = 0; idx < kPicoPIDMax; ++idx) {
-    mPtRange[idx][0] = std::numeric_limits<float>::min();
+    mPtRange[idx][0] = std::numeric_limits<float>::lowest();
     mPtRange[idx][1] = std::numeric_limits<float>::max();
-    mDcaMin[idx] = std::numeric_limits<float>::min();
-    mDcaMinTertiary[idx] = std::numeric_limits<float>::min();
-    mPtotRangeTOF[idx][0] = std::numeric_limits<float>::min();
+    mDcaMin[idx] = std::numeric_limits<float>::lowest();
+    mDcaMinTertiary[idx] = std::numeric_limits<float>::lowest();
+    mPtotRangeTOF[idx][0] = std::numeric_limits<float>::lowest();
     mPtotRangeTOF[idx][1] = std::numeric_limits<float>::max();
-    mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::min();
+    mPtotRangeHybridTOF[idx][0] = std::numeric_limits<float>::lowest();
     mPtotRangeHybridTOF[idx][1] = std::numeric_limits<float>::max();
     mTPCNSigmaMax[idx] = std::numeric_limits<float>::max();
     mTOFDeltaOneOverBetaMax[idx] = std::numeric_limits<float>::max();
@@ -281,6 +281,7 @@ bool StPicoCutsBase::isTOFHadronPID(StPicoTrack const *trk, float const & tofBet
   
   float ptot    = trk->dcaGeometry().momentum().mag();
   float betaInv = sqrt(ptot*ptot + mHypotheticalMass2[pidFlag]) / ptot;
+
   return ( fabs(1/tofBeta - betaInv) < mTOFDeltaOneOverBetaMax[pidFlag] );
 }
 
@@ -295,7 +296,7 @@ bool StPicoCutsBase::isTOFHadron(StPicoTrack const *trk, float const & tofBeta, 
 
   // -- only apply, if in ptot range
   float ptot = trk->dcaGeometry().momentum().mag();  
-  if (ptot < mPtotRangeTOF[pidFlag][0] && ptot >= mPtotRangeTOF[pidFlag][1])
+  if (ptot < mPtotRangeTOF[pidFlag][0] || ptot >= mPtotRangeTOF[pidFlag][1])
     return true;
 
   return isTOFHadronPID(trk, tofBeta, pidFlag);
@@ -313,11 +314,11 @@ bool StPicoCutsBase::isHybridTOFHadron(StPicoTrack const *trk, float const & tof
 
   // -- only apply, if in ptot range
   float ptot = trk->dcaGeometry().momentum().mag();  
-  if (ptot < mPtotRangeHybridTOF[pidFlag][0] && ptot >= mPtotRangeHybridTOF[pidFlag][1])
+  if (ptot < mPtotRangeHybridTOF[pidFlag][0] || ptot >= mPtotRangeHybridTOF[pidFlag][1])
     return true;
 
   // -- only apply, if has TOF information
-  if (tofBeta <= 0) 
+  if (tofBeta <= 0 || tofBeta != tofBeta ) 
     return true;
 
   return isTOFHadronPID(trk, tofBeta, pidFlag);
