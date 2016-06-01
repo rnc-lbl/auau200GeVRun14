@@ -38,7 +38,11 @@ foreach line ( `cat $fileList` )
 
     mkdir -p $outDirTree $outDirList $logDir
 
-    root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/${rootMacro}++'("'${line}'","'${outName}'", '${mMode}', "'${badRunListFileName}'", "'${treeName}'", "'${productionBasePath}'", '${decayChannel}')' >& ${logName}.log
+    if ( -e ${outDirTree}/${outName}.${treeName}.root ) then
+	continue
+    endif
+
+   root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/${rootMacro}++'("'${line}'","'${outName}'", '${mMode}', "'${badRunListFileName}'", "'${treeName}'", "'${productionBasePath}'", '${decayChannel}')' >& ${logName}.log
 
     mv *.${treeName}.root $outDirTree
     mv *.root  $outDirList
