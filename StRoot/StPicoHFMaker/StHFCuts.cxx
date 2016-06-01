@@ -10,44 +10,44 @@ ClassImp(StHFCuts)
 // _________________________________________________________
 StHFCuts::StHFCuts() : StPicoCutsBase("HFCutsBase"), 
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
-  mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
-  mSecondaryPairCosThetaMin(std::numeric_limits<float>::min()), 
-  mSecondaryPairMassMin(std::numeric_limits<float>::min()), mSecondaryPairMassMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairDecayLengthMin(std::numeric_limits<float>::lowest()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairCosThetaMin(std::numeric_limits<float>::lowest()), 
+  mSecondaryPairMassMin(std::numeric_limits<float>::lowest()), mSecondaryPairMassMax(std::numeric_limits<float>::max()), 
   mSecondaryPairDcaToPvMax(std::numeric_limits<float>::max()),
 
   mTertiaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
-  mTertiaryPairDecayLengthMin(std::numeric_limits<float>::min()), mTertiaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
-  mTertiaryPairCosThetaMin(std::numeric_limits<float>::min()), 
-  mTertiaryPairMassMin(std::numeric_limits<float>::min()), mTertiaryPairMassMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairDecayLengthMin(std::numeric_limits<float>::lowest()), mTertiaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairCosThetaMin(std::numeric_limits<float>::lowest()), 
+  mTertiaryPairMassMin(std::numeric_limits<float>::lowest()), mTertiaryPairMassMax(std::numeric_limits<float>::max()), 
   mTertiaryPairDcaToPvMax(std::numeric_limits<float>::max()),
 
   mSecondaryTripletDcaDaughters12Max(std::numeric_limits<float>::max()), mSecondaryTripletDcaDaughters23Max(std::numeric_limits<float>::max()), 
   mSecondaryTripletDcaDaughters31Max(std::numeric_limits<float>::max()), 
-  mSecondaryTripletDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryTripletDecayLengthMax(std::numeric_limits<float>::max()), 
-  mSecondaryTripletCosThetaMin(std::numeric_limits<float>::min()), 
-  mSecondaryTripletMassMin(std::numeric_limits<float>::min()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()) {
+  mSecondaryTripletDecayLengthMin(std::numeric_limits<float>::lowest()), mSecondaryTripletDecayLengthMax(std::numeric_limits<float>::max()), 
+  mSecondaryTripletCosThetaMin(std::numeric_limits<float>::lowest()), 
+  mSecondaryTripletMassMin(std::numeric_limits<float>::lowest()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()) {
   // -- default constructor
 }
 
 // _________________________________________________________
 StHFCuts::StHFCuts(const Char_t *name) : StPicoCutsBase(name), 
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
-  mSecondaryPairDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
-  mSecondaryPairCosThetaMin(std::numeric_limits<float>::min()), 
-  mSecondaryPairMassMin(std::numeric_limits<float>::min()), mSecondaryPairMassMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairDecayLengthMin(std::numeric_limits<float>::lowest()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
+  mSecondaryPairCosThetaMin(std::numeric_limits<float>::lowest()), 
+  mSecondaryPairMassMin(std::numeric_limits<float>::lowest()), mSecondaryPairMassMax(std::numeric_limits<float>::max()), 
   mSecondaryPairDcaToPvMax(std::numeric_limits<float>::max()),
 
   mTertiaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
-  mTertiaryPairDecayLengthMin(std::numeric_limits<float>::min()), mTertiaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
-  mTertiaryPairCosThetaMin(std::numeric_limits<float>::min()), 
-  mTertiaryPairMassMin(std::numeric_limits<float>::min()), mTertiaryPairMassMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairDecayLengthMin(std::numeric_limits<float>::lowest()), mTertiaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
+  mTertiaryPairCosThetaMin(std::numeric_limits<float>::lowest()), 
+  mTertiaryPairMassMin(std::numeric_limits<float>::lowest()), mTertiaryPairMassMax(std::numeric_limits<float>::max()), 
   mTertiaryPairDcaToPvMax(std::numeric_limits<float>::max()),
 
   mSecondaryTripletDcaDaughters12Max(std::numeric_limits<float>::max()), mSecondaryTripletDcaDaughters23Max(std::numeric_limits<float>::max()), 
   mSecondaryTripletDcaDaughters31Max(std::numeric_limits<float>::max()), 
-  mSecondaryTripletDecayLengthMin(std::numeric_limits<float>::min()), mSecondaryTripletDecayLengthMax(std::numeric_limits<float>::max()), 
-  mSecondaryTripletCosThetaMin(std::numeric_limits<float>::min()), 
-  mSecondaryTripletMassMin(std::numeric_limits<float>::min()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()) {
+  mSecondaryTripletDecayLengthMin(std::numeric_limits<float>::lowest()), mSecondaryTripletDecayLengthMax(std::numeric_limits<float>::max()), 
+  mSecondaryTripletCosThetaMin(std::numeric_limits<float>::lowest()), 
+  mSecondaryTripletMassMin(std::numeric_limits<float>::lowest()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()) {
   // -- constructor
 }
 
