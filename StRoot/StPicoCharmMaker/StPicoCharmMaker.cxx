@@ -1,6 +1,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <unordered_set>
 
 #include "TTree.h"
 #include "TFile.h"
@@ -113,7 +114,7 @@ Int_t StPicoCharmMaker::Make()
    mPicoEvent = picoDst->event();
 
    unsigned int nHftTracks = 0;
-   
+
    if (isGoodTrigger() && isGoodEvent())
    {
       UInt_t nTracks = picoDst->numberOfTracks();
@@ -169,6 +170,8 @@ Int_t StPicoCharmMaker::Make()
 
           if(kaonPion.dcaDaughters() > charmMakerCuts::dcaDaughters) continue;
 
+          std::unordered_set<unsigned short> usedXTrak;
+
           // make Kππ
           if(mMakeKaonPionPion)
           {
@@ -177,9 +180,16 @@ Int_t StPicoCharmMaker::Make()
               if (idxPicoKaons[iK0] == idxPicoPions[iPi1]) continue;
               StPicoTrack const* pion1 = picoDst->track(idxPicoPions[iPi1]);
 
+              auto search = usedXTrak.find(pion1->id());
+              if(search != usedXTrak.end()) continue;
+
               StPicoKPiX kaonPionPion(*kaon0, *pion0, *pion1, idxPicoKaons[iK0], idxPicoPions[iPi0], idxPicoPions[iPi1], pVtx, bField);
 
-              if(isGoodKPiX(kaonPionPion) && isGoodKPiXMass(kaonPionPion.fourMom(M_PION_PLUS).m())) mPicoKPiXEvent->addKPiX(kaonPionPion);
+              if(isGoodKPiX(kaonPionPion) && isGoodKPiXMass(kaonPionPion.fourMom(M_PION_PLUS).m()))
+              {
+                mPicoKPiXEvent->addKPiX(kaonPionPion);
+                usedXTrak.insert(pion1->id());
+              }
             }
           }
 
@@ -191,9 +201,16 @@ Int_t StPicoCharmMaker::Make()
               if (idxPicoKaons[iK1] == idxPicoPions[iPi0]) continue;
               StPicoTrack const* kaon1 = picoDst->track(idxPicoKaons[iK1]);
 
+              auto search = usedXTrak.find(kaon1->id());
+              if(search != usedXTrak.end()) continue;
+
               StPicoKPiX kaonPionKaon(*kaon0, *pion0, *kaon1, idxPicoKaons[iK0], idxPicoPions[iPi0], idxPicoKaons[iK1], pVtx, bField);
 
-              if(isGoodKPiX(kaonPionKaon) && isGoodKPiXMass(kaonPionKaon.fourMom(M_KAON_MINUS).m())) mPicoKPiXEvent->addKPiX(kaonPionKaon);
+              if(isGoodKPiX(kaonPionKaon) && isGoodKPiXMass(kaonPionKaon.fourMom(M_KAON_MINUS).m()))
+              {
+                mPicoKPiXEvent->addKPiX(kaonPionKaon);
+                usedXTrak.insert(kaon1->id());
+              }
             }
           }
 
@@ -205,9 +222,16 @@ Int_t StPicoCharmMaker::Make()
               if (idxPicoProtons[iP] == idxPicoPions[iPi0]) continue;
               StPicoTrack const* proton = picoDst->track(idxPicoProtons[iP]);
 
+              auto search = usedXTrak.find(proton->id());
+              if(search != usedXTrak.end()) continue;
+
               StPicoKPiX kaonPionProton(*kaon0, *pion0, *proton, idxPicoKaons[iK0], idxPicoPions[iPi0], idxPicoProtons[iP], pVtx, bField);
 
-              if(isGoodKPiX(kaonPionProton) && isGoodKPiXMass(kaonPionProton.fourMom(M_PROTON).m())) mPicoKPiXEvent->addKPiX(kaonPionProton);
+              if(isGoodKPiX(kaonPionProton) && isGoodKPiXMass(kaonPionProton.fourMom(M_PROTON).m()))
+              {
+                mPicoKPiXEvent->addKPiX(kaonPionProton);
+                usedXTrak.insert(proton->id());
+              }
             }
           }
         } // .. end make Kπ pairs
