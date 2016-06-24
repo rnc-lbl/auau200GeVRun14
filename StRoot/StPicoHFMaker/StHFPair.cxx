@@ -60,8 +60,8 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
   StPhysicalHelixD const p2StraightLine(p2Mom, p2Helix.origin(), 0, particle2->charge());
 
   pair<double, double> const ss = (useStraightLine) ? p1StraightLine.pathLengths(p2StraightLine) : p1Helix.pathLengths(p2Helix);
-  StThreeVectorF const p1AtDcaToP2 = p1StraightLine.at(ss.first);
-  StThreeVectorF const p2AtDcaToP1 = p2StraightLine.at(ss.second);
+  StThreeVectorF const p1AtDcaToP2 = (useStraightLine) ? p1StraightLine.at(ss.first) : p1Helix.at(ss.first);
+  StThreeVectorF const p2AtDcaToP1 = (useStraightLine) ? p2StraightLine.at(ss.second) : p2Helix.at(ss.second);
 
   // -- calculate DCA of particle1 to particle2 at their DCA
   mDcaDaughters = (p1AtDcaToP2 - p2AtDcaToP1).mag();
@@ -138,8 +138,8 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StHFPair const * const p
   StPhysicalHelixD const p2StraightLine(p2Mom, p2Helix.origin(), 0, p2Charge);
   
   pair<double, double> const ss = (useStraightLine) ? p1StraightLine.pathLengths(p2StraightLine) : p1Helix.pathLengths(p2Helix);
-  StThreeVectorF const p1AtDcaToP2 = p1StraightLine.at(ss.first);
-  StThreeVectorF const p2AtDcaToP1 = p2StraightLine.at(ss.second);
+  StThreeVectorF const p1AtDcaToP2 = (useStraightLine) ? p1StraightLine.at(ss.first) : p1Helix.at(ss.first);
+  StThreeVectorF const p2AtDcaToP1 = (useStraightLine) ? p2StraightLine.at(ss.second) : p2Helix.at(ss.second);
 
   // -- calculate DCA of particle1 to particl2 at their DCA
   mDcaDaughters = (p1AtDcaToP2 - p2AtDcaToP1).mag();
