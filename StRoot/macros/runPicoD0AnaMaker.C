@@ -12,7 +12,7 @@
 void runPicoD0AnaMaker(TString d0list, TString outFileName, TString badRunListFileName = "picoList_bad_MB.list")
 {
    //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
-   string SL_version = "SL15c";
+   string SL_version = "SL16d";
    string env_SL = getenv("STAR");
    if (env_SL.find(SL_version) == string::npos)
    {
