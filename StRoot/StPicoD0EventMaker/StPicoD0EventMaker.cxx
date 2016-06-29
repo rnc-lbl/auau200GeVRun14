@@ -8,14 +8,16 @@
 #include "StThreeVectorF.hh"
 #include "StLorentzVectorF.hh"
 #include "StPhysicalHelixD.hh"
-#include "../StPicoDstMaker/StPicoDst.h"
-#include "../StPicoDstMaker/StPicoDstMaker.h"
-#include "../StPicoDstMaker/StPicoEvent.h"
-#include "../StPicoDstMaker/StPicoTrack.h"
-#include "../StPicoDstMaker/StPicoBTofPidTraits.h"
-#include "StPicoD0Event.h"
-#include "StPicoD0Hists.h"
-#include "StKaonPion.h"
+#include "StPicoDstMaker/StPicoDst.h"
+#include "StPicoDstMaker/StPicoDstMaker.h"
+#include "StPicoDstMaker/StPicoEvent.h"
+#include "StPicoDstMaker/StPicoTrack.h"
+#include "StPicoDstMaker/StPicoBTofPidTraits.h"
+
+#include "StPicoCharmContainers/StPicoD0Event.h"
+#include "StPicoCharmContainers/StKaonPion.h"
+
+#include "StPicoCharmContainers/StPicoD0QaHists.h"
 #include "StCuts.h"
 
 #include "StPicoD0EventMaker.h"
@@ -37,7 +39,7 @@ StPicoD0EventMaker::StPicoD0EventMaker(char const* makerName, StPicoDstMaker* pi
    mTree->SetAutoSave(1000000); // autosave every 1 Mbytes
    mTree->Branch("dEvent", "StPicoD0Event", &mPicoD0Event, BufSize, Split);
 
-   mPicoD0Hists = new StPicoD0Hists(fileBaseName);
+   mPicoD0Hists = new StPicoD0QaHists(fileBaseName, cuts::prescalesFilesDirectoryName);
 }
 
 StPicoD0EventMaker::~StPicoD0EventMaker()
@@ -169,13 +171,13 @@ Int_t StPicoD0EventMaker::Make()
 
             StPicoTrack const * pion = picoDst->track(idxPicoPions[ip]);
 
-            StKaonPion kaonPion(kaon, pion, idxPicoKaons[ik], idxPicoPions[ip], kfVertex, bField);
+            StKaonPion kaonPion(*kaon, *pion, idxPicoKaons[ik], idxPicoPions[ip], kfVertex, bField);
 
             if (!isGoodPair(kaonPion)) continue;
 
-            if(isGoodMass(kaonPion)) mPicoD0Event->addKaonPion(&kaonPion);
+            if(isGoodMass(kaonPion)) mPicoD0Event->addKaonPion(kaonPion);
 
-            bool fillMass = isGoodQaPair(&kaonPion,*kaon,*pion);
+            bool fillMass = isGoodQaPair(kaonPion,*kaon,*pion);
             bool unlike = kaon->charge() * pion->charge() < 0 ? true : false;
 
             if(fillMass || unlike) mPicoD0Hists->addKaonPion(&kaonPion,fillMass, unlike);

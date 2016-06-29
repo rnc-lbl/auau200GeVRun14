@@ -27,9 +27,8 @@ class StKaonPion : public TObject
 {
  public:
   StKaonPion();
-  StKaonPion(StKaonPion const *);
-  StKaonPion(StPicoTrack const * kaon, StPicoTrack const * pion,unsigned short kIdx,unsigned short pIdx,
-             StThreeVectorF const & vtx, float bField);
+  StKaonPion(StPicoTrack const& kaon, StPicoTrack const& pion,unsigned short kIdx,unsigned short pIdx,
+             StThreeVectorF const& vtx, float bField);
   ~StKaonPion() {}// please keep this non-virtual and NEVER inherit from this class 
 
   StLorentzVectorF const & lorentzVector() const;
@@ -48,9 +47,6 @@ class StKaonPion : public TObject
   float perpDcaToVtx() const;
           
  private:
-  // disable copy constructor and assignment operator by making them private (once C++11 is available in STAR you can use delete specifier instead)
-  StKaonPion(StKaonPion const &);
-  StKaonPion& operator=(StKaonPion const &);
   StLorentzVectorF mLorentzVector; // this owns four float only
 
   float mPointingAngle;

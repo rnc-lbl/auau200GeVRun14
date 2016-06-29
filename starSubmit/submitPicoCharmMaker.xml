@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job fileListSyntax="paths" maxFilesPerProcess="10" simulateSubmission="true">
+
+  <stdout URL="file:./jobs/log/$JOBID.log" />
+  <stderr URL="file:./jobs/err/$JOBID.err" />
+
+  <Generator>
+    <Location>./jobs/report/</Location>
+    <ScriptLocation>./jobs/csh/</ScriptLocation>
+    <ListLocation>./jobs/list/</ListLocation>
+  </Generator>
+
+  <command>
+    starver SL16d
+
+    ./runPicoCharmMaker.py ${FILELIST}
+  </command>
+
+  <input URL="filelist:/global/project/projectdirs/starprod/rnc/mustafa/Run14/AuAu/200GeV/Pico16a/P16id/charmProduction/&listOfFiles;" />
+
+  <SandBox installer="ZIP">
+    <Package name="LocalLibraries">
+      <File>file:./StRoot/</File>
+      <File>file:./.sl64_gcc482/</File>
+      <File>file:./run14AuAu200GeVPrescales</File>
+      <File>file:./runPicoCharmMaker.C</File>
+      <File>file:./runPicoCharmMaker.py</File>
+    </Package>
+  </SandBox>
+
+</job>

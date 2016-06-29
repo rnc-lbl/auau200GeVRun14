@@ -14,37 +14,31 @@
 ClassImp(StKaonPion)
 
 
-StKaonPion::StKaonPion(): mLorentzVector(),
-   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
-   mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()),
-   mKaonIdx(std::numeric_limits<unsigned short>::quiet_NaN()), mPionIdx(std::numeric_limits<unsigned short>::quiet_NaN()),
-   mDcaDaughters(std::numeric_limits<float>::quiet_NaN()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN())
+StKaonPion::StKaonPion(): mLorentzVector{},
+                          mPointingAngle(std::numeric_limits<float>::max()), 
+                          mDecayLength(std::numeric_limits<float>::min()),
+                          mKaonDca(std::numeric_limits<float>::min()), 
+                          mPionDca(std::numeric_limits<float>::min()),
+                          mKaonIdx(std::numeric_limits<unsigned short>::max()), 
+                          mPionIdx(std::numeric_limits<unsigned short>::max()),
+                          mDcaDaughters(std::numeric_limits<float>::max()), 
+                          mCosThetaStar(std::numeric_limits<float>::max())
+{
+}
 
-{
-}
-//------------------------------------
-StKaonPion::StKaonPion(StKaonPion const * t) : mLorentzVector(t->mLorentzVector),
-   mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength),
-   mKaonDca(t->mKaonDca), mPionDca(t->mPionDca),
-   mKaonIdx(t->mKaonIdx), mPionIdx(t->mPionIdx),
-   mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar)
-{
-}
-//------------------------------------
-StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const pion,
+StKaonPion::StKaonPion(StPicoTrack const& kaon, StPicoTrack const& pion,
                        unsigned short const kIdx, unsigned short const pIdx,
-                       StThreeVectorF const & vtx, float const bField) : mLorentzVector(),
-   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
-   mKaonDca(std::numeric_limits<float>::quiet_NaN()), mPionDca(std::numeric_limits<float>::quiet_NaN()),
-   mKaonIdx(kIdx), mPionIdx(pIdx),
-   mDcaDaughters(std::numeric_limits<float>::quiet_NaN()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN())
+                       StThreeVectorF const& vtx, float const bField) : StKaonPion()
 {
-   if ((!kaon || !pion) || (kaon->id() == pion->id()))
+   if (kaon.id() == pion.id())
    {
       mKaonIdx = std::numeric_limits<unsigned short>::quiet_NaN();
       mPionIdx = std::numeric_limits<unsigned short>::quiet_NaN();
       return;
    }
+
+   mKaonIdx = kIdx;
+   mPionIdx = pIdx;
 
    /// prefixes code:
    ///   k means kaon
@@ -53,8 +47,8 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
 
 
    // to be used for testing with preview II pico production
-   StPhysicalHelixD kHelix = kaon->dcaGeometry().helix();
-   StPhysicalHelixD pHelix = pion->dcaGeometry().helix();
+   StPhysicalHelixD kHelix = kaon.dcaGeometry().helix();
+   StPhysicalHelixD pHelix = pion.dcaGeometry().helix();
 
    // move origins of helices to the primary vertex origin
    kHelix.moveOrigin(kHelix.pathLength(vtx));
@@ -63,8 +57,8 @@ StKaonPion::StKaonPion(StPicoTrack const * const kaon, StPicoTrack const * const
    // use straight lines approximation to get point of DCA of kaon-pion pair
    StThreeVectorF const kMom = kHelix.momentum(bField * kilogauss);
    StThreeVectorF const pMom = pHelix.momentum(bField * kilogauss);
-   StPhysicalHelixD const kStraightLine(kMom, kHelix.origin(), 0, kaon->charge());
-   StPhysicalHelixD const pStraightLine(pMom, pHelix.origin(), 0, pion->charge());
+   StPhysicalHelixD const kStraightLine(kMom, kHelix.origin(), 0, kaon.charge());
+   StPhysicalHelixD const pStraightLine(pMom, pHelix.origin(), 0, pion.charge());
 
    pair<double, double> const ss = kStraightLine.pathLengths(pStraightLine);
    StThreeVectorF const kAtDcaToPion = kStraightLine.at(ss.first);

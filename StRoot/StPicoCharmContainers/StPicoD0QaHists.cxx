@@ -5,22 +5,21 @@
 #include "TString.h"
 #include "../StPicoDstMaker/StPicoEvent.h"
 #include "../StPicoPrescales/StPicoPrescales.h"
-#include "StPicoD0Event.h"
-#include "StKaonPion.h"
-#include "StCuts.h"
+#include "StPicoCharmContainers/StPicoD0Event.h"
+#include "StPicoCharmContainers/StKaonPion.h"
 
-#include "StPicoD0Hists.h"
+#include "StPicoD0QaHists.h"
 
 //-----------------------------------------------------------------------
-StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(NULL),
+StPicoD0QaHists::StPicoD0QaHists(std::string fileBaseName, std::string prescaleDirectoy) : mPrescales(NULL), mOutFile(NULL),
   mh1TotalEventsInRun(NULL), mh1TotalHftTracksInRun(NULL), mh1TotalGRefMultInRun(NULL),
   mh1TotalD0CandidatesInRun(NULL), mh2KaonDcaVsPt(NULL), mh2PionDcaVsPt(NULL), 
   mh2CosThetaVsPt(NULL), mh2DcaDaughtersVsPt(NULL),
   mh2InvariantMassVsPtUnlike(NULL), mh2InvariantMassVsPtLike(NULL)
 {
-  mPrescales = new StPicoPrescales(cuts::prescalesFilesDirectoryName);
+  mPrescales = new StPicoPrescales(prescaleDirectoy);
 
-  mOutFile = new TFile(Form("%s.picoD0.hists.root",fileBaseName.Data()),"RECREATE");
+  mOutFile = new TFile(Form("%s.picoD0.hists.root",fileBaseName.c_str()),"RECREATE");
 
   int nRuns = mPrescales->numberOfRuns();
   TH1::SetDefaultSumw2();
@@ -38,14 +37,14 @@ StPicoD0Hists::StPicoD0Hists(TString fileBaseName) : mPrescales(NULL), mOutFile(
   mh2InvariantMassVsPtUnlike = new TH2F("mh2InvariantMassVsPtUnlike","invariantMassVsPtUnlike;p_{T}(K#pi)(GeV/c);m_{K#pi}(GeV/c^{2})",120,0,12,220,0,2.2);
   mh2InvariantMassVsPtLike = new TH2F("mh2InvariantMassVsPtLike","invariantMassVsPtLike;p_{T}(K#pi)(GeV/c);m_{K#pi}(GeV/c^{2})",120,0,12,220,0,2.2);
 }
-StPicoD0Hists::~StPicoD0Hists()
+StPicoD0QaHists::~StPicoD0QaHists()
 {
   delete mPrescales;
   // note that histograms are owned by mOutFile. They will be destructed 
   // when the file is closed.
 }
 //-----------------------------------------------------------------------
-void StPicoD0Hists::addEvent(StPicoEvent const& picoEvent,StPicoD0Event const & picoD0Event,unsigned int const nHftTracks)
+void StPicoD0QaHists::addEvent(StPicoEvent const& picoEvent,StPicoD0Event const & picoD0Event,unsigned int const nHftTracks)
 {
   int runIndex = mPrescales->runIndex(picoD0Event.runId());
   mh1TotalEventsInRun->Fill(runIndex);
@@ -57,7 +56,7 @@ void StPicoD0Hists::addEvent(StPicoEvent const& picoEvent,StPicoD0Event const & 
   mh2NKaonsVsNPions->Fill(picoD0Event.nPions(),picoD0Event.nKaons());
 }
 //---------------------------------------------------------------------
-void StPicoD0Hists::addKaonPion(StKaonPion const* const kp, bool const fillMass, bool const unlike)
+void StPicoD0QaHists::addKaonPion(StKaonPion const* const kp, bool const fillMass, bool const unlike)
 {
   if(unlike)
   {
@@ -74,7 +73,7 @@ void StPicoD0Hists::addKaonPion(StKaonPion const* const kp, bool const fillMass,
   }
 }
 //---------------------------------------------------------------------
-void StPicoD0Hists::closeFile()
+void StPicoD0QaHists::closeFile()
 {
   mOutFile->cd();
   mh1TotalEventsInRun->Write();

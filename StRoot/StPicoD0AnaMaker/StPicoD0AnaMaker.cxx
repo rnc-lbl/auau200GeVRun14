@@ -12,8 +12,8 @@
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoEvent.h"
 #include "StPicoDstMaker/StPicoTrack.h"
-#include "StPicoD0EventMaker/StPicoD0Event.h"
-#include "StPicoD0EventMaker/StKaonPion.h"
+#include "StPicoCharmContainers/StPicoD0Event.h"
+#include "StPicoCharmContainers/StKaonPion.h"
 #include "StPicoD0AnaMaker.h"
 #include "StPicoHFMaker/StHFCuts.h"
 

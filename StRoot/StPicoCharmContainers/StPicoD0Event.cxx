@@ -38,8 +38,7 @@ void StPicoD0Event::clear(char const *option)
    mNPions = 0;
 }
 //---------------------------------------------------------------------
-void StPicoD0Event::addKaonPion(StKaonPion const* t)
+void StPicoD0Event::addKaonPion(StKaonPion const& t)
 {
-   TClonesArray &kaonPionArray = *mKaonPionArray;
-   new(kaonPionArray[mNKaonPion++]) StKaonPion(t);
+   new((*mKaonPionArray)[mNKaonPion++]) StKaonPion(t);
 }
