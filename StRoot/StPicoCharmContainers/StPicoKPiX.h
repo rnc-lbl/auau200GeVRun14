@@ -28,7 +28,7 @@ class StPicoKPiX : public TObject
   StPicoKPiX();
   StPicoKPiX(StPicoTrack const& kaon, StPicoTrack const& pion, StPicoTrack const& xaon,
              unsigned short kIdx,unsigned short pIdx, unsigned short xIdx,
-             StThreeVectorF const& vtx, float bField);
+             StThreeVectorF const& vtx, float bField, int xaonPid);
   ~StPicoKPiX() {}// please keep this non-virtual and NEVER inherit from this class 
 
   StThreeVectorF   threeMom() const;
@@ -58,6 +58,9 @@ class StPicoKPiX : public TObject
 
   float dcaDaughters() const;
   float perpDcaToVtx() const;
+  bool  xaonIsPion() const;
+  bool  xaonIsKaon() const;
+  bool  xaonIsProton() const;
           
  private:
   // disable copy constructor and assignment operator by making them private 
@@ -82,6 +85,7 @@ class StPicoKPiX : public TObject
   unsigned short  mKaonIdx; // index of track in StPicoDstEvent
   unsigned short  mPionIdx;
   unsigned short  mXaonIdx;
+  unsigned char   mXaonPid; // 1=π, 2=K, 3=p
 
   ClassDef(StPicoKPiX,1)
 };
@@ -101,5 +105,8 @@ inline unsigned short   StPicoKPiX::kaonIdx() const { return mKaonIdx;}
 inline unsigned short   StPicoKPiX::pionIdx() const { return mPionIdx;}
 inline unsigned short   StPicoKPiX::xaonIdx() const { return mXaonIdx;}
 inline float StPicoKPiX::perpDcaToVtx() const { return mDecayLength*std::sin(mPointingAngle);}
+inline bool  StPicoKPiX::xaonIsPion() const   { return mXaonIdx==1;}
+inline bool  StPicoKPiX::xaonIsKaon() const   { return mXaonIdx==2;}
+inline bool  StPicoKPiX::xaonIsProton() const { return mXaonIdx==3;}
 #endif
 #endif
