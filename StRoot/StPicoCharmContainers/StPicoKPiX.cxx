@@ -22,14 +22,15 @@ StPicoKPiX::StPicoKPiX(): mKaonMomAtDca{}, mPionMomAtDca{}, mXaonMomAtDca{},
                           mDecayLength(std::numeric_limits<float>::min()),
                           mKaonIdx(std::numeric_limits<unsigned short>::max()), 
                           mPionIdx(std::numeric_limits<unsigned short>::max()),
-                          mXaonIdx(std::numeric_limits<unsigned short>::max())
+                          mXaonIdx(std::numeric_limits<unsigned short>::max()),
+                          mXaonPid(std::numeric_limits<unsigned char>::max())
 {
 }
 
 //------------------------------------
 StPicoKPiX::StPicoKPiX(StPicoTrack const& kaon, StPicoTrack const& pion, StPicoTrack const& xaon,
                        unsigned short const kIdx, unsigned short const pIdx, unsigned short xIdx,
-                       StThreeVectorF const& vtx, float const bField) : StPicoKPiX()
+                       StThreeVectorF const& vtx, float const bField, int const xaonPid) : StPicoKPiX()
 {
    if (kaon.id() == pion.id() || 
        kaon.id() == xaon.id() ||
@@ -41,6 +42,7 @@ StPicoKPiX::StPicoKPiX(StPicoTrack const& kaon, StPicoTrack const& pion, StPicoT
    mKaonIdx = kIdx;
    mPionIdx = pIdx;
    mXaonIdx = xIdx;
+   mXaonPid = xaonPid;
 
    /// local variables prefixes:
    ///   k is for kaon
