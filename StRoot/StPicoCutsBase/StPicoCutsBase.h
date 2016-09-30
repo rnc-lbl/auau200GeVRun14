@@ -196,7 +196,7 @@ class StPicoCutsBase : public TNamed
   
   const float& getHypotheticalMass(int pidFlag)           const;
 
- private:
+ protected:
   
   StPicoCutsBase(StPicoCutsBase const &);       
   StPicoCutsBase& operator=(StPicoCutsBase const &); 
@@ -220,7 +220,6 @@ class StPicoCutsBase : public TNamed
   // -- event cuts
   float mVzMax;
   float mVzVpdVzMax;
-
 
   // -- tracking
   int   mNHitsFitMin;
